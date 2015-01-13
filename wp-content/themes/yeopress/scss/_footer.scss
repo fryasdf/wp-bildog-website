@@ -1,0 +1,29 @@
+footer {
+  background-color: $orange;
+  width: 100%;
+  margin: 0;
+}
+
+footer div {
+  color: white;
+  font-size: 11px;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+}
+
+footer > div.row {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+footer .copyright {
+  padding-top: 10px;
+  text-align: center;
+}
+
+footer .col-md-4 {
+  padding-left: 0;
+}

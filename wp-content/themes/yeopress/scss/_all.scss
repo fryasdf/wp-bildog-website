@@ -1,0 +1,119 @@
+strong {
+  color: $orange;
+}
+
+.container {
+  padding: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  -webkit-box-shadow: 1px 0px 10px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    1px 0px 10px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         1px 0px 10px 0px rgba(50, 50, 50, 0.75);
+}
+
+.main-column {
+
+  padding-left: 40px;
+  padding-right: 40px;
+
+  @media only screen and (min-width: 640px) {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+
+}
+
+@media only screen and (min-width: 940px) {
+  .container {
+    width: 940px;
+  }
+}
+
+#featured {
+  position: relative;
+  overflow: hidden;
+  height: 0px;
+
+  @media only screen and (min-width: 250px) {
+    height: 150px;
+  }
+
+  @media only screen and (min-width: 550px) {
+    height: 200px;
+  }
+
+  @media only screen and (min-width: 940px) {
+    height: 300px;
+  }
+
+  #featured-image {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      height: auto;
+      width: auto; /* for ie9 */
+
+      @media only screen and (min-width: 940px) {
+        margin-top:-100px;
+      }
+
+      @media only screen and (min-width: 1300px) {
+        margin-top:-200px;
+      }
+    }
+
+
+  }
+
+  .featured-icon {
+    position: absolute;
+    height: 0px;
+    top: 5px;
+    left: 40%;
+    margin: 0 !important;
+
+    @media only screen and (min-width: 250px) {
+      height: 100px;
+      left: calc(50% - 50px);
+    }
+
+    @media only screen and (min-width: 550px) {
+      height: 150px;
+      left: calc(50% - 75px);
+    }
+
+    @media only screen and (min-width: 940px) {
+      height: 230px;
+      left: calc(50% - 115px);
+    }
+  }
+
+  #page-title {
+    width: 700px;
+    color: $orange;
+    font-size: 30px;
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - 350px);
+    @media only screen and (min-width: 250px) {
+      font-size: 15px;
+    }
+    @media only screen and (min-width: 550px) {
+      font-size: 25px;
+    }
+    @media only screen and (min-width: 940px) {
+      font-size: 30px;
+    }
+    h1 {
+      text-align: center;
+    }
+  }
+}
+
+.icon-fb {
+  margin-bottom: 5px;
+}
