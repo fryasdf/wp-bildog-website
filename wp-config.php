@@ -21,16 +21,16 @@ if (file_exists(dirname(__FILE__) . '/local-config.php')) {
 
 // Global DB config
 if (!defined('DB_NAME')) {
-	define('DB_NAME', '');
+	define('DB_NAME', 'wp_bildog_db');
 }
 if (!defined('DB_USER')) {
-	define('DB_USER', '');
+	define('DB_USER', 'wp_bildog');
 }
 if (!defined('DB_PASSWORD')) {
-	define('DB_PASSWORD', '');
+	define('DB_PASSWORD', 'someStupidPassword');
 }
 if (!defined('DB_HOST')) {
-	define('DB_HOST', '');
+	define('DB_HOST', 'localhost');
 }
 
 /** Database Charset to use in creating database tables. */
