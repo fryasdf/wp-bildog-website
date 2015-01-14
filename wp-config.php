@@ -19,18 +19,19 @@ if (file_exists(dirname(__FILE__) . '/local-config.php')) {
 	include(dirname(__FILE__) . '/local-config.php');
 }
 
+
 // Global DB config
 if (!defined('DB_NAME')) {
-	define('DB_NAME', 'wp_bildog_db');
+	define('DB_NAME', '');
 }
 if (!defined('DB_USER')) {
-	define('DB_USER', 'wp_bildog');
+	define('DB_USER', '');
 }
 if (!defined('DB_PASSWORD')) {
-	define('DB_PASSWORD', 'someStupidPassword');
+	define('DB_PASSWORD', '');
 }
 if (!defined('DB_HOST')) {
-	define('DB_HOST', 'localhost');
+	define('DB_HOST', '');
 }
 
 /** Database Charset to use in creating database tables. */
@@ -99,6 +100,7 @@ if (!defined('WP_DEBUG')) {
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
 	define('ABSPATH', dirname(__FILE__) . '/');
+
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
