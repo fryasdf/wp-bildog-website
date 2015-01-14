@@ -20,7 +20,7 @@
                         <div class="col-md-4">
                             <a href="<?php echo getPageLinkByTitle('Impressum') ?>">Impressum</a><br/>
                             <a href="<?php echo getPageLinkByTitle('Haftungsausschluss') ?>">Haftungsausschluss</a><br/>
-                            <a href="<?php echo getPageLinkByTitle('Haftungsausschluss') ?>">Datenschutzerklärung</a><br/>
+                            <a href="<?php echo getPageLinkByTitle('Datenschutzerklärung') ?>">Datenschutzerklärung</a><br/>
                         </div>
                     </div>
 
