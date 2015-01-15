@@ -7,8 +7,7 @@
  */
 ( function( $ ) {
 	var body    = $( 'body' ),
-		_window = $( window),
-        _document = $( document );
+		_window = $( window );
 
 	// Enable menu toggle for small screens.
 	( function() {
@@ -41,7 +40,13 @@
 	 * @link http://www.nczonline.net/blog/2013/01/15/fixing-skip-to-content-links/
 	 */
 	_window.on( 'hashchange.twentyfourteen', function() {
-		var element = document.getElementById( location.hash.substring( 1 ) );
+		var hash = location.hash.substring( 1 ), element;
+
+		if ( ! hash ) {
+			return;
+		}
+
+		element = document.getElementById( hash );
 
 		if ( element ) {
 			if ( ! /^(?:a|select|input|button|textarea)$/i.test( element.tagName ) ) {
@@ -89,7 +94,7 @@
 				mastheadOffset = $( '#masthead' ).offset().top - toolbarOffset;
 
 				_window.on( 'scroll.twentyfourteen', function() {
-					if ( ( window.scrollY > mastheadOffset ) && ( mastheadHeight < 49 ) ) {
+					if ( _window.scrollTop() > mastheadOffset && mastheadHeight < 49 ) {
 						body.addClass( 'masthead-fixed' );
 					} else {
 						body.removeClass( 'masthead-fixed' );
@@ -126,16 +131,4 @@
 			} );
 		}
 	} );
-
-    _document.ready( function() {
-
-        $("article.page > .post-thumbnail").detach().appendTo('#featured-image');
-
-        var topDefault = parseInt($('#featured-image .post-thumbnail').css('top'), 10);
-        _window.scroll(function () {
-            $('#featured-image .post-thumbnail').css({
-                'top': topDefault + ($(this).scrollTop() / 3 ) + "px"
-            });
-        });
-    })
 } )( jQuery );

@@ -6,9 +6,7 @@
  * @subpackage Twenty_Fourteen
  * @since Twenty Fourteen 1.0
  */
-
-/*
-
+?>
 <div id="secondary">
 	<?php
 		$description = get_bloginfo( 'description', 'display' );
@@ -29,7 +27,3 @@
 	</div><!-- #primary-sidebar -->
 	<?php endif; ?>
 </div><!-- #secondary -->
-
-*/
-
-?>
