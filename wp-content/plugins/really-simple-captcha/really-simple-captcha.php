@@ -34,7 +34,7 @@ class ReallySimpleCaptcha {
 		$this->chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 		/* Length of a word in an image */
-		$this->char_length = 4;
+		$this->amount_letters = 4;
 
 		/* Array of fonts. Randomly picked up per character */
 		$this->fonts = array(
@@ -77,12 +77,12 @@ class ReallySimpleCaptcha {
 	/**
 	 * Generate and return a random word.
 	 *
-	 * @return string Random word with $chars characters x $char_length length
+	 * @return string Random word with $chars characters x $amount_letters length
 	 */
 	public function generate_random_word() {
 		$word = '';
 
-		for ( $i = 0; $i < $this->char_length; $i++ ) {
+		for ( $i = 0; $i < $this->amount_letters; $i++ ) {
 			$pos = mt_rand( 0, strlen( $this->chars ) - 1 );
 			$char = $this->chars[$pos];
 			$word .= $char;

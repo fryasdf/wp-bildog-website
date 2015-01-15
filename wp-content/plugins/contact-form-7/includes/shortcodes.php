@@ -316,7 +316,17 @@ class WPCF7_Shortcode {
 
 		return $default;
 	}
+	public function get_amount_letters_option( $default = '' ) {
+		$matches_a = $this->get_all_match_options(
+			'%^(?:[0-9]*x?[0-9]*)?/([0-9]+)$%' );
 
+		foreach ( (array) $matches_a as $matches ) {
+			if ( isset( $matches[1] ) && '' !== $matches[1] )
+				return $matches[1];
+		}
+
+		return $default;
+	}
 	public function get_cols_option( $default = '' ) {
 		$matches_a = $this->get_all_match_options(
 			'%^([0-9]*)x([0-9]*)(?:/[0-9]+)?$%' );
