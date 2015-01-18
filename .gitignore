@@ -13,6 +13,8 @@ node_modules
 local-config.php
 wp-config.php
 
+test*
+
 # Operating system files
 .Spotlight-V100
 .Trashes
