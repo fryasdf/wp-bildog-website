@@ -1,3 +1,8 @@
+$head_pic_height__min_width_250: 200px;
+$head_pic_height__min_width_550: 266px;
+$head_pic_height__min_width_940: 400px;
+
+
 strong {
   color: $orange;
 }
@@ -35,19 +40,20 @@ strong {
   height: 0px;
 
   @media only screen and (min-width: 250px) {
-    height: 150px;
+    height: $head_pic_height__min_width_250;
   }
 
   @media only screen and (min-width: 550px) {
-    height: 200px;
+    height: $head_pic_height__min_width_550;
   }
 
   @media only screen and (min-width: 940px) {
-    height: 300px;
+    height: $head_pic_height__min_width_940;
   }
 
   #featured-image {
     position: relative;
+    //margin: TOP-_AND_BOTTOM_MARGIN LEFT_AND_RIGHT_MARGIN;
     margin: 0 auto;
     width: 100%;
     text-align: center;
@@ -56,11 +62,29 @@ strong {
       max-width: 100%;
       height: auto;
       width: auto; /* for ie9 */
-
+      // which part of the image is shown?
+      // i.e. image=
+      // -------------------------
+      // | aaa                   |
+      // |     bbb               |
+      // |         ccc           |
+      // |             ddd       |
+      // |                fff    |
+      // |                   ggg |
+      // -------------------------
+      //
+      // then a negative margin means that this is shown:
+      // -------------------------
+      // |             ddd       |
+      // |                fff    |
+      // |                   ggg |
+      // -------------------------
+      //
+      // 
       @media only screen and (min-width: 940px) {
         margin-top:-100px;
       }
-
+      
       @media only screen and (min-width: 1300px) {
         margin-top:-200px;
       }
@@ -77,20 +101,75 @@ strong {
     margin: 0 !important;
 
     @media only screen and (min-width: 250px) {
-      height: 100px;
-      left: calc(50% - 50px);
+      $height_head_pic: $head_pic_height__min_width_250;
+      $height: 0.6 * $height_head_pic;
+      // we assume the icons to be a square
+      $width: $height;
+      top: $height * 0.2;
+      height: $height;
+      left: unquote("calc( 50% - ") $width/2 unquote(")")
+   }
+
+    @media only screen and (min-width: 550px) {
+      $height_head_pic: $head_pic_height__min_width_550;
+      $height: 0.6 * $height_head_pic;
+      // we assume the icons to be a square
+      $width: $height;
+      top: $height * 0.2;
+      height: $height;
+      left: unquote("calc( 50% - ") $width/2 unquote(")")
+     }
+
+    @media only screen and (min-width: 940px) {
+      $height_head_pic: $head_pic_height__min_width_940;
+      $height: 0.6 * $height_head_pic;
+      // we assume the icons to be a square
+      $width: $height;
+      top: $height * 0.2;
+      height: $height;
+      left: unquote("calc( 50% - ") $width/2 unquote(")")
+    }
+  }
+
+  
+  .featured-icon-bildog-cropped {
+    position: absolute;
+    height: 0px;
+    left: 40%;
+    margin: 0 !important;
+
+    // careful: this logo is !NOT! a perfect square but rather a rectangle
+    // with
+    //  width = 2.48 * height
+    
+    @media only screen and (min-width: 250px) {
+      $height: 70px;
+      $width: $height * 2.48;
+      height: $height;
+      // we want it centered
+      top: ($head_pic_height__min_width_940 - $height)/2;
+      left: unquote("calc( 50% - ") $width/2 unquote(")")
     }
 
     @media only screen and (min-width: 550px) {
-      height: 150px;
-      left: calc(50% - 75px);
+      $height: 100px;
+      $width: $height * 2.48;
+      height: $height;
+      // we want it centered
+      top: ($head_pic_height__min_width_940 - $height)/2;
+      left: unquote("calc( 50% - ") $width/2 unquote(")")
     }
 
     @media only screen and (min-width: 940px) {
-      height: 230px;
-      left: calc(50% - 115px);
+      $height: 200px;
+      $width: $height * 2.48;
+      height: $height;
+      // we want it centered
+      top: ($head_pic_height__min_width_940 - $height)/2;
+      left: unquote("calc( 50% - ") $width/2 unquote(")")
     }
   }
+
 
   #page-title {
     width: 700px;
@@ -101,12 +180,15 @@ strong {
     left: calc(50% - 350px);
     @media only screen and (min-width: 250px) {
       font-size: 15px;
+      margin-bottom: 5px;
     }
     @media only screen and (min-width: 550px) {
       font-size: 25px;
+      margin-bottom: 8px;
     }
     @media only screen and (min-width: 940px) {
       font-size: 30px;
+      margin-bottom: 10px;
     }
     h1 {
       text-align: center;

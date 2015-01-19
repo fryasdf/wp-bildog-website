@@ -1,6 +1,20 @@
 @import 'variables';
 
 $above_nav_margin: 58px;
+// distance from a TOP LEVEL ('bildog', 'Projekte', ...) 
+// entry that has a sublist to the sublist
+// in the navigation bar
+// (i.e. the space below 'bildog' to its first entry 'Ziele')
+$navbar_sublist_padding: 20px;
+
+// thickness of the contour oval around the entries in the 
+// navigation bar
+// i.e. the border in
+// /--------\  <---- thickness
+// | bildog |
+// \--------/
+$radius_thickness: 2px;
+
 
 .active-navigation-element {
   background-color: $orange !important;
@@ -33,7 +47,7 @@ div.nav {
         }
 
         & > a {
-          border: 1px solid $orange;
+          border: $radius_thickness solid $orange;
           border-radius: 20px;
           padding: 5px 20px 5px 20px;
           color: $orange;
@@ -49,7 +63,20 @@ div.nav {
       &:hover {
         &.page_item_has_children {
           & > a {
-            padding-bottom: 20px;
+            // if one hovers over an entry in the TOP LEVEL in 
+            // the navigation bar AND this entry has subentries then
+            // ...
+            // make round edges at the top and normal edges at the bottom
+            border-top-left-radius:20px;
+            border-top-right-radius:20px;
+            border-bottom-right-radius:0px;
+            border-bottom-left-radius:0px;
+            // and give a little extra padding at the bottom
+            padding-bottom: $navbar_sublist_padding;
+            padding-top: 5px;
+            padding-right: 20px;
+            padding-left: 20px;
+
             background-color: $orange;
             color: white;
           }
@@ -69,7 +96,11 @@ div.nav {
         }
 
         &:hover > ul.children, &.open > ul.children {
-          margin-top: 3px;
+          // if we removed this -5px then it would be difficult to select an entry from a 
+          // sublist of the navbar because before the mouse went over the sublist,
+          // the top entry would have lost the focus again causing the sublist to 
+          // close prematurely!
+          margin-top: $navbar_sublist_padding - 5px;
           display: block;
           position: absolute;
 

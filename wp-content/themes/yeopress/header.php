@@ -110,15 +110,23 @@
            src="<?php bloginfo('template_directory'); ?>/images/head_blog.jpg" 
            alt="<?php the_title(); ?>" />
         <?php endif ?>
-
         <?php if (!has_post_thumbnail() && ! is_home()): ?>
           <img 
            src="<?php bloginfo('template_directory'); ?>/images/head_projekte.jpg" 
            alt="<?php the_title(); ?>" />
         <?php endif ?>
       </div>
-      
-      <img class="featured-icon" />
+     
+      <img
+      <?php
+        if (get_the_title() == "bildog") {
+          echo 'class="featured-icon-bildog-cropped"';
+        } else {
+          echo 'class="featured-icon"';
+        }
+      ?> 
+      />
+
       <!-- just echo the title, the blog site is a bit weird 
            when it comes to getting its title
       -->
@@ -144,6 +152,10 @@
          if there is no such file (CAREFUL: 
          or it cant be accessed due to missing permissions!) 
          then show a default icon
+         CAUTION: if the page title contains '/' then this is replaced by '_'
+                  also, capitals are replaced by lower cap letters
+                  i.e. if the pages name is 'Title/Of/Page' then the icon file
+                  must be named bldg_title_of_page.png
          -->
     <script type="text/javascript">
       /* show featured/default icon */
@@ -152,23 +164,27 @@
                          ?>/images/featured-icons/bldg_<?php 
                            if (is_home()) { 
                              echo "blog"; 
-                           } else { 
-                             echo str_replace("/", "_", strtolower(get_the_title())); } ?>.png";
+                           } else {
+                             echo str_replace("/", "_", strtolower(get_the_title())); 
+                           } 
+                         ?>.png";
         $.ajax({
           url: imageUrl,
           type: "HEAD",
           success: function () {
             $('.featured-icon').attr("src", imageUrl);
+            $('.featured-icon-bildog-cropped').attr("src", imageUrl);
           },
           error: function() {
             var defaultImageUrl = "<?php echo bloginfo('template_directory') 
                                     ?>/images/featured-icons/bldg_projekte.png";
                  $('.featured-icon').attr("src", defaultImageUrl);
+                 $('.featured-icon-bildog-cropped').attr("src", defaultImageUrl);
           }
         });
       }
       /* there is an empty site called 'Projekte'
-         but we dont want to show it */
+         but we dont want the user to be able to access it */
       function disableProjectsLink($) {
         $('.nav > ul > li > a').each(function(index) {
           var linkName = $( this ).text();
