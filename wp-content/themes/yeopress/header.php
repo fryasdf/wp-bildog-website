@@ -13,9 +13,12 @@
     <meta name="author" content="">
     <link rel="author" href="">
     <?php wp_head() ?>
+    <!-- for parallaxing background images -->
+    <script type="text/javascript" src="<?php echo get_bloginfo('url'); ?>/js/skrollr.min.js"></script>
   </head>
   <!-- end head -->
-  
+ 
+   
   <body <?php body_class() ?>>
 
   <!-- the total header.php contains:
@@ -100,36 +103,49 @@
     -->
     <div id="featured">
       <div id="featured-image">
-        <?php
-          if (has_post_thumbnail()):
-            the_post_thumbnail();
-          endif;
-        ?>
-        <?php if (is_home()): ?>
-          <img 
-           src="<?php bloginfo('template_directory'); ?>/images/head_blog.jpg" 
-           alt="<?php the_title(); ?>" />
-        <?php endif ?>
-        <?php if (!has_post_thumbnail() && ! is_home()): ?>
-          <img 
-           src="<?php bloginfo('template_directory'); ?>/images/head_projekte.jpg" 
-           alt="<?php the_title(); ?>" />
-        <?php endif ?>
-      </div>
-     
-      <img
-      <?php
-        if (get_the_title() == "bildog") {
-          echo 'class="featured-icon-bildog-cropped"';
-        } else {
-          echo 'class="featured-icon"';
-        }
-      ?> 
-      />
 
-      <!-- just echo the title, the blog site is a bit weird 
-           when it comes to getting its title
-      -->
+<?php
+// wordpress treats the 'blog' page a little differently than the others
+if (is_home()) {
+  $url = get_bloginfo('template_directory') . '/images/head_blog.jpg';
+} else {
+  if (has_post_thumbnail()) {
+    $url = wp_get_attachment_url( get_post_thumbnail_id($post->ID));
+  } else {
+    $url = get_bloginfo('template_directory') . '/images/head_projekte.jpg';
+  }
+}
+?>
+        <!-- actually, these settings belong to 
+             the css file but as we cannot alter 
+             the attributes 'data-...' in css neither,
+             we leave them here so that all the 
+             parallaxing settings
+             stick together right here --> 
+        <div style="
+           background:url(
+           '<?php echo $url; ?>'
+           );
+           background-size: 100%;
+           position:relative;
+           margin-top:-150px;
+           height:800px; /* to be honest: i dont know what this setting actually does...*/
+           " 
+           data-0="top:0px;" 
+           data-600="top:-200px;"></div>
+        </div>
+        <!-- <img src="<?php echo $url; ?>">  -->
+
+        <img
+        <?php
+          if (get_the_title() == "bildog") {
+            echo 'class="featured-icon-bildog-cropped"';
+          } else {
+            echo 'class="featured-icon"';
+          }
+        ?> 
+        />
+
       <div id="page-title">
         <h1>
           <?php
@@ -143,7 +159,13 @@
           ?>
         </h1>
       </div>
-    </div>
+ 
+      </div>
+     
+      <!-- just echo the title, the blog site is a bit weird 
+           when it comes to getting its title
+      -->
+   </div>
 
     <!-- show the featured icon, that is a second image
          being shown in the middle over the featured image 

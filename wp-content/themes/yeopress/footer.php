@@ -1,4 +1,4 @@
-        <footer id="page-footer" class="main-column">
+  <footer id="page-footer" class="main-column">
 
             <div class="row">
                 <div class="col-md-11">
@@ -46,7 +46,16 @@
             </div>
 
         </footer>
+  <!-- END content-wrap -->
+  </div>      
 
-		<?php wp_footer() ?>
-	</body>
+
+    <?php wp_footer() ?>
+    <!-- initialize parallax scrolling script for parallaxing background images -->
+    <script type="text/javascript">
+      skrollr.init({
+       smoothScrolling: false,
+      }); 
+    </script>	
+  </body>
 </html>

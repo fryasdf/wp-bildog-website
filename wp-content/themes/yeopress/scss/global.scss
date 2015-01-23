@@ -347,3 +347,26 @@ input.button:active {
 		background: url($images_dir + 'black_lozenge_@2X.png');
 	}
 }
+
+.test {
+  width: 500px;
+  column-count: 3;
+  column-rule-color: red;
+  column-rule-width: 1px;
+  column-rule-style: dotted;
+}
+
+.tabelle-2-spalten-erste-spalte {
+  position:relative;
+  margin-left: 0px; 
+  margin-right:3%; 
+  width: 47%; 
+  background-color:purple; 
+}
+.tabelle-2-spalten-zweite-spalte {
+  position:relative;
+  margin-left: 0px; 
+  margin-right:0; 
+  width: 47%; 
+  background-color:green; 
+}
