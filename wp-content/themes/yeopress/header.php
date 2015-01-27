@@ -137,7 +137,7 @@
            height:2000px; /* to be honest: i dont know what this setting actually does...*/
            " 
            data-0="margin-top:0px;" 
-           data-600="margin-top:-200px;">
+           data-600="margin-top:-130px;">
         </div>
       <!-- end featured-image -->
       </div>
