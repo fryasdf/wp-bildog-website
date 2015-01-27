@@ -53,9 +53,30 @@
     <?php wp_footer() ?>
     <!-- initialize parallax scrolling script for parallaxing background images -->
     <script type="text/javascript">
-      skrollr.init({
-       smoothScrolling: false,
-      }); 
+      function isNonMobileBrowser() {
+        if(navigator.userAgent.indexOf("Chrome") != -1 ) {
+          // Chrome
+          return true;
+        } else if(navigator.userAgent.indexOf("Opera") != -1 ) {
+          // Opera
+          return true;
+        } else if(navigator.userAgent.indexOf("Firefox") != -1 ) {
+          // FireFox
+          return true;
+        } else if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
+        {
+          // IE 
+          return true;
+        } else {
+          // unknown
+          return false;
+        }
+      }
+      if (isNonMobileBrowser()) {
+        skrollr.init({
+          smoothScrolling: false,
+        });
+      }
     </script>	
   </body>
 </html>

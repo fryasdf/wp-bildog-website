@@ -15,6 +15,15 @@
     <?php wp_head() ?>
     <!-- for parallaxing background images -->
     <script type="text/javascript" src="<?php echo get_bloginfo('url'); ?>/js/skrollr.min.js"></script>
+    <script type="text/javascript">
+      window.onresize = displayWindowSize;
+      window.onload = displayWindowSize;
+      function displayWindowSize() {
+        
+        document.getElementById("dimensions").innerHTML = window.innerWidth + "x" + window.innerHeight;
+      };
+    </script>
+
   </head>
   <!-- end head -->
  
@@ -95,6 +104,7 @@
         )) 
       ?>
     </header>
+    
 
     <!-- show the featured image (german: Beitragsbild) 
          i.e. the image that has been associated to this page as 
@@ -104,67 +114,59 @@
     <div id="featured">
       <div id="featured-image">
 
-<?php
-// wordpress treats the 'blog' page a little differently than the others
-if (is_home()) {
-  $url = get_bloginfo('template_directory') . '/images/head_blog.jpg';
-} else {
-  if (has_post_thumbnail()) {
-    $url = wp_get_attachment_url( get_post_thumbnail_id($post->ID));
-  } else {
-    $url = get_bloginfo('template_directory') . '/images/head_projekte.jpg';
-  }
-}
-?>
-        <!-- actually, these settings belong to 
-             the css file but as we cannot alter 
-             the attributes 'data-...' in css neither,
-             we leave them here so that all the 
-             parallaxing settings
-             stick together right here --> 
-        <div style="
+        <?php
+          // wordpress treats the 'blog' page a little 
+          // differently than the others
+          if (is_home()) {
+            $url = get_bloginfo('template_directory') . '/images/head_blog.jpg';
+          } else {
+            if (has_post_thumbnail()) {
+              $url = wp_get_attachment_url( get_post_thumbnail_id($post->ID));
+            } else {
+              $url = get_bloginfo('template_directory') . 
+                       '/images/head_projekte.jpg';
+            }
+          }
+        ?>
+        
+        <div id="parallax-layer" style="
            background:url(
            '<?php echo $url; ?>'
            );
            background-size: 100%;
-           position:relative;
-           margin-top:-150px;
-           height:800px; /* to be honest: i dont know what this setting actually does...*/
+           height:2000px; /* to be honest: i dont know what this setting actually does...*/
            " 
-           data-0="top:0px;" 
-           data-600="top:-200px;"></div>
+           data-0="margin-top:0px;" 
+           data-600="margin-top:-200px;">
         </div>
-        <!-- <img src="<?php echo $url; ?>">  -->
-
+      <!-- end featured-image -->
+      </div>
+      <div id="featured-image-overlay">
         <img
-        <?php
-          if (get_the_title() == "bildog") {
-            echo 'class="featured-icon-bildog-cropped"';
-          } else {
-            echo 'class="featured-icon"';
-          }
-        ?> 
-        />
-
-      <div id="page-title">
-        <h1>
           <?php
-            if (is_home()) {
-              echo "Blog";
-            }
-            else if (get_the_title() == "bildog") {}
-            else {
-              echo get_the_title();
+            if (get_the_title() == "bildog") {
+              echo 'class="featured-icon-bildog-cropped"';
+            } else {
+              echo 'class="featured-icon"';
             }
           ?>
-        </h1>
-      </div>
- 
-      </div>
-     
-      <!-- just echo the title, the blog site is a bit weird 
-           when it comes to getting its title
-      -->
+        />
+        <div id="page-title">
+          <h1>
+            <?php
+              if (is_home()) {
+                echo "Blog";
+              }
+              else if (get_the_title() == "bildog") {}
+              else {
+                echo get_the_title();
+              }
+            ?>
+          </h1>
+        </div>
+     <!-- end featured-image-overlay -->
+     </div>
+   <!-- end featured -->
    </div>
 
     <!-- show the featured icon, that is a second image
@@ -216,6 +218,13 @@ if (is_home()) {
           }
         })
       }
+      // CSS3 asks for this property when applying media query
+      // @media only screen and (min-width: ...px)
+      //alert(window.innerWidth);
     </script>
-
+    <!--
+    <div id="dimensions">
+      ----- DOLLY ----
+    </div>
+    -->
     <div id="content-wrap" class="container">
