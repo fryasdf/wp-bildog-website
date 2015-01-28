@@ -61,7 +61,7 @@
         if(navigator.userAgent.indexOf("Chrome") != -1 ) {
           // Chrome
           return true;
-        } else if(navigator.userAgent.indexOf("Opera") != -1 ) {
+        } else if(navigator.userAgent.indexOf("Opera") != -1 ) if(navigator.userAgent.indexOf("OPR") != -1 ){
           // Opera
           return true;
         } else if(navigator.userAgent.indexOf("Firefox") != -1 ) {
