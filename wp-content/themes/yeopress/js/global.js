@@ -21,7 +21,6 @@ require(['jquery', 'bootstrap'], function($) {
 //        }
 //    });
 
-    loadFeaturedIcon($);
     disableProjectsLink($);
     
 });

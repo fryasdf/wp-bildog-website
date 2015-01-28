@@ -16,12 +16,18 @@
     <!-- for parallaxing background images -->
     <script type="text/javascript" src="<?php echo get_bloginfo('url'); ?>/js/skrollr.min.js"></script>
     <script type="text/javascript">
+      /* DEBUG
       window.onresize = displayWindowSize;
       window.onload = displayWindowSize;
       function displayWindowSize() {
         
         document.getElementById("dimensions").innerHTML = window.innerWidth + "x" + window.innerHeight;
       };
+      */
+      // SOME MORE DEBUG
+      // CSS3 asks for this property when applying media query
+      // @media only screen and (min-width: ...px)
+      //alert(window.innerWidth);
     </script>
 
   </head>
@@ -210,9 +216,6 @@
           }
         })
       }
-      // CSS3 asks for this property when applying media query
-      // @media only screen and (min-width: ...px)
-      //alert(window.innerWidth);
     </script>
    <div id="content-wrap" class="container">
 
