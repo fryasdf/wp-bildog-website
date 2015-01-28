@@ -54,6 +54,10 @@
     <!-- initialize parallax scrolling script for parallaxing background images -->
     <script type="text/javascript">
       function isNonMobileBrowser() {
+        if(navigator.userAgent.indexOf("Android") != -1 ) {
+          return false;
+        }
+
         if(navigator.userAgent.indexOf("Chrome") != -1 ) {
           // Chrome
           return true;
@@ -64,8 +68,10 @@
           // FireFox
           return true;
         } else if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
-        {
+          {
           // IE 
+          return true;
+        } else if(navigator.userAgent.indexOf("Safari")) {
           return true;
         } else {
           // unknown
