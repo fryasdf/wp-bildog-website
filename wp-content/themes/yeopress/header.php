@@ -141,15 +141,44 @@
         </div>
       <!-- end featured-image -->
       </div>
+
+    <!-- show the featured icon, that is a second image
+         being shown in the middle over the featured image 
+         file selected:
+         <template_directory>/images/featured-icons-bldg_<titleOfPage> 
+         if there is no such file (CAREFUL: 
+         or it cant be accessed due to missing permissions!) 
+         then show a default icon
+         CAUTION: if the page title contains '/' then this is replaced by '_'
+                  also, capitals are replaced by lower cap letters
+                  i.e. if the pages name is 'Title/Of/Page' then the icon file
+                  must be named bldg_title_of_page.png
+         -->
+ 
+
       <div id="featured-image-overlay">
-        <img
-          <?php
+        <img class="<?php
             if (get_the_title() == "bildog") {
-              echo 'class="featured-icon-bildog-cropped"';
+              echo 'featured-icon-bildog-cropped';
             } else {
-              echo 'class="featured-icon"';
+              echo 'featured-icon';
             }
-          ?>
+          ?>"
+             src="<?php
+                 $localDirectory = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/images/featured-icons/';
+                 $hostDirectory = get_bloginfo('template_directory') . '/images/featured-icons/';
+                 $defaultIconName = 'bldg_projekte.png';
+                 if (is_home()) {
+                   $iconName = 'bldg_blog.png';
+                 } else {
+                   $iconName = 'bldg_' . str_replace("/", "_", strtolower(get_the_title())) . '.png';
+                 }
+                 if (file_exists($localDirectory . $iconName)) {
+                   echo $hostDirectory . $iconName;
+                 } else {
+                   echo $hostDirectory . $defaultIconName;
+                 }
+          ?>"
         />
         <div id="page-title">
           <h1>
@@ -169,44 +198,7 @@
    <!-- end featured -->
    </div>
 
-    <!-- show the featured icon, that is a second image
-         being shown in the middle over the featured image 
-         file selected:
-         <template_directory>/images/featured-icons-bldg_<titleOfPage> 
-         if there is no such file (CAREFUL: 
-         or it cant be accessed due to missing permissions!) 
-         then show a default icon
-         CAUTION: if the page title contains '/' then this is replaced by '_'
-                  also, capitals are replaced by lower cap letters
-                  i.e. if the pages name is 'Title/Of/Page' then the icon file
-                  must be named bldg_title_of_page.png
-         -->
-    <script type="text/javascript">
-      /* show featured/default icon */
-      function loadFeaturedIcon($) {
-        var imageUrl = "<?php bloginfo('template_directory'); 
-                         ?>/images/featured-icons/bldg_<?php 
-                           if (is_home()) { 
-                             echo "blog"; 
-                           } else {
-                             echo str_replace("/", "_", strtolower(get_the_title())); 
-                           } 
-                         ?>.png";
-        $.ajax({
-          url: imageUrl,
-          type: "HEAD",
-          success: function () {
-            $('.featured-icon').attr("src", imageUrl);
-            $('.featured-icon-bildog-cropped').attr("src", imageUrl);
-          },
-          error: function() {
-            var defaultImageUrl = "<?php echo bloginfo('template_directory') 
-                                    ?>/images/featured-icons/bldg_projekte.png";
-                 $('.featured-icon').attr("src", defaultImageUrl);
-                 $('.featured-icon-bildog-cropped').attr("src", defaultImageUrl);
-          }
-        });
-      }
+   <script type="text/javascript">
       /* there is an empty site called 'Projekte'
          but we dont want the user to be able to access it */
       function disableProjectsLink($) {
@@ -222,9 +214,6 @@
       // @media only screen and (min-width: ...px)
       //alert(window.innerWidth);
     </script>
-    <!--
-    <div id="dimensions">
-      ----- DOLLY ----
-    </div>
-    -->
-    <div id="content-wrap" class="container">
+   <div id="content-wrap" class="container">
+
+
