@@ -1,6 +1,6 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:400,300italic,400italic);
 /* ==========================================================================
-	Imports
+  Imports
 /* ========================================================================== */
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 html {
@@ -7647,9 +7647,13 @@ strong {
   padding: 0;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.8) !important;
-  -webkit-box-shadow: 1px 0px 10px 0px rgba(50, 50, 50, 0.75);
-  -moz-box-shadow: 1px 0px 10px 0px rgba(50, 50, 50, 0.75);
-  box-shadow: 1px 0px 10px 0px rgba(50, 50, 50, 0.75);
+}
+@media only screen and (min-width: 550px) {
+  .container {
+    -webkit-box-shadow: 1px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 1px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    box-shadow: 1px 0px 10px 0px rgba(50, 50, 50, 0.75);
+  }
 }
 
 .main-column {
@@ -7673,7 +7677,7 @@ strong {
 }
 
 /* ==========================================================================
-	Base
+  Base
 /* ========================================================================== */
 html {
   height: 100%;
@@ -7700,7 +7704,7 @@ body {
   font-family: 'Lato', sans-serif;
 }
 
-/*	Apply to all elements. In a responsive design, this is almost always a good idea */
+/*  Apply to all elements. In a responsive design, this is almost always a good idea */
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -7708,7 +7712,7 @@ body {
 }
 
 /* ==========================================================================
-	Links
+  Links
 /* ========================================================================== */
 a {
   color: #26527c;
@@ -7730,7 +7734,7 @@ a:hover {
 }
 
 /* ==========================================================================
-	Typography
+  Typography
 /* ========================================================================== */
 /* Headers */
 h1 {
@@ -7787,7 +7791,7 @@ ul {
 }
 
 /* =============================================================================
-	Helper Classes
+  Helper Classes
 /* ========================================================================== */
 /* Prefixed with tags to override default tag styling for these elemets if .button is added */
 button,
@@ -7829,7 +7833,7 @@ input.button {
 }
 
 /* =============================================================================
-	Structural Styles, Media Queries & Page Styling
+  Structural Styles, Media Queries & Page Styling
 /* ========================================================================== */
 /* Less than 320px but will apply at all sizes */
 #page-wrap {
@@ -7942,7 +7946,22 @@ input.button {
   float: left;
 }
 
+/* 550<px there is no head pic... */
+@media only screen and (min-width: 550px) {
+  #page-content {
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
 /* 640px to 767px */
+@media only screen and (min-width: 640px) {
+  #page-content {
+    width: 100%;
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
+}
 /* 768px to 1024px */
 @media only screen and (min-width: 768px) {
   #content-wrap {
@@ -7987,27 +8006,4 @@ input.button {
   .search-form {
     background: url("/wp-content/themes/yeopress/images/black_lozenge_@2X.png");
   }
-}
-.test {
-  width: 500px;
-  column-count: 3;
-  column-rule-color: red;
-  column-rule-width: 1px;
-  column-rule-style: dotted;
-}
-
-.tabelle-2-spalten-erste-spalte {
-  position: relative;
-  margin-left: 0px;
-  margin-right: 3%;
-  width: 47%;
-  background-color: purple;
-}
-
-.tabelle-2-spalten-zweite-spalte {
-  position: relative;
-  margin-left: 0px;
-  margin-right: 0;
-  width: 47%;
-  background-color: green;
 }

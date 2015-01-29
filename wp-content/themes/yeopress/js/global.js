@@ -20,8 +20,11 @@ require(['jquery', 'bootstrap'], function($) {
 //            $(this).addClass('open');
 //        }
 //    });
-
     disableProjectsLink($);
-    
+    // initialize parallax scrolling script for parallaxing background images
+    skrollr.init({
+      smoothScrolling: false,
+    });
+ 
 });
 
