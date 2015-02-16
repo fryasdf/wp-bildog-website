@@ -9,7 +9,7 @@
     <meta charset="<?php bloginfo( 'charset' ) ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
-    <title><?php wp_title( '|', true, 'right' ) ?></title>
+    <title><?php wp_title( '') ?></title>
     <meta name="author" content="">
     <link rel="author" href="">
     <?php wp_head() ?>
@@ -20,10 +20,12 @@
       window.onresize = displayWindowSize;
       window.onload = displayWindowSize;
       function displayWindowSize() {
-        
         document.getElementById("dimensions").innerHTML = window.innerWidth + "x" + window.innerHeight;
       };
       */
+    //  var x = document.getElementById("page-logo");
+    //  var x = document.getElementById("page-logo");
+      //var x = document.getElementsByClassName("page_item_has_children");
       // SOME MORE DEBUG
       // CSS3 asks for this property when applying media query
       // @media only screen and (min-width: ...px)
@@ -35,7 +37,6 @@
  
    
   <body <?php body_class() ?>>
-
   <!-- the total header.php contains:
        1) a) link to home with bildog logo
           b) bar with drop-down menus and links to
@@ -92,6 +93,8 @@
         $excludePageIds[] = get_page_by_title("Impressum");
         $excludePageIds[] = get_page_by_title("Haftungsausschluss");
         $excludePageIds[] = get_page_by_title("Datenschutzerklärung");
+        $excludePageIds[] = get_page_by_title("Kontakt");
+        $excludePageIds[] = get_page_by_title("Test");
         $ids = "";
         foreach($excludePageIds as $key => $page) {
           if (!$page) {
@@ -105,8 +108,8 @@
           'theme_location' => 'main-nav',
           'menu_class'     => 'nav navbar-nav pull-right',
           'depth'          => 2,
-          'exclude'        => $ids
-          //'walker'            => new wp_bootstrap_navwalker()
+          'exclude'        => $ids,
+          'walker'            => new MyWalker()
         )) 
       ?>
     </header>
@@ -134,7 +137,7 @@
             }
           }
         ?>
-        
+ 
         <div id="parallax-layer" style="
            background:url(
            '<?php echo $url; ?>'
@@ -207,16 +210,30 @@
    <script type="text/javascript">
       /* there is an empty site called 'Projekte'
          but we dont want the user to be able to access it */
-      function disableProjectsLink($) {
-        $('.nav > ul > li > a').each(function(index) {
-          var linkName = $( this ).text();
-          if (linkName === 'Projekte') {
-            $(this).bind('click', false);
-            $(this).css('cursor', 'default');
-          }
-        })
-      }
+      // Note: we are doing it the jQuery way in js/global.js
+      // but if jQuery is not available, we use the clasical way here
+      var x = document.getElementsByClassName("page_item_has_children");
+      for (i = 0; i < x.length; i++) {
+        var y = x[i].getElementsByTagName("a");
+        if (y[0].innerHTML === "Projekte") {
+          y[0].style.pointerEvents = "none";
+        }
+      }        
+ 
+      /* If the device is a touch screen then the dropdown
+         menu does not work as expected, we need to disable all the links
+         of items with children then */
+      if (Modernizr.touch) {   
+        var x = document.getElementsByClassName("page_item_has_children");
+        for (i = 0; i < x.length; i++) {
+          var y = x[i].getElementsByTagName("a");
+          y[0].style.pointerEvents = "none";
+        }        
+        //alert('Touch Screen');  
+      } else {   
+        //alert('No Touch Screen');  
+      }  
     </script>
-   <div id="content-wrap" class="container">
+  <div id="content-wrap" class="container">
 
 

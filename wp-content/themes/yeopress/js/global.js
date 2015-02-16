@@ -10,8 +10,6 @@ require.config({
 });
 
 require(['jquery', 'bootstrap'], function($) {
-	console.log('Working!!');
-
     // Hack to enable dropdown.
     // IF you use this remove :hover menu from css
 //    $('.page_item_has_children').on('click', function(event) {
@@ -20,11 +18,21 @@ require(['jquery', 'bootstrap'], function($) {
 //            $(this).addClass('open');
 //        }
 //    });
-    disableProjectsLink($);
+
+        $('#jQueryEnabled').each(function(index) {
+          $(this).html("1");
+        });
+    // disable projects link
+        $('.nav > ul > li > a').each(function(index) {
+          var linkName = $( this ).text();
+          if (linkName === 'Projekte') {
+            $(this).bind('click', false);
+            $(this).css('cursor', 'default');
+          }
+        });
     // initialize parallax scrolling script for parallaxing background images
     skrollr.init({
-      smoothScrolling: false,
+      smoothScrolling: false
     });
  
 });
-

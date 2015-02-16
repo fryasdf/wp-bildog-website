@@ -3,7 +3,7 @@ Contributors: solarissmoke
 Donate link: http://rayofsolaris.net/donate.php
 Tags: comments, disable, global
 Requires at least: 3.6
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: trunk
 
 Allows administrators to globally disable comments on their site. Comments can be disabled according to post type. Multisite friendly.
@@ -73,6 +73,9 @@ The plugin provides the option to **completely disable the commenting feature in
 **Please delete any existing comments on your site before applying this setting, otherwise (depending on your theme) those comments may still be displayed to visitors.**
 
 == Changelog ==
+
+= 1.2 =
+* Allow network administrators to disable comments on custom post types across the whole network.
 
 = 1.1.1 =
 * Fix PHP warning when active_sitewide_plugins option doesn't contain expected data type.

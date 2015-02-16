@@ -192,28 +192,7 @@ input.button:active {
     color: $color_opposite;
   }
 }
-#page-header {
 
-  ul {
-  list-style: none;
-  padding: 0;
-
-  li {
-    cursor: pointer;
-
-    .lt-ie9 & {
-      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#298cba', endColorstr='#1d6385',GradientType=0 ); /* IE6-8 */
-    }
-
-    a {
-      text-decoration: none;
-    }
-  }
-  }
-  .nav ul li {
-    padding: $size_base/2 0.3em;
-  }
-}
 
 /* Content */
 #content-wrap {

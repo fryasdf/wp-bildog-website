@@ -15,21 +15,42 @@ $navbar_sublist_padding: 20px;
 // \--------/
 $radius_thickness: 2px;
 
+$extra_padding_last_button : 200px;
+
+$extra_padding_for_links: 200px;
 
 .active-navigation-element {
   background-color: $orange !important;
   color: white !important;
 }
 
+#page-header {
+
+  ul {
+  list-style: none;
+  padding: 0;
+
+  li {
+    //cursor: pointer;
+
+    .lt-ie9 & {
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#298cba', endColorstr='#1d6385',GradientType=0 ); /* IE6-8 */
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+  }
+  .nav ul li {
+    padding: $size_base/2 0.3em;
+  }
+}
 div.nav {
 
   & > ul {
 
     @media only screen and (min-width: 780px) {
-      & > li:last-child {
-        margin-top: $above_nav_margin + 36px;
-      }
-
       & > li {
         margin-top: $above_nav_margin;
       }
@@ -42,7 +63,7 @@ div.nav {
 
         @media only screen and (min-width: 780px) {
           &:last-child a {
-            padding-top: 200px;
+            padding-top: $extra_padding_last_button;
           }
         }
 
@@ -51,12 +72,13 @@ div.nav {
           border-radius: 20px;
           padding: 5px 20px 5px 20px;
           color: $orange;
-          margin-top: 5px;
+          margin-top: -$extra_padding_last_button;
           margin-right: 5px;
-
+          display:inline-block;
           &:focus, &:hover,  {
             @extend .active-navigation-element;
           }
+            text-align: center;
         }
       }
 
@@ -84,7 +106,9 @@ div.nav {
       }
 
       &.current_page_item > a {
-        @extend .active-navigation-element
+        @extend .active-navigation-element;
+        pointer-events: none;
+        cursor: default;
       }
 
       &.page_item_has_children {
@@ -100,11 +124,12 @@ div.nav {
           // sublist of the navbar because before the mouse went over the sublist,
           // the top entry would have lost the focus again causing the sublist to 
           // close prematurely!
-          margin-top: $navbar_sublist_padding - 5px;
+          margin-top: -5px;
           display: block;
           position: absolute;
 
           li {
+            overflow:hidden;
 
             &:hover {
               background-color: white;
@@ -115,17 +140,25 @@ div.nav {
             }
 
             a {
-              padding-left: 5px;
-              padding-right: 5px;
+              padding-left: 5px + $extra_padding_for_links;
+              padding-right: 5px + $extra_padding_for_links ;
+              padding-top: $extra_padding_for_links; 
+              padding-bottom: $extra_padding_for_links; 
+
+              margin-left: -$extra_padding_for_links;
+              margin-top: -$extra_padding_for_links;
+              margin-bottom: -$extra_padding_for_links;
+              margin-right: -$extra_padding_for_links;
+
               border: 0;
               color: white;
-              display:block;
-              width: 100%;
+              display:inline-block;
             }
-
           }
         }
       }
     }
   }
 }
+
+
