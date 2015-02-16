@@ -82,7 +82,7 @@ class MyWalker extends Walker_Page {
    *   TEXT
    * for the __first__ occurrence of <$tagname ...> ... </$tagname>
    */
-  private static function getTextBetweenTags($string, $tagname)
+  private function getTextBetweenTags($string, $tagname)
   {
     $pattern = "/<$tagname.*>(.*?)<\/$tagname>/";
     preg_match($pattern, $string, $matches);
@@ -94,7 +94,7 @@ class MyWalker extends Walker_Page {
    *   <$tagname someadditionalinfo>TEXT</$tagname>
    * for the __first__ occurrence of <$tagname ...> ... </$tagname>
    */
-  private static function getTagAndText($string, $tagname)
+  private function getTagAndText($string, $tagname)
   {
     $pattern = "/<$tagname.*>.*<\/$tagname>/";
     preg_match($pattern, $string, $matches);
@@ -112,7 +112,7 @@ class MyWalker extends Walker_Page {
     $newPart = str_replace($outputBefore, "", $output);
     // search for the first occurrence of <a ...>SOMETHING</a>
     // and extract it, save the part left and right of it
-    $titleAdded = static::getTextBetweenTags($newPart, 'a');
+    $titleAdded = self::getTextBetweenTags($newPart, 'a');
 
     $newPartSplittet = explode($titleAdded, $newPart);
     $newPartLeft = $newPartSplittet[0];
