@@ -110,6 +110,12 @@ class MyWalker extends Walker_Page {
     parent::start_el($output, $page, $depth, $args , $current_page );
     // extract the part that was added by the parent function
     $newPart = str_replace($outputBefore, "", $output);
+    //$newPart = str_replace("page_item_has_children", "page_item_has_children_depth_" . $depth, $newPart);
+    
+    //print "START_EL:" . "\n";
+    //print "START_EL:depth=" . $depth . "\n";
+    //print "START_EL: the following was added:" . $newPart . "\n";
+    
     // search for the first occurrence of <a ...>SOMETHING</a>
     // and extract it, save the part left and right of it
     $titleAdded = self::getTextBetweenTags($newPart, 'a');
@@ -118,6 +124,7 @@ class MyWalker extends Walker_Page {
     $newPartLeft = $newPartSplittet[0];
     $newPartRight = $newPartSplittet[1];
 
+    // substitute $specialPageName by $resultTitle
     $specialPageName = "Mitmachen";
     $resultTitle = "Spenden <br> + <br> Mitmachen";
     if ($titleAdded == $specialPageName) {
@@ -139,3 +146,4 @@ function custom_title( $title ) {
   }
   return 'bildog |' . $title;
 }
+

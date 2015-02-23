@@ -107,7 +107,7 @@
         wp_nav_menu(array(
           'theme_location' => 'main-nav',
           'menu_class'     => 'nav navbar-nav pull-right',
-          'depth'          => 2,
+          'depth'          => 3,
           'exclude'        => $ids,
           'walker'            => new MyWalker()
         )) 
