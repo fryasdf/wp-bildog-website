@@ -18,6 +18,7 @@ add_shortcode("my-post-filter", "mpfil_shortcode_function");
 DEFINE("MPFIL_DEFAULT_CATEGORY_NAME", "");
 DEFINE("MPFIL_DEFAULT_POST_FILE_NAME", "");
 DEFINE("MPFIL_DEFAULT_PAGINATION_SCRIPT", "");
+DEFINE("MPFIL_DEFAULT_POSTS_PER_PAGE", 5);
 
 function mpfil_shortcode_function($params_from_shortcode) {
   global $post;
@@ -28,7 +29,8 @@ function mpfil_shortcode_function($params_from_shortcode) {
   $defaultArray = array(
     "category_name" => MPFIL_DEFAULT_CATEGORY_NAME,
     "post_file_name" => MPFIL_DEFAULT_POST_FILE_NAME,
-    "pagination_script" => MPFIL_DEFAULT_PAGINATION_SCRIPT
+    "pagination_script" => MPFIL_DEFAULT_PAGINATION_SCRIPT,
+    "posts_per_page" => MPFIL_DEFAULT_POSTS_PER_PAGE
   );
 
   $params_from_shortcode=
@@ -38,13 +40,14 @@ function mpfil_shortcode_function($params_from_shortcode) {
       "my-post-filter"
     );
 
-
   // for navigation:
   //  'posts_per_page' => 5,
   //  'paged' = $pageNumber
   $category_name = wp_specialchars_decode($params_from_shortcode['category_name']);
   $post_file_name = wp_specialchars_decode($params_from_shortcode['post_file_name']);
+  $posts_per_page = wp_specialchars_decode($params_from_shortcode['posts_per_page']);
   $pagination_script = wp_specialchars_decode($params_from_shortcode['pagination_script']);
+
 
   // if post_file_name is something like 'filename.php' then
   // remove the trailing '.php' as wordpress
@@ -56,7 +59,7 @@ function mpfil_shortcode_function($params_from_shortcode) {
   //$output .= "POST NAME='" . $post_file_name . "'<br><br>\n\n";
   $params = array(
       'post_type' => 'post',
-      'posts_per_page' => 2,
+      'posts_per_page' => $posts_per_page,
       'paged' => $paged,
       'category_name' => $category_name,
     );
