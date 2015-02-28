@@ -174,19 +174,7 @@
             }
           ?>"
              src="<?php
-                 $localDirectory = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/images/featured-icons/';
-                 $hostDirectory = get_bloginfo('template_directory') . '/images/featured-icons/';
-                 $defaultIconName = 'bldg_projekte.png';
-                 if (is_home()) {
-                   $iconName = 'bldg_blog.png';
-                 } else {
-                   $iconName = 'bldg_' . str_replace("/", "_", strtolower(get_the_title())) . '.png';
-                 }
-                 if (file_exists($localDirectory . $iconName)) {
-                   echo $hostDirectory . $iconName;
-                 } else {
-                   echo $hostDirectory . $defaultIconName;
-                 }
+              echo get_icon(get_real_title());            
           ?>"
         />
         <div id="page-title">
@@ -212,6 +200,9 @@
          but we dont want the user to be able to access it */
       // Note: we are doing it the jQuery way in js/global.js
       // but if jQuery is not available, we use the clasical way here
+      /* EDIT: now the design has changed, now the site 'Projekte'
+         MUST be accesible!*/
+      /*
       var x = document.getElementsByClassName("page_item_has_children");
       for (i = 0; i < x.length; i++) {
         var y = x[i].getElementsByTagName("a");
@@ -219,7 +210,8 @@
           y[0].style.pointerEvents = "none";
         }
       }        
- 
+      */
+
       /* If the device is a touch screen then the dropdown
          menu does not work as expected, we need to disable all the links
          of items with children then */

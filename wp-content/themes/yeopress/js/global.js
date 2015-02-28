@@ -23,6 +23,9 @@ require(['jquery', 'bootstrap'], function($) {
           $(this).html("1");
         });
     // disable projects link
+      /* EDIT: now the design has changed, now the site 'Projekte'
+         MUST be accesible!*/
+        /*
         $('.nav > ul > li > a').each(function(index) {
           var linkName = $( this ).text();
           if (linkName === 'Projekte') {
@@ -30,6 +33,8 @@ require(['jquery', 'bootstrap'], function($) {
             $(this).css('cursor', 'default');
           }
         });
+        */
+
     // initialize parallax scrolling script for parallaxing background images
     skrollr.init({
       smoothScrolling: false

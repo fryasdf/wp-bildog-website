@@ -147,3 +147,71 @@ function custom_title( $title ) {
   return 'bildog |' . $title;
 }
 
+
+// some pages contents start with '((SOME TEXT))'
+// this is a special feature: it is a short description for
+// an index-like page. This needs to be stripped off
+// before showing the actual content
+// these functions get the 'SOME TEXT'
+function has_short_description($search_string) {
+  return preg_match_all('/{([^}]*)}/', $search_string, $hits);
+}
+function get_short_description($search_string) {
+  $res = preg_match_all('/{([^}]*)}/', $search_string, $hits);
+  if ($res === 1) {
+    return $hits[1][0];
+  }
+  echo 'ERROR: get_short_description(): this string does not';
+  echo '                                have a short description';
+  return 'ERROR: NO SHORT DESCRIPTION AVAILABLE!!!';
+}
+function get_short_description_with_enclosing_and_newlines($search_string) {
+  $res = preg_match_all('/({[^}]*}[\n]*)/', $search_string, $hits);
+  if ($res === 1) {
+    return $hits[1][0];
+  }
+  echo 'ERROR: get_short_description_with_enclosing():'; 
+  echo '       this string does not have a short description';
+  return 'ERROR: NO SHORT DESCRIPTION AVAILABLE!!!';
+}
+
+// for a general string messy_title...
+//   its is turned to lower case
+//   german umlauts are substituted by ae, ue, oe, ss
+//   blanks ' ' are replaced by '_'
+//   all remaining chars (/&%$) are removed
+function get_clean_title($messy_title) {
+  $res = strtolower($messy_title);
+  $res = str_replace("ä", "ae", $res);
+  $res = str_replace("ö", "oe", $res);
+  $res = str_replace("ü", "ue", $res);
+  $res = str_replace("ß", "ss", $res);
+  $res = str_replace(" ", "_", strtolower($res));
+  $res = preg_replace("/[^A-Za-z0-9_]/", '', $res);
+  return $res;
+}
+
+// get the associated icon to the page, i.e. the file located in
+// TEMPLATE_DIRECTORY/images/featured-icons/bldg_{...}
+// where {...} is either (the 'cleaned' page title to lowercase).png
+// (see above)
+// or the default 'projekte.png' if the icon file does not exist
+function get_icon($page_title) {
+  $localDirectory = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/images/featured-icons/';
+  $hostDirectory = get_bloginfo('template_directory') . '/images/featured-icons/';
+  $defaultIconName = 'bldg_projekte.png';
+  $iconName = 'bldg_' . get_clean_title($page_title) . '.png';
+  if (file_exists($localDirectory . $iconName)) {
+    return $hostDirectory . $iconName;
+  } else {
+    return $hostDirectory . $defaultIconName;
+  }
+}
+
+// wordpress is a little weird when it comes to the blog page
+function get_real_title() {
+  if (is_home()) {
+    return "Blog";
+  }
+  return get_the_title();
+}
