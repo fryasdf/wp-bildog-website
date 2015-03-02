@@ -13,10 +13,9 @@
     <meta name="author" content="">
     <link rel="author" href="">
     <?php wp_head() ?>
-    <!-- for parallaxing background images -->
-    <script type="text/javascript" src="<?php echo get_bloginfo('url'); ?>/js/skrollr.min.js"></script>
     <script type="text/javascript">
-      /* DEBUG
+      // DEBUG
+      /*
       window.onresize = displayWindowSize;
       window.onload = displayWindowSize;
       function displayWindowSize() {
@@ -37,6 +36,7 @@
  
    
   <body <?php body_class() ?>>
+  <div id="dimensions"></div>
   <!-- the total header.php contains:
        1) a) link to home with bildog logo
           b) bar with drop-down menus and links to
@@ -164,7 +164,6 @@
                   must be named bldg_title_of_page.png
          -->
  
-
       <div id="featured-image-overlay">
         <img class="<?php
             if (get_the_title() == "bildog") {
@@ -179,13 +178,11 @@
         />
         <div id="page-title">
           <h1>
+      <!-- CLEAN TITLE: <?php echo get_clean_title(get_real_title());?> -->
             <?php
-              if (is_home()) {
-                echo "Blog";
-              }
-              else if (get_the_title() == "bildog") {}
+              if (get_the_title() == "bildog") {}
               else {
-                echo get_the_title();
+                echo strip_off_mytags(get_real_title());
               }
             ?>
           </h1>

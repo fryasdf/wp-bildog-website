@@ -1,12 +1,13 @@
 require.config({
-	"baseUrl": "wp-content/themes/yeopress/js",
-    "shim" : {
-        "bootstrap" : { "deps" :['jquery'] }
-    },
-	"paths": {
-		"jquery": "vendor/jquery/jquery",
-        "bootstrap": "../node_modules/bootstrap-sass/assets/javascripts/bootstrap"
-	}
+  "baseUrl": "wp-content/themes/yeopress/js",
+  "shim" : {
+    "bootstrap" : { "deps" :['jquery'] }
+  },
+  "paths": {
+    "jquery": "vendor/jquery/jquery",
+    "bootstrap": "../node_modules/bootstrap-sass/assets/javascripts/bootstrap",
+    "skrollr": "skrollr"
+  }
 });
 
 require(['jquery', 'bootstrap'], function($) {
@@ -35,9 +36,13 @@ require(['jquery', 'bootstrap'], function($) {
         });
         */
 
-    // initialize parallax scrolling script for parallaxing background images
-    skrollr.init({
-      smoothScrolling: false
-    });
  
+});
+
+require(['skrollr/skrollr.min'], function(skrollr){
+    // initialize parallax scrolling script for parallaxing background images
+    var s = skrollr.init({
+      smoothScrolling: false,
+      forceHeight: false
+    });
 });

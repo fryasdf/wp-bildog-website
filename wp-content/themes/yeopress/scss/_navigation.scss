@@ -46,12 +46,30 @@ $extra_padding_for_links: 200px;
     padding: $size_base/2 0.3em;
   }
 }
+
+#spenden-mitmachen-large {
+  @media only screen and (max-width: 779px) {
+    display:none;
+  }
+  @media only screen and (min-width: 780px) {
+    display:inline-block;
+  }
+}
+#spenden-mitmachen-one-line{
+  @media only screen and (max-width: 779px) {
+    display:relative;
+  }
+  @media only screen and (min-width: 780px) {
+    display:none;
+  }
+}
+
 div.nav {
 
   & > ul {
 
-    @media only screen and (min-width: 780px) {
-      & > li {
+    & > li {
+      @media only screen and (min-width: 780px) {
         margin-top: $above_nav_margin;
       }
     }
@@ -61,8 +79,8 @@ div.nav {
 
       &.page_item {
 
-        @media only screen and (min-width: 780px) {
-          &:last-child a {
+        &:last-child a {
+          @media only screen and (min-width: 780px) {
             padding-top: $extra_padding_last_button;
           }
         }
@@ -74,7 +92,7 @@ div.nav {
           color: $orange;
           margin-top: -$extra_padding_last_button;
           margin-right: 5px;
-          display:inline-block;
+          //display:inline-block;
           &:focus, &:hover,  {
             @extend .active-navigation-element;
           }
@@ -107,7 +125,9 @@ div.nav {
 
       &.current_page_item > a {
         @extend .active-navigation-element;
-        pointer-events: none;
+        // CAREFUL: this also prevents mouseover events!!
+        // we cannot do it like this!
+        //pointer-events: none;
         cursor: default;
       }
 
@@ -120,11 +140,7 @@ div.nav {
         }
 
         &:hover > ul.children, &.open > ul.children {
-          // if we removed this -5px then it would be difficult to select an entry from a 
-          // sublist of the navbar because before the mouse went over the sublist,
-          // the top entry would have lost the focus again causing the sublist to 
-          // close prematurely!
-          margin-top: -5px;
+          margin-top: 15px;
           display: block;
           position: absolute;
 

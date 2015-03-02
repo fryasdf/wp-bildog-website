@@ -7361,6 +7361,28 @@ img {
   padding: 0.5em 0.3em;
 }
 
+@media only screen and (max-width: 779px) {
+  #spenden-mitmachen-large {
+    display: none;
+  }
+}
+@media only screen and (min-width: 780px) {
+  #spenden-mitmachen-large {
+    display: inline-block;
+  }
+}
+
+@media only screen and (max-width: 779px) {
+  #spenden-mitmachen-one-line {
+    display: relative;
+  }
+}
+@media only screen and (min-width: 780px) {
+  #spenden-mitmachen-one-line {
+    display: none;
+  }
+}
+
 @media only screen and (min-width: 780px) {
   div.nav > ul > li {
     margin-top: 58px;
@@ -7381,7 +7403,6 @@ div.nav > ul > li.page_item > a {
   color: #ef7102;
   margin-top: -200px;
   margin-right: 5px;
-  display: inline-block;
   text-align: center;
 }
 div.nav > ul > li:hover.page_item_has_children > a {
@@ -7397,7 +7418,6 @@ div.nav > ul > li:hover.page_item_has_children > a {
   color: white;
 }
 div.nav > ul > li.current_page_item > a {
-  pointer-events: none;
   cursor: default;
 }
 div.nav > ul > li.page_item_has_children > ul.children {
@@ -7406,7 +7426,7 @@ div.nav > ul > li.page_item_has_children > ul.children {
   z-index: 99999;
 }
 div.nav > ul > li.page_item_has_children:hover > ul.children, div.nav > ul > li.page_item_has_children.open > ul.children {
-  margin-top: -5px;
+  margin-top: 15px;
   display: block;
   position: absolute;
 }
@@ -7695,6 +7715,88 @@ strong {
 }
 .icon-fb {
   margin-bottom: 5px;
+}
+
+.projektbeschreibung-container {
+  padding: 10px;
+}
+@media only screen and (min-width: 993px) {
+  .projektbeschreibung-container {
+    height: 800px;
+  }
+}
+
+.projektbeschreibung {
+  border: 2px solid #ef7102;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+@media only screen and (min-width: 993px) {
+  .projektbeschreibung {
+    height: 790px;
+  }
+}
+.projektbeschreibung .header .icon {
+  width: 65%;
+  margin-top: 20px;
+  margin-bottom: 0px;
+}
+@media only screen and (max-width: 549px) {
+  .projektbeschreibung .header .icon {
+    display: none;
+  }
+}
+@media only screen and (min-width: 550px) and (max-width: 799px) {
+  .projektbeschreibung .header .icon {
+    width: 140px;
+  }
+}
+@media only screen and (min-width: 800px) and (max-width: 939px) {
+  .projektbeschreibung .header .icon {
+    width: 140px;
+  }
+}
+@media only screen and (min-width: 940px) and (max-width: 1099px) {
+  .projektbeschreibung .header .icon {
+    width: 140px;
+  }
+}
+@media only screen and (min-width: 1100px) {
+  .projektbeschreibung .header .icon {
+    width: 65%;
+  }
+}
+.projektbeschreibung .header .titel {
+  color: #ef7102;
+  font-size: 10px;
+}
+@media only screen and (max-width: 549px) {
+  .projektbeschreibung .header .titel {
+    font-size: 10px;
+  }
+}
+@media only screen and (min-width: 550px) and (max-width: 799px) {
+  .projektbeschreibung .header .titel {
+    font-size: 10px;
+  }
+}
+@media only screen and (min-width: 800px) and (max-width: 939px) {
+  .projektbeschreibung .header .titel {
+    font-size: 10px;
+  }
+}
+@media only screen and (min-width: 940px) and (max-width: 1099px) {
+  .projektbeschreibung .header .titel {
+    font-size: 10px;
+  }
+}
+@media only screen and (min-width: 1100px) {
+  .projektbeschreibung .header .titel {
+    font-size: 15px;
+  }
+}
+.projektbeschreibung .header .titel h1 {
+  text-align: center;
 }
 
 /* ==========================================================================

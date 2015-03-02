@@ -20,6 +20,23 @@ DEFINE("MPFIL_DEFAULT_POST_FILE_NAME", "");
 DEFINE("MPFIL_DEFAULT_PAGINATION_SCRIPT", "");
 DEFINE("MPFIL_DEFAULT_POSTS_PER_PAGE", 5);
 
+// EXAMPLE:
+// [my-post-filter category_name="Hamburg" posts_per_page=10 post_file_name="yeopress_content_post_brief"]
+// will show all posts from the category "Hamburg"
+// in the design as given in the file
+// <template directory>/yeopress_content_post_brief.php
+// i.e. a file of the form
+//
+// <li style="background-color:red"><?php  the_title() QUESTIONMARK></li>
+//
+// also, before this is done with every post, the file
+//   yeopress_content_post_brief_before.php
+// is executed and afterwards the file
+//   yeopress_content_post_brief_after.php
+// those may contain just <ul> and </ul> for example (or may be more 
+// complicated)
+
+
 function mpfil_shortcode_function($params_from_shortcode) {
   global $post;
   $paged = wp_specialchars_decode(get_query_var( 'paged', 1 ));

@@ -76,6 +76,7 @@ function getPageLinkByTitle($pageTitle) {
 
 
 class MyWalker extends Walker_Page {
+  private $disabled = 0;
   /* if $string is
    *   ... <$tagname something uninteresting>TEXT</$tagname> ...
    * then this function gets
@@ -104,12 +105,26 @@ class MyWalker extends Walker_Page {
   /* is called whenever a <li> <a href=...>...</a> is added
    */
   public function start_el( &$output, $page, $depth = 0, $args = array(), $current_page = 0 ) {
+    if ($this->disabled != 0) {
+      return;
+    }
     // call the parent start_el function
     // (this adds something to output)
     $outputBefore = $output;
     parent::start_el($output, $page, $depth, $args , $current_page );
     // extract the part that was added by the parent function
     $newPart = str_replace($outputBefore, "", $output);
+
+    // the complete subtree under 'unsichtbar' is invisible!
+    if (preg_match('/\Aunsichtbar/', $page->post_title)) {
+      //$output = $outputBefore . "CUTDOLLY" . $newPart;
+      //$this->test=1;
+
+      $this->disabled = 1;
+      $output = $outputBefore;
+      
+      return;
+    }
     //$newPart = str_replace("page_item_has_children", "page_item_has_children_depth_" . $depth, $newPart);
     
     //print "START_EL:" . "\n";
@@ -126,13 +141,46 @@ class MyWalker extends Walker_Page {
 
     // substitute $specialPageName by $resultTitle
     $specialPageName = "Mitmachen";
-    $resultTitle = "Spenden <br> + <br> Mitmachen";
+    $resultTitle = '<span id="spenden-mitmachen-one-line">Spenden + Mitmachen</span><span id="spenden-mitmachen-large">Spenden<br>+<br>Mitmachen</span>';
     if ($titleAdded == $specialPageName) {
       $titleAdded = $resultTitle;
     }
+    // if it is the entry 'Hamburg' that is a direct child of 'Projekte'
+    // then make it a little wider (widthout messing with the css of 
+    // the navbar... brrr) in order for the child list to look nicer
+    $specialPageName = "Hamburg";
+    $resultTitle = "Hamburg &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    if ($titleAdded == $specialPageName && $page->post_parent === get_page_by_title('Projekte')->ID) {
+      $titleAdded = $resultTitle;
+    }
+
     $toAppend = $newPartLeft . $titleAdded . $newPartRight;
     $output = $outputBefore . $toAppend;
   }
+  public function end_el( &$output, $page, $depth = 0, $args = array() ) {
+    if ($depth === 0 && $this->disabled != 0) {
+      $this->disabled = 0;
+      return;
+    }
+    if ($this->disabled != 0) {
+      return;
+    }
+    parent::end_el($output, $page, $depth, $args);
+  }
+
+  public function start_lvl( &$output, $depth = 0, $args = array() ) {
+    if ($this->disabled != 0) {
+      return;
+    }
+    parent::start_lvl($output, $depth, $args);
+  }
+  public function end_lvl( &$output, $depth = 0, $args = array() ) {
+    if ($this->disabled != 0) {
+      return;
+    }
+    parent::end_lvl($output, $depth, $args);  
+  }
+  
 }
 
 
@@ -148,40 +196,99 @@ function custom_title( $title ) {
 }
 
 
-// some pages contents start with '((SOME TEXT))'
+
+/*
+ * MYTAGS SECTION
+ *
+ * A 'mytag' is a thing SOMETHINGINALLCAPITALS{some content}
+ * which appears on some pages. This is an input-output machinery for
+ * interacting with worpdress, essentially these functions provide methods
+ * of getting the contents or the tag with contents, stripping them off
+ * and showing them on other places.
+ */
+$SHORT_DESCRIPTION_TAGNAME = "KURZBESCHREIBUNG";
+$TITLE_LOCALE_TAGNAME = "ORT";
+
+$mytags = array($SHORT_DESCRIPTION_TAGNAME, $TITLE_LOCALE_TAGNAME);
+
+function has_mytag($search_string, $tag) {
+  return preg_match_all('/' . $tag . '{([^}]*)}/', $search_string, $hits);
+}
+function get_mytag_contents($search_string, $tag) {
+  $res = preg_match_all('/' . $tag . '{([^}]*)}/', $search_string, $hits);
+  if ($res === 1) {
+    return $hits[1][0];
+  }
+  echo 'ERROR: get_mytag_contents(): this string (' . $search_string . 
+                                     ') does not have such a tag (' . 
+                                     $tag . ')';
+  return 'ERROR: NO TAG AVAILABLE!!!';
+}
+
+function get_mytag_with_brackets_and_trailing_newlines($search_string, $tag) {
+  $res = preg_match_all('/(' . $tag . '{[^}]*}[\n]*)/', $search_string, $hits);
+  if ($res === 1) {
+    return $hits[1][0];
+  }
+  echo 'ERROR: get_mytag_with_brackets_and_trailing_newlines():'; 
+  echo '       this string does not have such a tag';
+  return 'ERROR: NO TAG AVAILABLE!!!';
+}
+
+function strip_off_mytags($text) {
+  global $mytags;
+  foreach($mytags as $tag) {
+    if (has_mytag($text, $tag)) {
+      $tag_with_content = get_mytag_with_brackets_and_trailing_newlines($text, $tag);
+      $text = str_replace($tag_with_content , "" , $text);
+    }
+  } 
+  return $text;
+}
+function replace_mytag_with_content($text, $tag) {
+  if (has_mytag($text, $tag)) {
+    $tag_with_content = get_mytag_with_brackets_and_trailing_newlines($text, $tag);
+    $only_content = get_mytag_contents($text, $tag);
+    $text = str_replace($tag_with_content , $only_content , $text);
+  }
+  return $text;
+}
+
+// some pages contents start with '{SOME TEXT}'
 // this is a special feature: it is a short description for
 // an index-like page. This needs to be stripped off
 // before showing the actual content
 // these functions get the 'SOME TEXT'
 function has_short_description($search_string) {
-  return preg_match_all('/{([^}]*)}/', $search_string, $hits);
+  global $SHORT_DESCRIPTION_TAGNAME;
+  return has_mytag($search_string, $SHORT_DESCRIPTION_TAGNAME);
 }
 function get_short_description($search_string) {
-  $res = preg_match_all('/{([^}]*)}/', $search_string, $hits);
-  if ($res === 1) {
-    return $hits[1][0];
-  }
-  echo 'ERROR: get_short_description(): this string does not';
-  echo '                                have a short description';
-  return 'ERROR: NO SHORT DESCRIPTION AVAILABLE!!!';
+  global $SHORT_DESCRIPTION_TAGNAME;
+  return get_mytag_contents($search_string, $SHORT_DESCRIPTION_TAGNAME);
 }
 function get_short_description_with_enclosing_and_newlines($search_string) {
-  $res = preg_match_all('/({[^}]*}[\n]*)/', $search_string, $hits);
-  if ($res === 1) {
-    return $hits[1][0];
-  }
-  echo 'ERROR: get_short_description_with_enclosing():'; 
-  echo '       this string does not have a short description';
-  return 'ERROR: NO SHORT DESCRIPTION AVAILABLE!!!';
+  global $SHORT_DESCRIPTION_TAGNAME;
+  return get_mytag_with_brackets_and_trailing_newlines($search_string, $SHORT_DESCRIPTION_TAGNAME);
 }
 
+function get_locale_tag_title($title) {
+  global $TITLE_LOCALE_TAGNAME;
+  return get_mytag_contents($title, $TITLE_LOCALE_TAGNAME);
+}
+
+
+
 // for a general string messy_title...
-//   its is turned to lower case
-//   german umlauts are substituted by ae, ue, oe, ss
-//   blanks ' ' are replaced by '_'
-//   all remaining chars (/&%$) are removed
+//   1) mytags are removed
+//   2) its is turned to lower case
+//   3) german umlauts are substituted by ae, ue, oe, ss
+//   4) blanks ' ' are replaced by '_'
+//   5) all remaining chars (/&%$) are removed
 function get_clean_title($messy_title) {
-  $res = strtolower($messy_title);
+  $res = $messy_title;
+  $res = strip_off_mytags($res);
+  $res = strtolower($res);
   $res = str_replace("ä", "ae", $res);
   $res = str_replace("ö", "oe", $res);
   $res = str_replace("ü", "ue", $res);
@@ -192,15 +299,15 @@ function get_clean_title($messy_title) {
 }
 
 // get the associated icon to the page, i.e. the file located in
-// TEMPLATE_DIRECTORY/images/featured-icons/bldg_{...}
-// where {...} is either (the 'cleaned' page title to lowercase).png
+// TEMPLATE_DIRECTORY/images/featured-icons/{...}
+// where {...} is either (the 'cleaned' page title).png
 // (see above)
-// or the default 'projekte.png' if the icon file does not exist
+// or the default 'default.png' if the icon file does not exist
 function get_icon($page_title) {
   $localDirectory = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/images/featured-icons/';
   $hostDirectory = get_bloginfo('template_directory') . '/images/featured-icons/';
-  $defaultIconName = 'bldg_projekte.png';
-  $iconName = 'bldg_' . get_clean_title($page_title) . '.png';
+  $defaultIconName = 'default.png';
+  $iconName = get_clean_title($page_title) . '.png';
   if (file_exists($localDirectory . $iconName)) {
     return $hostDirectory . $iconName;
   } else {

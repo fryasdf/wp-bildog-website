@@ -1,0 +1,68 @@
+$projekte_padding: 10px;
+$projekte_height: 800px;
+
+.projektbeschreibung-container{
+  padding: $projekte_padding;
+  @media only screen and (min-width: 993px) {
+    height: $projekte_height;
+  }
+}
+
+.projektbeschreibung{
+  border: $radius_thickness solid $orange; 
+  @media only screen and (min-width: 993px) {
+    height: $projekte_height - $projekte_padding;
+  }
+  padding-left: 10px;
+  padding-right: 10px;
+  //margin: 5px;
+  .header{
+    .icon{
+      width: 65%;
+      margin-top: 20px;
+      margin-bottom: 0px;
+      @media only screen and (max-width: 549px) {
+        display:none;
+      }
+      @media only screen and (min-width: 550px) and (max-width: 799px) {
+        width: 140px;
+      }
+      @media only screen and (min-width: 800px) and (max-width: 939px) {
+        width: 140px;
+      }
+      @media only screen and (min-width: 940px) and (max-width: 1099px) {
+        width: 140px;
+      }
+      @media only screen and (min-width: 1100px) {
+        width: 65%;
+      }
+     }
+    .titel {
+      color: $orange;
+      font-size: 10px;
+      @media only screen and (max-width: 549px) {
+        font-size: 10px;
+      }
+      @media only screen and (min-width: 550px) and (max-width: 799px) {
+        font-size: 10px;
+      }
+      @media only screen and (min-width: 800px) and (max-width: 939px) {
+        font-size: 10px;
+      }
+      @media only screen and (min-width: 940px) and (max-width: 1099px) {
+        font-size: 10px;
+      }
+      @media only screen and (min-width: 1100px) {
+        font-size: 15px;
+      }
+      h1 {
+        text-align: center;
+      }
+    }
+  } // end header
+  .projekt-inhalt {
+  }
+}
+
+
+
