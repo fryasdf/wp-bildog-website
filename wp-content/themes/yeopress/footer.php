@@ -43,6 +43,33 @@
 
     <?php wp_footer() ?>
 
+  <script type="text/javascript">
+      var allElements = document.getElementsByClassName('projekt-box');
+      var allInnerToggleLinks = document.getElementsByClassName('toggle-link-inner');
+
+      var BOX_HEIGHT = "<?php 
+          $file_name = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/scss/_projekte.scss';
+          $variable = read_scss_variable_without_unit
+               ($file_name, 'projekte_box_height', 'px');
+          echo $variable;
+          ?>";
+      for (i=0; i < allElements.length; i++) {
+        element = allElements[i];
+        innerToggleLink = allInnerToggleLinks[i];
+        if (element.offsetHeight <= BOX_HEIGHT) {
+          innerToggleLink.style.display = "none";
+        } 
+        //console.log('i=' + i + 
+        //        '|client=' + element.clientHeight +
+        //        '|offset=' + element.offsetHeight +
+        //        '|scroll=' + element.scrollHeight
+        //        );
+        allElements[i].style.height = BOX_HEIGHT + 'px';
+      }
+
+
+
+    </script>
  
   </body>
 </html>

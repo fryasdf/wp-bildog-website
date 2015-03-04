@@ -1,22 +1,41 @@
-$projekte_padding: 10px;
-$projekte_height: 800px;
+@import 'variables';
+
+
+$projekte_margin: 10px;
+// this variable is actually not used in this css script but it 
+// is read by header.php and footer.php
+// in which javascripts set the height
+// CAREFUL: MUST BE GIVEN IN px!!!!
+$projekte_box_height: 445px;
+
+$projekte_inner_box_padding: 10px;
 
 .projektbeschreibung-container{
-  padding: $projekte_padding;
-  @media only screen and (min-width: 993px) {
-    height: $projekte_height;
-  }
+  padding: $projekte_margin;
 }
 
-.projektbeschreibung{
+.projekt-box-fixed {
+  height:450px;
+}
+.projekt-test {
+  background-color:purple;
+  height: 200px;
+}
+
+.projekt-box{
+  position:relative;
+  overflow:hidden;
   border: $radius_thickness solid $orange; 
-  @media only screen and (min-width: 993px) {
-    height: $projekte_height - $projekte_padding;
-  }
-  padding-left: 10px;
-  padding-right: 10px;
-  //margin: 5px;
+
+  // when bootstrap does not stack
+  //@media only screen and (min-width: 993px) {
+  //  height: $projekte_box_height;
+  //}  
+ 
   .header{
+    padding-left: $projekte_inner_box_padding;
+    padding-right: $projekte_inner_box_padding;
+   
     .icon{
       width: 65%;
       margin-top: 20px;
@@ -61,8 +80,36 @@ $projekte_height: 800px;
     }
   } // end header
   .projekt-inhalt {
+     overflow:hidden;
+     padding-left: $projekte_inner_box_padding;
+     padding-right: $projekte_inner_box_padding;
+
+  }
+  .toggle-link-inner {
+    position:absolute;
+    bottom: 0;
+    left: 0;
+    display:block;
+
+    vertical-align: middle;
+    text-align:center;
+    background-color:$orange;
+    width:100%;
+  }
+  .toggle-link-inner:hover {
+    cursor: pointer;
   }
 }
 
+.toggle-link-outer {
+  vertical-align: middle;
+  text-align:center;
+  background-color:$orange;
+  width:100%;
+  display:none;
+}
+.toggle-link-outer:hover {
+  cursor: pointer;
+}
 
 

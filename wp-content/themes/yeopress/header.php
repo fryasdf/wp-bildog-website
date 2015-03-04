@@ -29,6 +29,33 @@
       // CSS3 asks for this property when applying media query
       // @media only screen and (min-width: ...px)
       //alert(window.innerWidth);
+
+      function collapse(nr) {
+        var BOX_HEIGHT = "<?php 
+          $file_name = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/scss/_projekte.scss';
+          $variable = read_scss_variable($file_name, 'projekte_box_height');
+          echo $variable;
+         ?>";
+        var element = document.getElementsByClassName('projekt-box')[nr];
+        var toggleLinkInner = document.getElementsByClassName("toggle-link-inner")[nr];
+        var toggleLinkOuter = document.getElementsByClassName("toggle-link-outer")[nr];
+        element.style.height = BOX_HEIGHT;
+        toggleLinkInner.style.display = "block";
+        toggleLinkOuter.style.display = "none";
+        
+      }
+      function expand(nr) {
+        var element = document.getElementsByClassName('projekt-box')[nr];
+        var toggleLinkInner = document.getElementsByClassName("toggle-link-inner")[nr];
+        var toggleLinkOuter = document.getElementsByClassName("toggle-link-outer")[nr];        
+        element.style.height = "auto";
+        toggleLinkInner.style.display = "none";
+        toggleLinkOuter.style.display = "block";
+        
+      }
+      
+
+
     </script>
 
   </head>
@@ -36,7 +63,6 @@
  
    
   <body <?php body_class() ?>>
-  <div id="dimensions"></div>
   <!-- the total header.php contains:
        1) a) link to home with bildog logo
           b) bar with drop-down menus and links to
@@ -222,6 +248,7 @@
       } else {   
         //alert('No Touch Screen');  
       }  
+
     </script>
   <div id="content-wrap" class="container">
 

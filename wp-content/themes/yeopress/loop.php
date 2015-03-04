@@ -38,32 +38,46 @@
 
           // show the page including...
           echo '<div class="col-md-4 projektbeschreibung-container">' . "\n";
-          echo '<div class="projektbeschreibung">' . "\n";
-          echo '<div class="header">' . "\n";
-          // ... its icon ...
-          echo '<center>' . "\n";
-          echo '<img src="' . get_icon($page->post_title) 
-                               . '" class="icon">';
-          echo '</center>' . "\n";
-          // ...its title...
-          echo '<div class="titel">' . "\n";
-          echo '<h1>' . $page->post_title . '</h1>' . "\n";
-          echo '</div>' . "\n";
-          echo '</div>' . "\n";
+            echo '<div class="projekt-box">' . "\n";
+              echo '<div class="header">' . "\n";
+                // ... its icon ...
+                echo '<center>' . "\n";
+                  echo '<img src="' . get_icon($page->post_title) 
+                                    . '" class="icon">';
+                echo '</center>' . "\n";
+                // ...its title...
+                echo '<div class="titel">' . "\n";
+                  echo '<h1>' . $page->post_title . '</h1>' . "\n";
+                echo '</div>' . "\n";
+              echo '</div>' . "\n";
           
-          echo '<div class="projekt-inhalt">' . "\n";
+              echo '<div class="projekt-inhalt">' . "\n";
 
-          // and the content of the page
-          // precisely as wordpress would show it, i.e. including 
-          // shortcodes, etc)
-          $page_content = apply_filters( 'the_content', $page->post_content );
-          $page_content = str_replace( ']]>', ']]&gt;', $page_content );
-          echo $page_content;
-          echo '</div>' . "\n";
+                // and the content of the page
+                // precisely as wordpress would show it, i.e. including 
+                // shortcodes, etc)
+                $page_content = apply_filters( 'the_content', $page->post_content );
+                $page_content = str_replace( ']]>', ']]&gt;', $page_content );
+                echo $page_content;
+              echo '</div>' . "\n";
+              
+              echo '<div class="toggle-link-inner" onclick="expand(' . $j . ')">' . "\n";
+              echo '<img src="' . 
+                 get_bloginfo('template_directory') . '/images/' .
+                 'arrow_down.png">' . "\n";
+              echo '</div>' . "\n";
+            // end projekt-box
+            echo '</div>' . "\n";
+            echo '<div class="toggle-link-outer" onclick="collapse(' . $j . ')">' . "\n";
+              echo '<img src="' . 
+                 get_bloginfo('template_directory') . '/images/' .
+                 'arrow_up.png">' . "\n";
+            echo '</div>' . "\n";
 
-          echo '</div>' . "\n";
+          // end col, projektbeschreibung-container
           echo '</div>' . "\n";
         } 
+        // end <div class="row">
         echo '</div>' . "\n";
       }
     }

@@ -322,3 +322,20 @@ function get_real_title() {
   }
   return get_the_title();
 }
+
+
+// read the value of an scss variable from an scss file
+  function read_scss_variable($file_name, $variable_name) {
+    $file_content = file_get_contents($file_name);                             
+    $res = preg_match_all('/\$' . $variable_name . '[\ ]*:[\ ]*([^;]*);/', $file_content, $hits);
+    if ($res === 1) {
+      return $hits[1][0];
+    }
+    return NULL;
+  }
+  function read_scss_variable_without_unit($file_name, $variable_name, $unit) {
+    $value = read_scss_variable($file_name, $variable_name);
+    $value = str_replace($unit, '', $value);
+    return $value;
+  }
+
