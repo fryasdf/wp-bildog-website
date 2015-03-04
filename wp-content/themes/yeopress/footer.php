@@ -79,9 +79,11 @@
           // depending on whether or not the page has been 
           // reloaded or not (weird??)
         } else {
-          if (element.offsetHeight <= BOX_HEIGHT) {
-            innerToggleLink.style.display = "none";
-          } 
+          // we want all the read more buttons to be there in
+          // order for the project descriptions to look alike
+          //if (element.offsetHeight <= BOX_HEIGHT) {
+          //  innerToggleLink.style.display = "none";
+          //} 
         }
        allElements[i].style.height = BOX_HEIGHT + 'px';
       }
