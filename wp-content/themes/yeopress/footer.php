@@ -44,6 +44,18 @@
     <?php wp_footer() ?>
 
   <script type="text/javascript">
+ 
+    function isOpera() {
+      return (window.opera && window.opera.buildNumber);
+    }
+    function isSafari() {
+      return (navigator.userAgent.indexOf("Safari") > -1);
+    }
+    //var $ =jQuery.noConflict();
+    //$( ".projekt-box" ).each(function( index ) {
+    //  console.log( index + ": " + $( this ).height() );
+    //});
+    //function myLoad() {
       var allElements = document.getElementsByClassName('projekt-box');
       var allInnerToggleLinks = document.getElementsByClassName('toggle-link-inner');
 
@@ -56,20 +68,25 @@
       for (i=0; i < allElements.length; i++) {
         element = allElements[i];
         innerToggleLink = allInnerToggleLinks[i];
-        if (element.offsetHeight <= BOX_HEIGHT) {
-          innerToggleLink.style.display = "none";
-        } 
-        //console.log('i=' + i + 
-        //        '|client=' + element.clientHeight +
-        //        '|offset=' + element.offsetHeight +
-        //        '|scroll=' + element.scrollHeight
-        //        );
-        allElements[i].style.height = BOX_HEIGHT + 'px';
+        console.log('i=' + i + 
+                '|client=' + element.clientHeight +
+                '|offset=' + element.offsetHeight +
+                '|scroll=' + element.scrollHeight
+                );
+        if (isOpera() || isSafari()) { 
+          // opera and safari give weird (wrong!) values for
+          // the client-, offset and scrollheight
+          // depending on whether or not the page has been 
+          // reloaded or not (weird??)
+        } else {
+          if (element.offsetHeight <= BOX_HEIGHT) {
+            innerToggleLink.style.display = "none";
+          } 
+        }
+       allElements[i].style.height = BOX_HEIGHT + 'px';
       }
-
-
-
-    </script>
+    //}
+  </script>
  
   </body>
 </html>
