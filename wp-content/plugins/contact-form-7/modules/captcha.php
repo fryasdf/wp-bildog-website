@@ -3,7 +3,6 @@
 ** A base module for [captchac] and [captchar]
 **/
 
-$WPCF7_DEFAULT_AMOUNT_OF_LETTERS = 4;
 /* Shortcode handler */
 
 add_action( 'wpcf7_init', 'wpcf7_add_shortcode_captcha' );
@@ -18,8 +17,6 @@ function wpcf7_captcha_shortcode_handler( $tag ) {
 
 	if ( 'captchac' == $tag->type && ! class_exists( 'ReallySimpleCaptcha' ) )
 		return '<em>' . __( 'To use CAPTCHA, you need <a href="http://wordpress.org/extend/plugins/really-simple-captcha/">Really Simple CAPTCHA</a> plugin installed.', 'contact-form-7' ) . '</em>';
-
-  
 
 	if ( empty( $tag->name ) )
 		return '';
@@ -36,7 +33,13 @@ function wpcf7_captcha_shortcode_handler( $tag ) {
 		$atts['class'] = $tag->get_class_option( $class );
 		$atts['id'] = $tag->get_id_option();
 
-		$op = wpcf7_captchac_options( $tag->options );
+		$op = array( // Default
+			'img_size' => array( 72, 24 ),
+			'base' => array( 6, 18 ),
+			'font_size' => 14,
+			'font_char_width' => 15 );
+
+		$op = array_merge( $op, wpcf7_captchac_options( $tag->options ) );
 
 		if ( ! $filename = wpcf7_generate_captcha( $op ) )
 			return '';
@@ -70,6 +73,13 @@ function wpcf7_captcha_shortcode_handler( $tag ) {
 
 		$atts['size'] = $tag->get_size_option( '40' );
 		$atts['maxlength'] = $tag->get_maxlength_option();
+		$atts['minlength'] = $tag->get_minlength_option();
+
+		if ( $atts['maxlength'] && $atts['minlength']
+		&& $atts['maxlength'] < $atts['minlength'] ) {
+			unset( $atts['maxlength'], $atts['minlength'] );
+		}
+
 		$atts['class'] = $tag->get_class_option( $class );
 		$atts['id'] = $tag->get_id_option();
 		$atts['tabindex'] = $tag->get_option( 'tabindex', 'int', true );
@@ -95,6 +105,7 @@ function wpcf7_captcha_shortcode_handler( $tag ) {
 		$html = sprintf(
 			'<span class="wpcf7-form-control-wrap %1$s"><input %2$s />%3$s</span>',
 			sanitize_html_class( $tag->name ), $atts, $validation_error );
+
 		return $html;
 	}
 }
@@ -114,14 +125,10 @@ function wpcf7_captcha_validation_filter( $result, $tag ) {
 
 	$prefix = isset( $_POST[$captchac] ) ? (string) $_POST[$captchac] : '';
 	$response = isset( $_POST[$name] ) ? (string) $_POST[$name] : '';
+	$response = wpcf7_canonicalize( $response );
 
 	if ( 0 == strlen( $prefix ) || ! wpcf7_check_captcha( $prefix, $response ) ) {
-		$result['valid'] = false;
-		$result['reason'][$name] = wpcf7_get_message( 'captcha_not_match' );
-	}
-
-	if ( isset( $result['reason'][$name] ) && $id = $tag->get_id_option() ) {
-		$result['idref'][$name] = $id;
+		$result->invalidate( $tag, wpcf7_get_message( 'captcha_not_match' ) );
 	}
 
 	if ( 0 != strlen( $prefix ) ) {
@@ -225,17 +232,11 @@ function wpcf7_tg_pane_captcha( $contact_form ) {
 <input type="text" name="bg" class="color oneline option" /></td>
 </tr>
 
-<tr><td colspan="1"><?php echo esc_html( __( "Image size", 'contact-form-7' ) ); ?> (<?php echo esc_html( __( 'optional', 'contact-form-7' ) ); ?>)<br />
+<tr><td colspan="2"><?php echo esc_html( __( "Image size", 'contact-form-7' ) ); ?> (<?php echo esc_html( __( 'optional', 'contact-form-7' ) ); ?>)<br />
 <input type="checkbox" name="size:s" class="exclusive option" />&nbsp;<?php echo esc_html( __( "Small", 'contact-form-7' ) ); ?>&emsp;
 <input type="checkbox" name="size:m" class="exclusive option" />&nbsp;<?php echo esc_html( __( "Medium", 'contact-form-7' ) ); ?>&emsp;
 <input type="checkbox" name="size:l" class="exclusive option" />&nbsp;<?php echo esc_html( __( "Large", 'contact-form-7' ) ); ?>
-</td>
-
-
-<td><?php echo esc_html( __( "Amount of letters", 'contact-form-7' ) ); ?> (<?php echo esc_html( __( 'optional', 'contact-form-7' ) ); ?>)<br />
-<input type="number" name="amount_letters" class="numeric oneline option" min="1" /></td>
-</tr>
-
+</td></tr>
 </table>
 
 <table class="scope captchar">
@@ -256,7 +257,6 @@ function wpcf7_tg_pane_captcha( $contact_form ) {
 <td><code>maxlength</code> (<?php echo esc_html( __( 'optional', 'contact-form-7' ) ); ?>)<br />
 <input type="number" name="maxlength" class="numeric oneline option" min="1" /></td>
 </tr>
-
 </table>
 
 <div class="tg-tag"><?php echo esc_html( __( "Copy this code and paste it into the form left.", 'contact-form-7' ) ); ?>
@@ -382,7 +382,6 @@ function wpcf7_captcha_url( $filename ) {
 }
 
 function wpcf7_generate_captcha( $options = null ) {
-
 	if ( ! $captcha = wpcf7_init_captcha() ) {
 		return false;
 	}
@@ -403,8 +402,6 @@ function wpcf7_generate_captcha( $options = null ) {
 	if ( is_array( $options ) ) {
 		if ( isset( $options['img_size'] ) )
 			$captcha->img_size = $options['img_size'];
-		if ( isset( $options['amount_letters'] ) )
-			$captcha->amount_letters = $options['amount_letters'];
 		if ( isset( $options['base'] ) )
 			$captcha->base = $options['base'];
 		if ( isset( $options['font_size'] ) )
@@ -469,72 +466,35 @@ function wpcf7_cleanup_captcha_files() {
 	}
 }
 
-/*
- * &$op: reference to options array 
- * size_switch: either 's', 'm' or 'l' (or, if none given then it defaults to 'm')
- *
- * adds entries to $op that allow to determine the size of the captcha image
- */
-function wpcf7_captchac_add_img_size(&$op, $size_switch = 'm') {
-	switch ($size_switch) {
-		case 's':
-			$op['font_size'] = 11;
-			$op['font_char_width'] = 13;
-			$op['img_size'] = array( 5 + $op['font_char_width'] * $op['amount_letters'] + 5, 20 );
-			//$op['img_size'] = array( 60, 20 );
-			$op['base'] = array( 6, 15 );
-			break;
-		case 'l':
-			$op['font_size'] = 17;
-			$op['font_char_width'] = 19;
-			$op['img_size'] = array( 15 + $op['font_char_width'] * $op['amount_letters'] + 15, 28 );
-			//$op['img_size'] = array( 84, 28 );
-			$op['base'] = array( 14, 20 );
-			break;
-		case 'm':
-		default:
-			$op['font_size'] = 14;
-			$op['font_char_width'] = 15;
-			$op['img_size'] = array( 10 + $op['font_char_width'] * $op['amount_letters'] + 10, 24 );
-			//$op['img_size'] = array( 72, 24 );
-			$op['base'] = array( 10, 18 );
-	}
-	return null;
-}
-
-/*
- * takes $options which is a string like 'id:122 amount_letters:123 [...]'
- * and turns it into an array
- *   'id' => 122
- *   'amount_letters' => 123
- * and some other stuff that is needed by the plugin really_simple_captcha
- *
- */
 function wpcf7_captchac_options( $options ) {
-	if ( ! is_array( $options ) ) {
+	if ( ! is_array( $options ) )
 		return array();
-	}
 
 	$op = array();
-
-	// is the string amount_letters:SOMENUMBER is contained in $options then get the number
-        $amount_letters_array = preg_grep('%^amount_letters:\d+$%', $options);
-        if ( $amount_letters = array_shift( $amount_letters_array ) ) {
-                preg_match( '%^amount_letters:(\d+)$%', $amount_letters, $is_matches );
-                $op['amount_letters'] = $is_matches[1];
-        } else {
-                $op['amount_letters'] = $WPCF7_DEFAULT_AMOUNT_OF_LETTERS;
-	}
-	
-       	// is the string size: and then s.m or l is contained in $options --> get the s,m or l
 	$image_size_array = preg_grep( '%^size:[smlSML]$%', $options );
+
 	if ( $image_size = array_shift( $image_size_array ) ) {
-		// --> figure out which size was given
 		preg_match( '%^size:([smlSML])$%', $image_size, $is_matches );
-                wpcf7_captchac_add_img_size($op, strtolower( $is_matches[1] ));
-	} else {
-		// no size was given explicitly --> use the default one
-                wpcf7_captchac_add_img_size($op);
+		switch ( strtolower( $is_matches[1] ) ) {
+			case 's':
+				$op['img_size'] = array( 60, 20 );
+				$op['base'] = array( 6, 15 );
+				$op['font_size'] = 11;
+				$op['font_char_width'] = 13;
+				break;
+			case 'l':
+				$op['img_size'] = array( 84, 28 );
+				$op['base'] = array( 6, 20 );
+				$op['font_size'] = 17;
+				$op['font_char_width'] = 19;
+				break;
+			case 'm':
+			default:
+				$op['img_size'] = array( 72, 24 );
+				$op['base'] = array( 6, 18 );
+				$op['font_size'] = 14;
+				$op['font_char_width'] = 15;
+		}
 	}
 
 	$fg_color_array = preg_grep( '%^fg:#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$%', $options );
@@ -568,7 +528,6 @@ function wpcf7_captchac_options( $options ) {
 			$op['bg'] = array( hexdec( $r ), hexdec( $g ), hexdec( $b ) );
 		}
 	}
-
 
 	return $op;
 }

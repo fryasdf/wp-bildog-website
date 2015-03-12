@@ -323,6 +323,28 @@ function get_real_title() {
   return get_the_title();
 }
 
+// gets the path to the featured image (dt: Beitragsbild)
+// associated with the page
+function get_featured_image($pageID) {
+  if ($pageID == get_option('page_for_posts' )) {
+    // its the blog page were on
+    return get_bloginfo('template_directory') . '/images/head_blog.jpg';
+  }
+  if (has_post_thumbnail($pageID)) {
+    return wp_get_attachment_url( get_post_thumbnail_id($pageID));
+  } else {
+    return get_bloginfo('template_directory') . 
+                        '/images/head_projekte.jpg';
+  }
+  return "get_featured_image(): ERROR";
+}
+// returns the current page's id
+function my_get_current_page_ID() {
+  return get_queried_object_id();
+
+  //global $wp;
+  //return $wp->query_vars['page_id'];
+}
 
 // read the value of an scss variable from an scss file
   function read_scss_variable($file_name, $variable_name) {
@@ -338,4 +360,12 @@ function get_real_title() {
     $value = str_replace($unit, '', $value);
     return $value;
   }
+
+function prepare_content_as_wordpress_would_do($content) {
+  $content = apply_filters( 'the_content', $content );
+  $content = str_replace( ']]>', ']]&gt;', $content );
+  $content = strip_off_mytags($content);
+  return $content;
+}
+
 

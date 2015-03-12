@@ -1,40 +1,41 @@
 @import 'variables';
 
 
-$projekte_margin: 10px;
+$short-description_margin: 10px;
 // this variable is actually not used in this css script but it 
 // is read by header.php and footer.php
 // in which javascripts set the height
 // CAREFUL: MUST BE GIVEN IN px!!!!
-$projekte_box_height: 445px;
+$short-description_box_height: 445px;
 
-$projekte_inner_box_padding: 10px;
+$short-description_box_height_mini: 120px;
+$short-description_box_width_mini: 120px;
 
-.projektbeschreibung-container{
-  padding: $projekte_margin;
+$short-description_inner_box_padding: 10px;
+
+.short-description-container{
+  padding: $short-description_margin;
 }
 
-.projekt-box-fixed {
-  height:450px;
-}
-.projekt-test {
+
+.short-description-test {
   background-color:purple;
   height: 200px;
 }
 
-.projekt-box{
+.short-description-box{
   position:relative;
   overflow:hidden;
   border: $radius_thickness solid $orange; 
 
   // when bootstrap does not stack
   //@media only screen and (min-width: 993px) {
-  //  height: $projekte_box_height;
+  //  height: $short-description_box_height;
   //}  
  
   .header{
-    padding-left: $projekte_inner_box_padding;
-    padding-right: $projekte_inner_box_padding;
+    padding-left: $short-description_inner_box_padding;
+    padding-right: $short-description_inner_box_padding;
    
     .icon{
       width: 65%;
@@ -79,10 +80,10 @@ $projekte_inner_box_padding: 10px;
       }
     }
   } // end header
-  .projekt-inhalt {
+  .short-description-content {
      overflow:hidden;
-     padding-left: $projekte_inner_box_padding;
-     padding-right: $projekte_inner_box_padding;
+     padding-left: $short-description_inner_box_padding;
+     padding-right: $short-description_inner_box_padding;
 
   }
   .toggle-link-inner {
@@ -110,6 +111,26 @@ $projekte_inner_box_padding: 10px;
 }
 .toggle-link-outer:hover {
   cursor: pointer;
+}
+
+.short-description-box-mini {
+  overflow:visible;
+  height:$short-description_box_height_mini;
+  width:$short-description_box_width_mini;
+  border: $radius_thickness solid $orange; 
+  .icon{
+    margin: 0;
+    width: $short-description_box_width_mini * (8/10);
+  }
+  .titel {
+    color: $orange;
+    font-size: 10px;
+    text-align: center;
+  }
+}
+
+.short-description-box-height-prop {
+  height:$short-description_box_height;
 }
 
 

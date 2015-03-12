@@ -32,11 +32,11 @@
 
       function collapse(nr) {
         var BOX_HEIGHT = "<?php 
-          $file_name = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/scss/_projekte.scss';
-          $variable = read_scss_variable($file_name, 'projekte_box_height');
+          $file_name = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/scss/_short-description.scss';
+          $variable = read_scss_variable($file_name, 'short-description_box_height');
           echo $variable;
          ?>";
-        var element = document.getElementsByClassName('projekt-box')[nr];
+        var element = document.getElementsByClassName('short-description-box')[nr];
         var toggleLinkInner = document.getElementsByClassName("toggle-link-inner")[nr];
         var toggleLinkOuter = document.getElementsByClassName("toggle-link-outer")[nr];
         element.style.height = BOX_HEIGHT;
@@ -45,7 +45,7 @@
         
       }
       function expand(nr) {
-        var element = document.getElementsByClassName('projekt-box')[nr];
+        var element = document.getElementsByClassName('short-description-box')[nr];
         var toggleLinkInner = document.getElementsByClassName("toggle-link-inner")[nr];
         var toggleLinkOuter = document.getElementsByClassName("toggle-link-outer")[nr];        
         element.style.height = "auto";
@@ -115,7 +115,9 @@
         that offers a ertain 'type of style'-selection bar
         --> 
       <?php
-        /* we dont want the following pages to be indexed */
+        /* we dont want the following pages to be indexed 
+           also, MyWalker() excludes all pages with a title
+           of the form unsichtbar_* (and subpages of them)*/
         $excludePageIds[] = get_page_by_title("Impressum");
         $excludePageIds[] = get_page_by_title("Haftungsausschluss");
         $excludePageIds[] = get_page_by_title("Datenschutzerklärung");
@@ -141,32 +143,19 @@
     </header>
     
 
-    <!-- show the featured image (german: Beitragsbild) 
+    <?php
+         /*
+          show the featured image (german: Beitragsbild) 
          i.e. the image that has been associated to this page as 
          'Beitragsbild' in wordpress 
          if there is none, show a default image and icon (overlayed) 
-    -->
+         */ 
+    ?>
     <div id="featured">
       <div id="featured-image">
-
-        <?php
-          // wordpress treats the 'blog' page a little 
-          // differently than the others
-          if (is_home()) {
-            $url = get_bloginfo('template_directory') . '/images/head_blog.jpg';
-          } else {
-            if (has_post_thumbnail()) {
-              $url = wp_get_attachment_url( get_post_thumbnail_id($post->ID));
-            } else {
-              $url = get_bloginfo('template_directory') . 
-                       '/images/head_projekte.jpg';
-            }
-          }
-        ?>
- 
         <div id="parallax-layer" style="
            background:url(
-           '<?php echo $url; ?>'
+           '<?php echo get_featured_image(my_get_current_page_ID()); ?>'
            );
            background-size: 100%;
            height:2000px; /* to be honest: i dont know what this setting actually does...*/

@@ -7723,96 +7723,92 @@ strong {
 /* Directories */
 /* Colors */
 /* Font Sizes */
-.projektbeschreibung-container {
+.short-description-container {
   padding: 10px;
 }
 
-.projekt-box-fixed {
-  height: 450px;
-}
-
-.projekt-test {
+.short-description-test {
   background-color: purple;
   height: 200px;
 }
 
-.projekt-box {
+.short-description-box {
   position: relative;
   overflow: hidden;
   border: 2px solid #ef7102;
 }
-.projekt-box .header {
+.short-description-box .header {
   padding-left: 10px;
   padding-right: 10px;
 }
-.projekt-box .header .icon {
+.short-description-box .header .icon {
   width: 65%;
   margin-top: 20px;
   margin-bottom: 0px;
 }
 @media only screen and (max-width: 549px) {
-  .projekt-box .header .icon {
+  .short-description-box .header .icon {
     display: none;
   }
 }
 @media only screen and (min-width: 550px) and (max-width: 799px) {
-  .projekt-box .header .icon {
+  .short-description-box .header .icon {
     width: 140px;
   }
 }
 @media only screen and (min-width: 800px) and (max-width: 939px) {
-  .projekt-box .header .icon {
+  .short-description-box .header .icon {
     width: 140px;
   }
 }
 @media only screen and (min-width: 940px) and (max-width: 1099px) {
-  .projekt-box .header .icon {
+  .short-description-box .header .icon {
     width: 140px;
   }
 }
 @media only screen and (min-width: 1100px) {
-  .projekt-box .header .icon {
+  .short-description-box .header .icon {
     width: 65%;
   }
 }
-.projekt-box .header .titel {
+.short-description-box .header .titel {
   color: #ef7102;
   font-size: 10px;
 }
 @media only screen and (max-width: 549px) {
-  .projekt-box .header .titel {
+  .short-description-box .header .titel {
     font-size: 10px;
   }
 }
 @media only screen and (min-width: 550px) and (max-width: 799px) {
-  .projekt-box .header .titel {
+  .short-description-box .header .titel {
     font-size: 10px;
   }
 }
 @media only screen and (min-width: 800px) and (max-width: 939px) {
-  .projekt-box .header .titel {
+  .short-description-box .header .titel {
     font-size: 10px;
   }
 }
 @media only screen and (min-width: 940px) and (max-width: 1099px) {
-  .projekt-box .header .titel {
+  .short-description-box .header .titel {
     font-size: 10px;
   }
 }
 @media only screen and (min-width: 1100px) {
-  .projekt-box .header .titel {
+  .short-description-box .header .titel {
     font-size: 15px;
   }
 }
-.projekt-box .header .titel h1 {
+.short-description-box .header .titel h1 {
   text-align: center;
 }
-.projekt-box .projekt-inhalt {
+.short-description-box .short-description-content {
   overflow: hidden;
   padding-left: 10px;
   padding-right: 10px;
 }
-.projekt-box .toggle-link-inner {
+.short-description-box .toggle-link-inner {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -7822,7 +7818,7 @@ strong {
   background-color: #ef7102;
   width: 100%;
 }
-.projekt-box .toggle-link-inner:hover {
+.short-description-box .toggle-link-inner:hover {
   cursor: pointer;
 }
 
@@ -7836,6 +7832,26 @@ strong {
 
 .toggle-link-outer:hover {
   cursor: pointer;
+}
+
+.short-description-box-mini {
+  overflow: visible;
+  height: 120px;
+  width: 120px;
+  border: 2px solid #ef7102;
+}
+.short-description-box-mini .icon {
+  margin: 0;
+  width: 96px;
+}
+.short-description-box-mini .titel {
+  color: #ef7102;
+  font-size: 10px;
+  text-align: center;
+}
+
+.short-description-box-height-prop {
+  height: 445px;
 }
 
 /* ==========================================================================
