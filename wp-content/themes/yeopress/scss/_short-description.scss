@@ -11,6 +11,7 @@ $short-description_box_height: 445px;
 $short-description_box_height_mini: 120px;
 $short-description_box_width_mini: 120px;
 
+
 $short-description_inner_box_padding: 10px;
 
 .short-description-container{
@@ -23,6 +24,13 @@ $short-description_inner_box_padding: 10px;
   height: 200px;
 }
 
+.no-interaction-link, 
+.no-interaction-link:focus, 
+.no-interaction-link:active,
+.no-interaction-link:hover {
+    outline: none;
+    text-decoration: none;
+}
 .short-description-box{
   position:relative;
   overflow:hidden;
@@ -84,6 +92,9 @@ $short-description_inner_box_padding: 10px;
      overflow:hidden;
      padding-left: $short-description_inner_box_padding;
      padding-right: $short-description_inner_box_padding;
+     .short-description-link {
+       color:$orange;
+     }
 
   }
   .toggle-link-inner {
@@ -115,22 +126,35 @@ $short-description_inner_box_padding: 10px;
 
 .short-description-box-mini {
   overflow:visible;
-  height:$short-description_box_height_mini;
-  width:$short-description_box_width_mini;
-  border: $radius_thickness solid $orange; 
+  height: $short-description_box_height_mini;
+  width:  $short-description_box_width_mini;
+  border: $radius_thickness solid $orange;
+  position:relative;
   .icon{
-    margin: 0;
-    width: $short-description_box_width_mini * (8/10);
+    // pixel precise does not work!!
+    height: $short-description_box_height_mini * (8/10);
+    width:  $short-description_box_width_mini * (8/10);
+    position:absolute;
+    left:10px;
+    top:10px;
+    margin:auto;
   }
-  .titel {
-    color: $orange;
-    font-size: 10px;
-    text-align: center;
+
+  .icon-hover{
+    display:none;
   }
 }
+.short-description-box-mini:hover{
+  background-color:$orange;
+}
+.short-description-box-mini:hover .icon-hover{
+  display:block;
+}
 
-.short-description-box-height-prop {
+.short-description-box-projekte {
   height:$short-description_box_height;
 }
-
+.short-description-box-team {
+  height:$short-description_box_height;
+}
 

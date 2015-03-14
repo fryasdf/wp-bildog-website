@@ -76,7 +76,9 @@ function getPageLinkByTitle($pageTitle) {
 
 
 class MyWalker extends Walker_Page {
+  // = 1 if temporarily nothing is to be printed
   private $disabled = 0;
+
   /* if $string is
    *   ... <$tagname something uninteresting>TEXT</$tagname> ...
    * then this function gets
@@ -117,15 +119,21 @@ class MyWalker extends Walker_Page {
 
     // the complete subtree under 'unsichtbar' is invisible!
     if (preg_match('/\Aunsichtbar/', $page->post_title)) {
-      //$output = $outputBefore . "CUTDOLLY" . $newPart;
-      //$this->test=1;
-
       $this->disabled = 1;
       $output = $outputBefore;
-      
       return;
     }
-    //$newPart = str_replace("page_item_has_children", "page_item_has_children_depth_" . $depth, $newPart);
+    
+    // there is no mouseover, just a click
+    // disable sublists for "Projekte" and "Blog"
+    if (!user_has_mouse()) {
+      if ($page->post_title == "Projekte" || $page->post_title == "Blog") {
+        $newPart = str_replace("page_item_has_children", "page_item",  $newPart);
+        $output = $outputBefore . $newPart;
+        $this->disabled = 1;
+        return;
+      }
+    }
     
     //print "START_EL:" . "\n";
     //print "START_EL:depth=" . $depth . "\n";
@@ -150,7 +158,8 @@ class MyWalker extends Walker_Page {
     // the navbar... brrr) in order for the child list to look nicer
     $specialPageName = "Hamburg";
     $resultTitle = "Hamburg &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    if ($titleAdded == $specialPageName && $page->post_parent === get_page_by_title('Projekte')->ID) {
+    if ($titleAdded == $specialPageName) {
+      // && $page->post_parent === get_page_by_title('Projekte')->ID) {
       $titleAdded = $resultTitle;
     }
 
@@ -303,16 +312,20 @@ function get_clean_title($messy_title) {
 // where {...} is either (the 'cleaned' page title).png
 // (see above)
 // or the default 'default.png' if the icon file does not exist
-function get_icon($page_title) {
+function get_icon_without_png($page_title) {
   $localDirectory = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/images/featured-icons/';
   $hostDirectory = get_bloginfo('template_directory') . '/images/featured-icons/';
-  $defaultIconName = 'default.png';
-  $iconName = get_clean_title($page_title) . '.png';
-  if (file_exists($localDirectory . $iconName)) {
+  $defaultIconName = 'default';
+  $iconName = get_clean_title($page_title);
+  if (file_exists($localDirectory . $iconName . ".png")) {
     return $hostDirectory . $iconName;
   } else {
     return $hostDirectory . $defaultIconName;
   }
+}
+
+function get_icon($page_title) {
+  return get_icon_without_png($page_title) . ".png";
 }
 
 // wordpress is a little weird when it comes to the blog page
@@ -361,11 +374,148 @@ function my_get_current_page_ID() {
     return $value;
   }
 
+
+function byteStr2byteArray($s) {
+    return array_slice(unpack("C*", "\0".$s), 1);
+}
+
+
+// conversion hex <-> decimal <-> strings
+function hexArrayToDecArray($hexArray) {
+  $decArray = array();
+  foreach ($hexArray as $hexValue) {
+    array_push($decArray, hexdec($hexValue));
+  }
+  return $decArray;
+}
+
+function hexArrayToString($hexArray) {
+  $decArray = hexArrayToDecArray($hexArray);
+  return decArrayToString($decArray);
+}
+
+function decArrayToString($decimalArray) {
+  return implode(array_map("chr", $decimalArray));
+}
+
+
+
 function prepare_content_as_wordpress_would_do($content) {
   $content = apply_filters( 'the_content', $content );
   $content = str_replace( ']]>', ']]&gt;', $content );
+
+  // there is an encoding issue here:
+  // in firefox and linux console and some other devices,
+  // one can represent the german umlauts in two different ways
+  // 1) by their usual unicode representation
+  // 2) by the usual letter (a,o,u,A,O,U) followed by a special
+  //    unicode character (0xcc 0x88) that represents 'two dots'
+  //    firefox actually MISinterprets a followed by 'two dots'
+  //    as a Umlaut but other browsers do not do that
+  //    --> substitute {a,o,u,A,U,O} + two dots by their normal
+  //    unicode characters
+  //
+  // by the way: how do these strange letter + two dots things enter?
+  // well, if someone edits a page in wordpress and pastes from a
+  // different text editor then this can actually happen (and it did happen!)
+  $aUmlaut = hexArrayToString(array("c3", "a4")); // unicode a umlaut
+  $oUmlaut = hexArrayToString(array("c3", "b6")); // unicode o umlaut
+  $uUmlaut = hexArrayToString(array("c3", "bc")); // unicode u umlaut
+
+  $AUmlaut = hexArrayToString(array("c3","84")); // unicode A umlaut
+  $OUmlaut = hexArrayToString(array("c3","96")); // unicode O umlaut
+  $UUmlaut = hexArrayToString(array("c3","9c")); // unicode U umlaut
+
+  // {a,o,u,A,O,U} and unicode letter 'two dots' (0xcc 0x88)
+  $aUmlautStrange = hexArrayToString(array("61", "cc", "88"));
+  $oUmlautStrange = hexArrayToString(array("6f", "cc", "88"));
+  $uUmlautStrange = hexArrayToString(array("75", "cc", "88")); 
+
+  $AUmlautStrange = hexArrayToString(array("41", "cc", "88"));
+  $OUmlautStrange = hexArrayToString(array("4f", "cc", "88"));
+  $UUmlautStrange = hexArrayToString(array("55", "cc", "88"));
+
+  // replace the strange letter + two dots combination by the usual unicode
+  $content = str_replace($aUmlautStrange, $aUmlaut, $content);
+  $content = str_replace($oUmlautStrange, $oUmlaut, $content);
+  $content = str_replace($uUmlautStrange, $uUmlaut, $content);
+
+  $content = str_replace($AUmlautStrange, $AUmlaut, $content);
+  $content = str_replace($OUmlautStrange, $OUmlaut, $content);
+  $content = str_replace($UUmlautStrange, $UUmlaut, $content);
+
+  // some debug code for the encoding issue
+  /*
+  $letter_before = substr($content, 784, 1);
+  $selection = substr($content, 785, 2);
+  $letter_after = substr($content, 787, 1);
+  
+  echo 'STRLEN(FIRST)=' . strlen($letter_before) . "\n\n<br><br>";
+  echo 'STRLEN(SELECTION)=' . strlen($selection) . "\n\n<br><br>";
+  echo 'STRLEN(AFTER)=' . strlen($letter_after) . "\n\n<br><br>";
+  //echo 'selection[0]=' . $selection[0] . "\n\n<br><br>";
+  //echo 'selection[1]=' . $selection[1] . "\n\n<br><br>";
+  //echo 'selection[2]=' . $selection[2] . "\n\n<br><br>";
+
+  $byteArray = unpack("C*", $selection);
+  
+  for ($i=1; $i <= sizeof($byteArray); $i++) {
+    echo "byteArray[$i] = " . dechex($byteArray[$i]) . "<br>\n";
+  }
+
+  echo 'ENCODING="' . mb_detect_encoding ( $content) . '"<br>' . "\n\n";
+  echo 'DOLLY BEFORE="' . $letter_before . '"|SELECTION = "' . $selection . '" AFTER="' . $letter_after . '" ---' . "<br><br>\n\n";
+  */
+
   $content = strip_off_mytags($content);
   return $content;
+}
+
+// this adds the images caption after the image is shown in the gallery
+add_filter('envira_gallery_output_after_image', 'envira_gallery_add_image_caption',10,5);
+function envira_gallery_add_image_caption( $output, $id, $item, $data, $i) {
+  $toAppend = "";
+  // DEBUG
+  //$toAppend = $toAppend . "DATAATT=" . print_r(wp_prepare_attachment_for_js( $id ), TRUE) . "\n";
+  //$toAppend = $toAppend . "ID=" . print_r($id, TRUE) . "\n";
+  //$toAppend = $toAppend . "ITEM=" . print_r($item, TRUE) . "\n";
+  //$toAppend = $toAppend . "DATA=" . print_r($data, TRUE) . "\n";
+  //$toAppend = $toAppend . "i=" . print_r($i, TRUE) . "\n";
+
+
+
+  // $description = wp_prepare_attachment_for_js($id)['description'];
+  // $alt = wp_prepare_attachment_for_js($id)['alt'];
+  $caption = wp_prepare_attachment_for_js($id)['caption'];
+  $toAppend = "<center>$caption</center>";
+  return $output . $toAppend;
+}
+
+function my_error($file, $text) {
+  echo '<h1>' . $file . ": ERROR: " . $text . "</h1>\n\n";
+}
+function is_boolean($variable) {
+  if ($variable == TRUE || $variable == FALSE) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+// is supposed to check whether the user has a pointer device with which
+// a mouseover event is possible
+// dirty user agent sniffing... but... can you show me a better method?
+// --> send it to fab_wer@web.de
+function user_has_mouse() {
+  $user_agent = $_SERVER['HTTP_USER_AGENT'];
+  $user_agent_beginning = substr($user_agent, 0, 4);
+  $res = preg_match("/android|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(ad|hone|od)|iris|kindle|lge |maemo|meego.+mobile|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino|playbook|silk/i", $user_agent);
+
+  $res_beginning = preg_match("/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(di|rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i", $user_agent_beginning);
+  if ($res || $res_beginning) {
+    return FALSE;
+  } else {
+    return TRUE;
+  } 
 }
 
 

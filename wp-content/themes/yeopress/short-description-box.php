@@ -43,44 +43,92 @@
      Type:  Integer
      Value: The index of the current item in the list
 
+   $link_to_page (optional)
+     Type:  Boolean
+     Value: If true then after each short description, a link
+            to the actual page will be shown.
+
+   $link_title (optional, must be set if $link_to_page is set) 
+     Type:  String
+     Value: This text will be shown as the links title, for example
+            'read more'.
+
+   $header_is_link_to_page (optional)
+     Type:  Boolean
+     Value: If true then the header area will be a link to the respective
+            page of which we are showing the short description right now.
+
+   $nr_of_entries_per_row (see list-of-short-descriptions.php)
+   $css_classes (see list-of-short-descriptions.php)
+   $add_custom_css_class (see list-of-short-descriptions.php)
+   $custom_css_class 
+     Type:  String
+     Value: If $add_custom_css_class is set then 
+            short-description-box-$custom_css_class is appended
+            as a css class.
   */
+
   if (!isset($page)) {
-    echo '<h1>content-description-box.php: ERROR: variable ' . 
-         '$page is undefined!</h1>';
+    my_error(__FILE__, 'variable $page is undefined!');
   }
   if (!isset($box_content)) {
-    echo '<h1>content-description-box.php: ERROR: variable'.
-         '$box_content is missing!</h1>';
+    my_error(__FILE__, 'variable $box_content is missing!');
   }
   if (!isset($header_pic)) {
-    echo '<h1>content-description-box.php: ERROR: variable'.
-         '$header_pic is missing!</h1>';
+    my_error(__FILE__, 'variable $header_pic is missing!');
+  }
+
+  if (isset($link_to_page)) {
+    if (!is_boolean($link_to_page)) {
+      my_error(__FILE__, '$link_to_page is not boolean!');
+    }
+    if ($link_to_page === TRUE) {
+      if (!isset($link_title)) {
+        my_error(__FILE__, 'variable $link_to_page is set but $link_title is unset!');
+      }
+    }
   }
 
 ?>
 
 <!-- show the page including... -->
-<div class="col-md-<?php echo floor(12/$nr_of_entries_per_row) ?> short-description-container">
-  <div class="short-description-box short-description-box-height-prop">
-    <div class="header">
-      <!-- header pic -->
-        <?php 
-          if ($header_pic != "nothing") {
-            echo '<center><img src="';
-            if ($header_pic === "icon") {
-              echo get_icon($page->post_title);
+<div class="<?php 
+  if (!isset($css_classes)) {
+    echo 'col-md-' . floor(12/$nr_of_entries_per_row);
+  } else {
+    echo $css_classes;
+  }
+  ?> short-description-container">
+  <div class="short-description-box<?php
+    if (isset($add_custom_css_class)) {
+      echo " short-description-box-" . $custom_css_class;
+    }
+    ?>">
+    <?php if($header_is_link_to_page) : ?>
+    <a href="<?php echo get_permalink($page->ID)?>" class="no-interaction-link">
+    <?php endif; ?>
+      <div class="header">
+        <!-- header pic -->
+          <?php 
+            if ($header_pic != "nothing") {
+              echo '<center><img src="';
+              if ($header_pic === "icon") {
+                echo get_icon($page->post_title);
+              }
+              if ($header_pic === "featured_image") {
+                echo get_featured_image($page->ID);
+              }
+              echo '" class="icon"></center>';
             }
-            if ($header_pic === "featured_image") {
-              echo get_featured_image($page->ID);
-            }
-            echo '" class="icon"></center>';
-          }
-          ?>
-      <!-- title -->
-      <div class="titel">
-        <h1> <?php echo $page->post_title ?></h1>
+            ?>
+        <!-- title -->
+        <div class="titel">
+          <h1> <?php echo $page->post_title ?></h1>
+        </div>
       </div>
-    </div>
+    <?php if ($header_is_link_to_page): ?>
+    </a>
+    <?php endif; ?>
       <div class="short-description-content">
         <!-- the content of the page
              precisely as wordpress would show it, i.e. including 
@@ -115,6 +163,17 @@
           }
           echo prepare_content_as_wordpress_would_do($content);
         ?>
+        <?php if ($link_to_page) : ?>
+          <center>
+          <strong>
+          <a href="<?php 
+             echo get_permalink($page->ID)
+             ?>" class="no-interaction-link short-description-link">
+            <?php echo $link_title ?>
+          </a>
+          </strong>
+          </center>
+        <?php endif; ?>
       </div>
     <?php if($expandable): ?>
     <div class="toggle-link-inner" onclick="expand(<?php echo $j?>)">

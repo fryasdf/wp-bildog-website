@@ -146,9 +146,11 @@ div.nav {
 
           li {
             overflow:hidden;
+            border: $radius_thickness solid $orange;
 
             &:hover {
               background-color: white;
+              border: $radius_thickness solid $orange;
 
               a {
                 color: $orange;

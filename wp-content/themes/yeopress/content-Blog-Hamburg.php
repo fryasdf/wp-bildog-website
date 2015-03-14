@@ -5,7 +5,6 @@ global $TITLE_LOCALE_TAGNAME;
 // and if its contents contains "Hamburg"
 function check_locale_Hamburg($page) {
   // DOLLY DEBUG REMOVE
-  return TRUE;
   $cont = $page->post_content;
   if (has_mytag($cont, $TITLE_LOCALE_TAGNAME)) {
     if (preg_match_all('/Hamburg/', get_mytag_contents($cont, $TITLE_LOCALE_TAGNAME), $hits)) {
@@ -21,7 +20,8 @@ function check_locale_Hamburg($page) {
   $box_content = "nothing";
   $header_pic = "icon";
   $item_template_file = "projekte-box.php";
-  $nr_of_entries_per_row = 6;
+  $nr_of_entries_per_row = 1;   // this is ignored in this case,
+                                // see projekt-box.php
   $check_function = "check_locale_Hamburg";
   // show short summary of all projects in Hamburg
   include(locate_template('list-of-short-descriptions.php'));
