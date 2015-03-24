@@ -7678,8 +7678,10 @@ footer .copyright {
   text-align: center;
 }
 
-footer .col-md-4 {
-  padding-left: 0;
+@media only screen and (max-width: 991px) {
+  footer .smaller-than-md-center {
+    text-align: center;
+  }
 }
 
 strong {
@@ -8194,4 +8196,8 @@ input.button {
   .search-form {
     background: url("/wp-content/themes/yeopress/images/black_lozenge_@2X.png");
   }
+}
+/* USER SPECIFIC */
+.blocksatz {
+  text-align: justify;
 }

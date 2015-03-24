@@ -24,6 +24,9 @@ footer .copyright {
   text-align: center;
 }
 
-footer .col-md-4 {
-  padding-left: 0;
+footer .smaller-than-md-center{
+ @media only screen and (max-width: 991px) {
+    // i.e. when bootstrap goes into 'sm' mode
+    text-align:center;
+  }
 }
