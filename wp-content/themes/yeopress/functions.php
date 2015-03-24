@@ -217,16 +217,22 @@ function custom_title( $title ) {
  */
 $SHORT_DESCRIPTION_TAGNAME = "KURZBESCHREIBUNG";
 $TITLE_LOCALE_TAGNAME = "ORT";
+$NO_WORDPRESS_TAGNAME = "NO_WORDPRESS";
 
-$mytags = array($SHORT_DESCRIPTION_TAGNAME, $TITLE_LOCALE_TAGNAME);
+$mytags = array($SHORT_DESCRIPTION_TAGNAME, $TITLE_LOCALE_TAGNAME, $NO_WORDPRESS_TAGNAME);
 
 function has_mytag($search_string, $tag) {
-  return preg_match_all('/' . $tag . '{([^}]*)}/', $search_string, $hits);
+  return (preg_match_all('/' . $tag . '{([^}]*)}/', $search_string, $hits) > 0);
 }
-function get_mytag_contents($search_string, $tag) {
+
+function get_mytag_contents($search_string, $tag, $only_return_first=FALSE) {
   $res = preg_match_all('/' . $tag . '{([^}]*)}/', $search_string, $hits);
-  if ($res === 1) {
-    return $hits[1][0];
+  if ($res > 0) {
+    if ($only_return_first == TRUE) {
+      return $hits[1][0];
+    } else {
+      return $hits[1];
+    }
   }
   echo 'ERROR: get_mytag_contents(): this string (' . $search_string . 
                                      ') does not have such a tag (' . 
@@ -234,10 +240,14 @@ function get_mytag_contents($search_string, $tag) {
   return 'ERROR: NO TAG AVAILABLE!!!';
 }
 
-function get_mytag_with_brackets_and_trailing_newlines($search_string, $tag) {
-  $res = preg_match_all('/(' . $tag . '{[^}]*}[\n]*)/', $search_string, $hits);
-  if ($res === 1) {
-    return $hits[1][0];
+function get_mytag_with_brackets_and_trailing_newlines($search_string, $tag, $only_return_first=FALSE) {
+  $res = preg_match_all('/(' . $tag . '{[^}]*}[\ ,\n]*)/', $search_string, $hits);
+  if ($res > 0) {
+    if ($only_return_first == TRUE) {
+      return $hits[1][0];
+    } else {
+      return $hits[1];
+    }
   }
   echo 'ERROR: get_mytag_with_brackets_and_trailing_newlines():'; 
   echo '       this string does not have such a tag';
@@ -248,17 +258,21 @@ function strip_off_mytags($text) {
   global $mytags;
   foreach($mytags as $tag) {
     if (has_mytag($text, $tag)) {
-      $tag_with_content = get_mytag_with_brackets_and_trailing_newlines($text, $tag);
-      $text = str_replace($tag_with_content , "" , $text);
+      $tags_with_contents = get_mytag_with_brackets_and_trailing_newlines($text, $tag);
+      foreach($tags_with_contents as $tag_with_content) {
+        $text = str_replace($tag_with_content , "" , $text);
+      }
     }
   } 
   return $text;
 }
 function replace_mytag_with_content($text, $tag) {
   if (has_mytag($text, $tag)) {
-    $tag_with_content = get_mytag_with_brackets_and_trailing_newlines($text, $tag);
-    $only_content = get_mytag_contents($text, $tag);
-    $text = str_replace($tag_with_content , $only_content , $text);
+    $tags_with_contents = get_mytag_with_brackets_and_trailing_newlines($text, $tag);
+    $only_contents = get_mytag_contents($text, $tag);
+    for($i=0;$i<sizeof($tags_with_contents);$i++) {
+      $text = str_replace($tags_with_contents[$i] , $only_contents[$i] , $text);
+    }
   }
   return $text;
 }
@@ -274,16 +288,16 @@ function has_short_description($search_string) {
 }
 function get_short_description($search_string) {
   global $SHORT_DESCRIPTION_TAGNAME;
-  return get_mytag_contents($search_string, $SHORT_DESCRIPTION_TAGNAME);
+  return get_mytag_contents($search_string, $SHORT_DESCRIPTION_TAGNAME, TRUE);
 }
 function get_short_description_with_enclosing_and_newlines($search_string) {
   global $SHORT_DESCRIPTION_TAGNAME;
-  return get_mytag_with_brackets_and_trailing_newlines($search_string, $SHORT_DESCRIPTION_TAGNAME);
+  return get_mytag_with_brackets_and_trailing_newlines($search_string, $SHORT_DESCRIPTION_TAGNAME, TRUE);
 }
 
 function get_locale_tag_title($title) {
   global $TITLE_LOCALE_TAGNAME;
-  return get_mytag_contents($title, $TITLE_LOCALE_TAGNAME);
+  return get_mytag_contents($title, $TITLE_LOCALE_TAGNAME, TRUE);
 }
 
 
@@ -399,9 +413,69 @@ function decArrayToString($decimalArray) {
 }
 
 
-
 function prepare_content_as_wordpress_would_do($content) {
-  $content = apply_filters( 'the_content', $content );
+  // before we strip off all tags, there is one special tag:
+  // if there is a NO_WORDPRESS{...} in the content then we want to display
+  // '...' without preprocessing by wordpress
+  global $NO_WORDPRESS_TAGNAME;
+  if (has_mytag($content, $NO_WORDPRESS_TAGNAME)) {
+    $tags_with_brackets = get_mytag_with_brackets_and_trailing_newlines($content, $NO_WORDPRESS_TAGNAME);
+    $tags_contents = get_mytag_contents($content, $NO_WORDPRESS_TAGNAME);
+ 
+    // split content using the different TAG{...} as delimiters
+    $reg_exp = "(";
+    foreach($tags_with_brackets as $delimiter) {
+      $reg_exp = $reg_exp . preg_quote($delimiter) . "|";
+    }
+    // delete the last "|"
+    $reg_exp="/" . substr($reg_exp, 0, -1) . ")/";
+    $res = preg_split($reg_exp, $content);
+        
+
+    // there is a little bug in wordpress filter function:
+    // usually, it just inserts <p> ... </p> around some of the content
+    // but it gets confused when there are html tags that are not properly 
+    // closed... however, this is necessary sometimes:
+    // for example, in this situation here we have
+    // some content before NO_WORDPRESS{...} some content after
+    // for example
+    //
+    // <div class="row">
+    //   <div class="col-xs-5 col-md-3 col-lg-1 vcenter">
+    //     <div style="height:10em;border:1px solid #000">Big</div>
+    //   </div>NO_WORDPRESS{xyz}
+    //   <div ....>
+    //
+    // gets filtered to
+    //
+    // <div class="row">
+    //   <div class="col-xs-5 col-md-3 col-lg-1 vcenter">
+    //     <div style="height:10em;border:1px solid #000">Big</div>
+    //   </p></div>xyz
+    //   <div ....>
+    //
+    // notice the </p>? This messes up the rest of the page TOTALLY
+    //
+    // solution for now: let wordpress filter the content but
+    // disable the <p> </p>-insertion completely...
+    remove_filter( 'the_content', 'wpautop' );
+    remove_filter( 'the_excerpt', 'wpautop' );
+
+    $final_content = "";
+    for ($i=0; $i<sizeof($res); $i++) {
+      // for debugging
+      //echo "res[$i]='" . $res[$i] . "'\n";
+      //echo "wordpress makes '" . apply_filters( 'the_content', $res[$i] ) . "' out of it\n";
+      $final_content = $final_content . 
+        apply_filters( 'the_content', $res[$i] );
+      if ($i < sizeof($res)-1) {
+        $final_content = $final_content . $tags_contents[$i];
+      }
+    }
+    $content = $final_content;
+  } else {
+    $content = apply_filters( 'the_content', $content );
+  }
   $content = str_replace( ']]>', ']]&gt;', $content );
 
   // there is an encoding issue here:

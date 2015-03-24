@@ -145,10 +145,12 @@
             global $SHORT_DESCRIPTION_TAGNAME;
             // if this page has a short description then show
             // the short description instead of the actual page content
+            // only the *first* ocurrence of $SHORT_DESCRIPTION_TAGNAME{...}
+            // is treated!
             if (has_mytag($page->post_content, $SHORT_DESCRIPTION_TAGNAME)) {
               $content = get_mytag_contents(
                            $page->post_content, 
-                           $SHORT_DESCRIPTION_TAGNAME);
+                           $SHORT_DESCRIPTION_TAGNAME, TRUE);
             } else {
               if (isset($box_content_default)) {
                 $content = $box_content_default;

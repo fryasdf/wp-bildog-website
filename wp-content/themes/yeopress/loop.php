@@ -1,3 +1,8 @@
+<?php // BUG IN WORDPRESS??
+//  echo 'wordpress filter: ---' . apply_filters( 'the_content', '<div style="background-color:red;">aaa' ) . '---';
+// gives <div ...>aaa</p>  --> just </p>, without <p>?
+?>
+
 <?php if (is_page()): the_post() ?>
   <article id="page-<?php the_ID() ?>">
     <?php 

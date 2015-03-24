@@ -6,7 +6,9 @@ global $TITLE_LOCALE_TAGNAME;
 function check_locale_Berlin($page) {
   $cont = $page->post_content;
   if (has_mytag($cont, $TITLE_LOCALE_TAGNAME)) {
-    if (preg_match_all('/Berlin/', get_mytag_contents($cont, $TITLE_LOCALE_TAGNAME), $hits)) {
+    // get the content of the *first* occurrence of $TITLE_LOCALE_TAGNAME{...}
+    // i.e. get the ...
+    if (preg_match_all('/Berlin/', get_mytag_contents($cont, $TITLE_LOCALE_TAGNAME, TRUE), $hits)) {
       return TRUE;
     } else {
       return FALSE;

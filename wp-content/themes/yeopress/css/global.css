@@ -8201,3 +8201,9 @@ input.button {
 .blocksatz {
   text-align: justify;
 }
+
+.vertikal-zentriert {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+}
