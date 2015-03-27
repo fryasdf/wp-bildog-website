@@ -314,7 +314,7 @@ function mytag_filter_function($page, $filter) {
                   "values and or modes do not match</strong>", E_USER_ERROR);
   }
   $content = $page->post_content;
-  echo "modes=" . print_r($modes, TRUE) . "<br>\n";
+  //echo "modes=" . print_r($modes, TRUE) . "<br>\n";
   for($i = 0; $i < sizeof($tags); $i++) {
     if (!has_mytag($content, $tags[$i])) {
       return FALSE;
