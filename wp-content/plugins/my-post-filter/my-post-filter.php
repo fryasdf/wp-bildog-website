@@ -281,13 +281,17 @@ function cast_string_to_boolean($string) {
 // coincide with the given values
 //
 //  for example:
-//    $filter="LOCATION=Berlin";
+//    $filter="LOCATION:EQUALS:Berlin";
 //    $page->content = "blah blah blah LOCATION{Berlin} blah blah blah"
 //  will return true while
 //    $page->content = "blah blah blah LOCATION{Hamburg} blah blah blah"
 //  and
 //    $page->content = "blah blah blah blah blah blah"
 //  will return false
+//
+//  modes currently implemented:
+//   EQUALS
+//   CONTAINS
 //
 // CAUTION: only the first occurrence of the mytag will be considered
 function mytag_filter_function($page, $filter) {
@@ -296,24 +300,41 @@ function mytag_filter_function($page, $filter) {
   }
   $conditions = explode(';', $filter);
   $tags = array();
+  $modes = array();
   $values = array();
 
   foreach ($conditions as $condition) {
-    $tagValue = explode("=", $condition);
+    $tagValue = explode(":", $condition);
     array_push($tags, $tagValue[0]);
-    array_push($values, $tagValue[1]);
+    array_push($modes, $tagValue[1]);
+    array_push($values, $tagValue[2]);
   }
-  if (sizeof($tags) != sizeof($values)) {
+  if (sizeof($tags) != sizeof($values) || sizeof($tags) != sizeof($modes)) {
     trigger_error("<strong>mytag_filter_function(): sizes of tags and" . 
-                  "values do not match</strong>", E_USER_ERROR);
+                  "values and or modes do not match</strong>", E_USER_ERROR);
   }
   $content = $page->post_content;
+  echo "modes=" . print_r($modes, TRUE) . "<br>\n";
   for($i = 0; $i < sizeof($tags); $i++) {
     if (!has_mytag($content, $tags[$i])) {
       return FALSE;
     }
-    if (get_mytag_contents($content, $tags[$i], TRUE) != $values[$i]) {
-      return FALSE;
+    $mytag_value = get_mytag_contents($content, $tags[$i], TRUE);
+    switch ($modes[$i]) {
+      case "EQUALS":
+        if ($mytag_value != $values[$i]) {
+          return FALSE;
+        }
+        break;
+      case "CONTAINS":
+        if (!preg_match("/" . $values[$i] . "/", $mytag_value)) {
+          return FALSE;
+        }
+        break;
+      default:
+        trigger_error("<strong>mytag_filter_function(): the given comparison " .
+                       "mode '" . $modes[$i] . "' is not implemented.",
+                  E_USER_ERROR);
     }
   }
   return TRUE;
