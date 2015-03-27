@@ -17,12 +17,20 @@
   <a href="<?php
       echo get_permalink($page->ID);
     ?>" class="no-interaction-link">
-  <div class="short-description-box-mini">
+  <div class="short-description-box-mini" 
+       alt="<?php echo $page->post_title ?>" 
+       title="<?php echo $page->post_title ?>">
       <img src="<?php echo get_icon($page->post_title);
-          ?>" class="icon">
+          ?>" 
+           alt="<?php echo $page->post_title ?>" 
+           title="<?php echo $page->post_title ?>"
+           class="icon">
       <img src="<?php 
         echo get_icon_without_png($page->post_title) . "_w.png"; 
-        ?>" class="icon icon-hover">
+        ?>" 
+        alt="<?php echo $page->post_title ?>" 
+        title="<?php echo $page->post_title ?>" 
+        class="icon icon-hover">
   </div>
   </a>
 </div>
