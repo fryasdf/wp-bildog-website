@@ -39,10 +39,6 @@
               for the box.
               If it is not set then it is treated as 'FALSE'.
 
-   $j (optional but must be given is expandable is set)
-     Type:  Integer
-     Value: The index of the current item in the list
-
    $link_to_page (optional)
      Type:  Boolean
      Value: If true then after each short description, a link
@@ -67,40 +63,29 @@
             short-description-box-$custom_css_class is appended
             as a css class.
   */
-
-  if (!isset($page)) {
-    my_error(__FILE__, 'variable $page is undefined!');
-  }
-  if (!isset($box_content)) {
-    my_error(__FILE__, 'variable $box_content is missing!');
-  }
-  if (!isset($header_pic)) {
-    my_error(__FILE__, 'variable $header_pic is missing!');
-  }
-
-  if (isset($link_to_page)) {
-    if (!is_boolean($link_to_page)) {
-      my_error(__FILE__, '$link_to_page is not boolean!');
-    }
-    if ($link_to_page === TRUE) {
-      if (!isset($link_title)) {
-        my_error(__FILE__, 'variable $link_to_page is set but $link_title is unset!');
-      }
-    }
-  }
-
+  $params = $GLOBALS['my_show_children_params'];
+  $page = $GLOBALS["my_show_children_page"];
+  
+  $css_classes = $params['css_classes'];
+  $add_custom_css_class = $params['add_custom_css_class'];
+  $custom_css_class = $params['custom_css_class'];
+  $header_is_link_to_page = $params['header_is_link_to_page'];
+  $header_pic = $params['header_pic'];
+  $box_content = $params['box_content'];
+  $box_content_default = $params['box_content_default'];
+  $expandable = $params['expandable'];
+  $nr_of_entries_per_row = $params['nr_of_entries_per_row'];
 ?>
 
-<!-- show the page including... -->
 <div class="<?php 
-  if (!isset($css_classes)) {
+  if ($css_classes == NULL) {
     echo 'col-md-' . floor(12/$nr_of_entries_per_row);
   } else {
     echo $css_classes;
   }
   ?> short-description-container">
   <div class="short-description-box<?php
-    if (isset($add_custom_css_class)) {
+    if ($add_custom_css_class) {
       echo " short-description-box-" . $custom_css_class;
     }
     ?>">
@@ -152,7 +137,7 @@
                            $page->post_content, 
                            $SHORT_DESCRIPTION_TAGNAME, TRUE);
             } else {
-              if (isset($box_content_default)) {
+              if ($box_content_default != NULL) {
                 $content = $box_content_default;
               } else {
                 $content = '<h1>ERROR: content-short-description-box.php:' .
@@ -178,13 +163,13 @@
         <?php endif; ?>
       </div>
     <?php if($expandable): ?>
-    <div class="toggle-link-inner" onclick="expand(<?php echo $j?>)">
+    <div class="toggle-link-inner" onclick="expand(this)">
       <img src="<?php echo get_bloginfo('template_directory')?>/images/arrow_down.png">
     </div>
     <?php endif; ?>
   </div>
   <?php if($expandable): ?>
-  <div class="toggle-link-outer" onclick="collapse(<?php echo $j?>)">
+  <div class="toggle-link-outer" onclick="collapse(this)">
     <img src="<?php echo get_bloginfo('template_directory')?>/images/arrow_up.png">
   </div>
   <?php endif; ?>

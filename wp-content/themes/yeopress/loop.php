@@ -6,15 +6,14 @@
 <?php if (is_page()): the_post() ?>
   <article id="page-<?php the_ID() ?>">
     <?php 
+
     // redirect the page with title (first entry) to
     // the usual header footer stuff but the contents replaced by
     // (second entry).php
+    // for example:
+    //  'AAAA' => 'BBBB',
+    // makes the page 'AAAAA' execute 'BBBB.php' in the template directory
     $special_contents = array(
-      'Projekte' => 'content-Projekte',
-      'Team' => 'content-Team',
-      'Hamburg' => 'content-Blog-Hamburg',
-      'Berlin' => 'content-Blog-Berlin',
-      'Afrika' => 'content-Blog-Afrika',
     );
 
     $title = get_the_title();

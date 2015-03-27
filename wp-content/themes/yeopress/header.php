@@ -30,40 +30,35 @@
       // @media only screen and (min-width: ...px)
       //alert(window.innerWidth);
 
-      function collapse(nr) {
+      function collapse(toggleLinkArrowUp) {
+        shortDescriptionBox = toggleLinkArrowUp.parentElement.firstElementChild;
+        toggleLinkArrowDown = toggleLinkArrowUp.parentElement.firstElementChild.lastElementChild;
+
         var BOX_HEIGHT = "<?php 
           $file_name = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/scss/_short-description.scss';
           $variable = read_scss_variable($file_name, 'short-description_box_height');
           echo $variable;
-         ?>";
-        var element = document.getElementsByClassName('short-description-box')[nr];
-        var toggleLinkInner = document.getElementsByClassName("toggle-link-inner")[nr];
-        var toggleLinkOuter = document.getElementsByClassName("toggle-link-outer")[nr];
-        element.style.height = BOX_HEIGHT;
-        toggleLinkInner.style.display = "block";
-        toggleLinkOuter.style.display = "none";
-        
-      }
-      function expand(nr) {
-        var element = document.getElementsByClassName('short-description-box')[nr];
-        var toggleLinkInner = document.getElementsByClassName("toggle-link-inner")[nr];
-        var toggleLinkOuter = document.getElementsByClassName("toggle-link-outer")[nr];        
-        element.style.height = "auto";
-        toggleLinkInner.style.display = "none";
-        toggleLinkOuter.style.display = "block";
-        
-      }
-      
+        ?>";
+        shortDescriptionBox.style.height = BOX_HEIGHT;
+        toggleLinkArrowDown.style.display = "block";
+        toggleLinkArrowUp.style.display = "none";
 
-
+      }
+      function expand(toggleLinkArrowDown) {
+        shortDescriptionBox = toggleLinkArrowDown.parentElement;
+        toggleLinkArrowUp = toggleLinkArrowDown.parentElement.nextElementSibling;
+        shortDescriptionBox.style.height = "auto";
+        toggleLinkArrowDown.style.display = "none";
+        toggleLinkArrowUp.style.display = "block";
+      }
     </script>
-
   </head>
-  <!-- end head -->
+  <?php // end head ?>
  
    
   <body <?php body_class() ?>>
-  <!-- the total header.php contains:
+  <?php
+    /* the total header.php contains:
        1) a) link to home with bildog logo
           b) bar with drop-down menus and links to
              home/projects/blog/get involved
@@ -83,11 +78,12 @@
           icon:
        The featured icon is
          
-  -->
+    */
+    ?>
     <header id="page-header" class="container main-column">
-      <!-- reference to frontpage with image -->
+      <?php // reference to frontpage with image ?>
       <div id="page-logo">
-        <!-- but only if its not the frontpage were on -->
+        <?php // but only if its not the frontpage were on ?>
         <?php if (!is_front_page()): ?>
           <a 
            href="<?php bloginfo('url') ?>" 
@@ -109,11 +105,13 @@
         <?php endif; ?>
       </div>
      
-      <!-- 
-        the navigation bar
-        wp_nav_menu( ... ) is a wordpredd function
-        that offers a ertain 'type of style'-selection bar
-        --> 
+      <?php /* 
+           the navigation bar
+           wp_nav_menu( ... ) is a wordpress function
+           that offers a ertain 'type of style'-selection bar
+           CAREFUL: we are using a custom walker defined in functions.php
+           */
+      ?> 
       <?php
         /* we dont want the following pages to be indexed 
            also, MyWalker() excludes all pages with a title
@@ -163,10 +161,11 @@
            data-0="margin-top:0px;" 
            data-600="margin-top:-130px;">
         </div>
-      <!-- end featured-image -->
+      <?php // end featured-image ?>
       </div>
 
-    <!-- show the featured icon, that is a second image
+      <?php /*
+         show the featured icon, that is a second image
          being shown in the middle over the featured image 
          file selected:
          <template_directory>/images/featured-icons-bldg_<titleOfPage> 
@@ -177,7 +176,7 @@
                   also, capitals are replaced by lower cap letters
                   i.e. if the pages name is 'Title/Of/Page' then the icon file
                   must be named bldg_title_of_page.png
-         -->
+         */ ?>
  
       <div id="featured-image-overlay">
         <img class="<?php
@@ -202,12 +201,13 @@
             ?>
           </h1>
         </div>
-     <!-- end featured-image-overlay -->
+     <?php // end featured-image-overlay ?>
      </div>
-   <!-- end featured -->
+   <?php // end featured ?>
    </div>
 
    <script type="text/javascript">
+      <?php
       /* there is an empty site called 'Projekte'
          but we dont want the user to be able to access it */
       // Note: we are doing it the jQuery way in js/global.js
@@ -227,6 +227,7 @@
       /* If the device is a touch screen then the dropdown
          menu does not work as expected, we need to disable all the links
          of items with children then */
+      ?>
       if (Modernizr.touch) {   
         var x = document.getElementsByClassName("page_item_has_children");
         for (i = 0; i < x.length; i++) {

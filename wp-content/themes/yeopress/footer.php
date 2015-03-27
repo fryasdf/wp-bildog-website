@@ -1,3 +1,6 @@
+<?php
+
+?>
 <footer id="page-footer" class="main-column">
   <div class="row">
     <?php // BILDOG WIRD UNTERSTUETZT SPALTE: 8?>
@@ -55,55 +58,6 @@
 <!-- END content-wrap -->
 </div>      
 
-
-    <?php wp_footer() ?>
-
-  <script type="text/javascript">
- 
-    function isOpera() {
-      return (window.opera && window.opera.buildNumber);
-    }
-    function isSafari() {
-      return (navigator.userAgent.indexOf("Safari") > -1);
-    }
-    //var $ =jQuery.noConflict();
-    //$( ".projekt-box" ).each(function( index ) {
-    //  console.log( index + ": " + $( this ).height() );
-    //});
-    //function myLoad() {
-      var allElements = document.getElementsByClassName('projekt-box');
-      var allInnerToggleLinks = document.getElementsByClassName('toggle-link-inner');
-
-      var BOX_HEIGHT = "<?php 
-          $file_name = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/scss/_projekte.scss';
-          $variable = read_scss_variable_without_unit
-               ($file_name, 'projekte_box_height', 'px');
-          echo $variable;
-          ?>";
-      for (i=0; i < allElements.length; i++) {
-        element = allElements[i];
-        innerToggleLink = allInnerToggleLinks[i];
-        console.log('i=' + i + 
-                '|client=' + element.clientHeight +
-                '|offset=' + element.offsetHeight +
-                '|scroll=' + element.scrollHeight
-                );
-        if (isOpera() || isSafari()) { 
-          // opera and safari give weird (wrong!) values for
-          // the client-, offset and scrollheight
-          // depending on whether or not the page has been 
-          // reloaded or not (weird??)
-        } else {
-          // we want all the read more buttons to be there in
-          // order for the project descriptions to look alike
-          //if (element.offsetHeight <= BOX_HEIGHT) {
-          //  innerToggleLink.style.display = "none";
-          //} 
-        }
-       allElements[i].style.height = BOX_HEIGHT + 'px';
-      }
-    //}
-  </script>
- 
+  <?php wp_footer() ?>
   </body>
 </html>

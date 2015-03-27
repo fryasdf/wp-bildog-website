@@ -136,3 +136,314 @@ function strip_trailing_dot_php($str) {
   }
   return $str;
 }
+
+
+
+
+//tell wordpress to register shortcode "[my-post-filter]"
+add_shortcode("my-show-children", "my_show_children_shortcode_function");
+
+
+
+// we obtain values from the wordpress shortcode but they are being treated 
+// as strings, so when the user enters "false" as value for the variable 'test'
+// and we test it using
+//   if ($params['test]) {
+//     ...
+// then this will repeat TRUE, because test is not the empty string
+// --> cast them to their real type
+
+function cast_string_to_boolean($string) {
+  if (preg_match("/true/i", $string)) {
+    return TRUE;
+  }
+  if (preg_match("/false/i", $string)) {
+    return FALSE;
+  }
+  return -1;
+}
+
+
+// SHORTCODE: my-show-children
+//
+// This shortcode goes through all the children of a specific page and
+// shows them by applying a template file which must be specified by the user.
+//
+// EXAMPLE:
+// [my-show-children parent_page_name="Team" template_filename="short-description-box.php" mytag_filter="ISTCOOL=ja"]
+//
+// This lists all the children of the page with title 'Team'. For every child,
+// the file short-description-box.php is called with the following information:
+// - $GLOBALS['my_show_children_params']
+//   contains a key-value array of the parameters, see below
+// - $GLOBALS["my_show_children_page"]
+//   contains the current child
+//
+// Additionally, before the loop starts, '$template_filename'_before.php
+// is called and afterwards, '$template_filename'_after.php is called.
+// For example, the shortcode above would interact well with
+//   short-description-box_before.php:
+//   <ul>
+//
+//   short-description-box_after.php:
+//   </ul>
+//
+/*   short-description-box.php:
+     <?php
+        $params = $GLOBALS['my_show_children_params'];
+        $page = $GLOBALS["my_show_children_page"]
+      ?>  
+     <li> <?php $page->post_title ?> </li>
+*/
+// This would show all the team members which contain ISTCOOL{ja}
+// somewhere in their page's content.
+// CAREFUL: MYTAGS must be known in functions.php in the themes folder
+     
+  /* INPUT DATA:
+   $box_content
+     Type:    String
+     Value:   One of {'content', 'short_tag', 'nothing'}
+       'page' then in the box, the page content is displayed
+       'short_tag' then this file looks in the page content for the string
+                   $SHORT_DESCRIPTION_TAGNAME{blah}
+                   and displays 'blah' instead of the page content
+       'nothing' then no text is displayed below the header
+
+   $box_content_default
+     Type:    String
+     Value:   arbitrary
+       This is shown if $box_content was set to 'short_tag'
+       and no short tag has been found in the pages content.
+       If there wasnt any short tag giving a short description
+       and this variable has not been set then an ERROR is printed.
+
+   $header_pic
+     Type:    String
+     Value:   one of {'icon', 'featured_image', 'nothing'}
+       'icon' then the icon as defined by get_icon in functions.php
+              is shown
+       'featured_image' then the featured image (dt: Beitragsbild)
+              as defined in get_featured_image in functions.php is shown
+       'nothing' then no header picture is shown
+
+   $expandable (optional)
+     Type:    Boolean
+     Value:   If true then there is an arrow under each short description
+              allowing the user to expand it if the content is too high
+              for the box.
+              If it is not set then it is treated as 'FALSE'.
+
+   $link_to_page (optional)
+     Type:  Boolean
+     Value: If true then after each short description, a link
+            to the actual page will be shown.
+
+   $link_title (optional, must be set if $link_to_page is set) 
+     Type:  String
+     Value: This text will be shown as the links title, for example
+            'read more'.
+
+   $header_is_link_to_page (optional)
+     Type:  Boolean
+     Value: If true then the header area will be a link to the respective
+            page of which we are showing the short description right now.
+
+   $css_classes
+     Type:  String
+     Value: The final html-section will be
+            <div class="row">
+            and then for each item
+            <div class="$css_classes short-description-box">
+            ...
+
+   $add_custom_css_class
+     Type:  Boolean
+     Value: If set then the final output will be
+            <div class="row">
+            and then for each object
+            <div class="... short-description-box 
+               short-description-box-{cleaned Title of parent}">
+             
+
+   $custom_css_class 
+     Type:  String
+     Value: If $add_custom_css_class is set then 
+            short-description-box-$custom_css_class is appended
+            as a css class.
+  */
+
+
+
+// filter is supposed to be a string like
+//   MYTAG1=VALUE1;MYTAG2=VALUE2;...
+// this function return true if the content of the page
+// contains all the mytags referenced and the value inside them
+// coincide with the given values
+//
+//  for example:
+//    $filter="LOCATION=Berlin";
+//    $page->content = "blah blah blah LOCATION{Berlin} blah blah blah"
+//  will return true while
+//    $page->content = "blah blah blah LOCATION{Hamburg} blah blah blah"
+//  and
+//    $page->content = "blah blah blah blah blah blah"
+//  will return false
+//
+// CAUTION: only the first occurrence of the mytag will be considered
+function mytag_filter_function($page, $filter) {
+  if($filter == "") {
+    return TRUE;
+  }
+  $conditions = explode(';', $filter);
+  $tags = array();
+  $values = array();
+
+  foreach ($conditions as $condition) {
+    $tagValue = explode("=", $condition);
+    array_push($tags, $tagValue[0]);
+    array_push($values, $tagValue[1]);
+  }
+  if (sizeof($tags) != sizeof($values)) {
+    trigger_error("<strong>mytag_filter_function(): sizes of tags and" . 
+                  "values do not match</strong>", E_USER_ERROR);
+  }
+  $content = $page->post_content;
+  for($i = 0; $i < sizeof($tags); $i++) {
+    if (!has_mytag($content, $tags[$i])) {
+      return FALSE;
+    }
+    if (get_mytag_contents($content, $tags[$i], TRUE) != $values[$i]) {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+function my_show_children_shortcode_function($params_from_shortcode) {
+  // not implemented yet
+  //$MY_SHOW_CHILDREN_DEFAULT_ENTRIES_PER_ROW = 3;
+  $defaultArray = array(
+    "parent_page_name" => NULL,
+    "box_content" => "content",
+    "box_content_default" => NULL, 
+    "header_pic" => "nothing", 
+    "expandable" => FALSE, 
+    "link_to_page" => FALSE, 
+    "link_title" => "more ...", 
+    "header_is_link_to_page" => TRUE,
+    "custom_css_class" => "WILL BE OVERWRITTEN IN ANY CASE, SEE BELOW",
+    "css_classes" => NULL, 
+    "add_custom_css_class" => TRUE, 
+    "template_filename" => NULL,
+    "mytag_filter" => "",
+  );  
+
+  $boolean_values = array(
+    "expandable", 
+    "link_to_page", 
+    "header_is_link_to_page",
+    "add_custom_css_class", 
+   );
+
+
+  
+  // sanitize parameters to prevent MYSQL injections
+  foreach ($params_from_shortcode as $key => $value) {
+    $params_from_shortcode[$key] = wp_specialchars_decode($value);
+  }
+
+  // now that they are sanitized, we can use them securely
+  $defaultArray['custom_css_class'] = 
+    $params_from_shortcode['parent_page_name'];
+  
+
+  $keys_before = array_keys($params_from_shortcode);
+
+  // I dont know what this function is supposed to do but it does not do it...
+  $params =
+    shortcode_atts(
+      $defaultArray,
+      $params_from_shortcode,
+      "my-show-children"
+  );
+
+
+  foreach (array_keys($params) as $key) {
+    // if the value was not specified by the user then insert its default value
+    if (!in_array($key, $keys_before)) {
+      $params[$key] = $defaultArray[$key];
+    }
+  }
+   
+/*
+  print_r($params_from_shortcode);
+  echo '<br><br>';
+  print_r($defaultArray);
+  echo '<br><br>';
+  print_r($params);
+  echo '<br><br><br><br>';
+  return;
+*/
+
+  // cast all the values that are of boolean type to boolean
+  foreach($boolean_values as $key) {
+    if (!is_bool($params[$key])) {
+      $try = cast_string_to_boolean($params[$key]);
+      if ($try === -1) {
+        trigger_error("<strong>Tried to cast variable $key to boolean but i dont know what this value is supposed to be: " . $params[$key] . "</strong>", E_USER_ERROR);
+      } else {
+        $params[$key] = $try;
+      }
+    }
+  }
+
+  $parent = get_page_by_title($params['parent_page_name']);
+  if ($parent==NULL) {
+    trigger_error("<strong>Tried to load the page with title " . $params['parent_page_name'] . " but no such page was found...</strong>", E_USER_ERROR);
+  }
+
+  // if post_file_name is something like 'filename.php' then
+  // remove the trailing '.php' as wordpress
+  // wants it to be like this
+  $params['template_filename'] = 
+    strip_trailing_dot_php($params['template_filename']);
+
+  $args = array(
+    'child_of' => $parent->ID,
+    'sort_column' => 'menu_order'
+  );
+
+  //$filtered_posts = new WP_Query( $params );
+  //echo "DOLLY=" . have_posts();
+  //echo "DOLLY........................";
+  //print_r($filtered_posts);
+  // The Query
+  $GLOBALS["my_show_children_params"] = $params;
+  $pages = get_pages($args); 
+
+
+  $new_pages = array();
+  for ($i = 0; $i < sizeof($pages); $i++) {
+    // if the check fails then 'delete' the page from the array
+    if (mytag_filter_function($pages[$i], $params['mytag_filter'])) {
+      array_push($new_pages, $pages[$i]);
+    }
+  }
+  $pages = $new_pages;
+
+
+  $output = '';
+  $output .= load_template_part($params['template_filename'] . '_before');
+  for ($j=0; $j < sizeof($pages); $j++) {
+    $GLOBALS["my_show_children_page"] = $pages[$j];
+    // for each post: dont come up with a new design of how to print
+    // out posts, use the same design as the template
+    $output .= load_template_part($params['template_filename']);
+    unset($GLOBALS["my_show_children_page"]);
+  }
+  $output .= load_template_part($params['template_filename'] . '_after');
+
+  unset($GLOBALS["my_show_children_params"]);
+  return $output;
+}
+

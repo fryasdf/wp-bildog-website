@@ -111,13 +111,12 @@
     $pages = $new_pages;
   }
 
-  
   $amount_pages = sizeof($pages);
   // yes, its amazing: for bootstrap, a whole 'table' is just one row
   // the breaking only depends on the col-xs,md,... entries
   echo '<div class="row">' . "\n";
   for ($j = 0; $j < sizeof($pages); $j++) {
-    // variables needed for content-short-description-box.php
+   // variables needed for content-short-description-box.php
     $page = $pages[$j];
     if (isset($add_custom_css_class)) {
       $custom_css_class = get_clean_title($parent_page->post_title);
@@ -125,9 +124,10 @@
     if (isset($item_template_file)) {
       include(locate_template($item_template_file));
     } else {
-      include(locate_template('short-description-box.php'));
+       include(locate_template('short-description-box.php'));
+
     }
-  }
+   }
   // end <div class="row">
   echo '</div>' . "\n";
  

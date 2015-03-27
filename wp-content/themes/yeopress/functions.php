@@ -327,7 +327,7 @@ function get_clean_title($messy_title) {
 // (see above)
 // or the default 'default.png' if the icon file does not exist
 function get_icon_without_png($page_title) {
-  $localDirectory = getcwd() . '/' . str_replace(get_bloginfo('url') . '/', '', get_bloginfo('template_directory')) . '/images/featured-icons/';
+  $localDirectory = get_stylesheet_directory() . "/images/featured-icons/";
   $hostDirectory = get_bloginfo('template_directory') . '/images/featured-icons/';
   $defaultIconName = 'default';
   $iconName = get_clean_title($page_title);
@@ -592,4 +592,157 @@ function user_has_mouse() {
   } 
 }
 
+// turn http://hostname/path/to/file.xyz
+// into /home/user/path_to_wordpress_installation/path/to/file.xyz
+function getFullPath($url){
+  return str_replace(get_bloginfo('url') . "/", get_home_path(), $url);
+}
+
+
+// If the user adds a png image with a filename beginning with "ehrenamtliche_"
+// then a mask is applied (making the borders of the image 'smoothly'
+// transparent) and the image is copied and registered as a wordpress attachment
+// with a filename_masked.png in the same folder
+function mask_and_copy($post_ID) {
+  // get the path and directory
+  $url = wp_get_attachment_image_src( $post_ID, 'large' )[0];
+  $filename_complete = getFullPath($url);
+  $dir = pathinfo($filename_complete)['dirname'] . "/";
+  $filename = pathinfo($filename_complete)['filename'];
+  $extension = pathinfo($filename_complete)['extension'];
+
+  $attachment_post = get_post( $post_ID );
+  $type = get_post_mime_type($post_ID);
+
+
+
+  // only if the filename starts with ehrenamtliche_ and its a png...
+  // (if its a jpg then we cant apply transparency because jpg
+  // does not know this concept!)
+  if ($type == "image/png" && preg_match('/\Aehrenamtliche_/', $filename)) {
+    $source = imagecreatefrompng($filename_complete);
+ 
+    // /home/.../ 
+    $localDirectory = get_stylesheet_directory() . "/images/";
+    // http://host/,,,
+    $hostDirectory = get_bloginfo('template_directory') . '/images/';
+
+    // load masking image
+    $mask = imagecreatefrompng( $localDirectory . 'mask.png' );
+
+    // Apply mask to source
+    imagealphamask( $source, $mask );
+
+    $newFilenameComplete =  $dir . $filename . "_masked" . "." . $extension;
+
+    // Output
+    imagepng( $source, $newFilenameComplete );
+
+    // register this image with wordpress so it appears in the media section
+
+    // Check the type of file. We'll use this as the 'post_mime_type'.
+    $filetype = wp_check_filetype( basename( $newFilenameComplete ), null );
+
+    // Get the path to the upload directory.
+    $wp_upload_dir = wp_upload_dir();
+
+    // Prepare an array of post data for the attachment.
+    $attachment = array(
+	'guid'           => $wp_upload_dir['url'] . '/' . basename( $newFilenameComplete ), 
+	'post_mime_type' => $filetype['type'],
+	'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $newFilenameComplete ) ),
+	'post_content'   => '',
+	'post_status'    => 'inherit'
+    );
+
+    // remove the hook, otherwise there will be a cycle:
+    // the user inserts some new image
+    // this hook is fired
+    // this hook triggers th registration of a new image
+    // this hook is fired
+    // ... 
+    remove_filter('add_attachment', 'mask_and_copy');
+
+
+    // Insert the attachment.
+    $attach_id = wp_insert_attachment( $attachment, $newFilenameComplete);
+ 
+  // Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+    require_once( ABSPATH . 'wp-admin/includes/image.php' );
+
+    // Generate the metadata for the attachment, and update the database record.
+    $attach_data = wp_generate_attachment_metadata( $attach_id, $newFilenameComplete );
+    wp_update_attachment_metadata( $attach_id, $attach_data );
+
+    add_filter('add_attachment', 'mask_and_copy');
+
+  }
+  return $post_ID;
+}
+
+// see the function
+add_filter('add_attachment', 'mask_and_copy');
+
+// applies a mask:
+//  mask contains a png image
+//  picture is a reference to the image to be masked
+//
+// the mask is applied as follows: for each pixel,
+// the alpha value of the mask pixel (i.e. the amount of non-transparency)
+// is subtracted from the non-transparency of the picture pixel,
+// hence, making it more transparent the thicker the color is in the mask
+// ACTUALLY, THE COLOR ITSELF OF THE MASK PIXEL DOES NOT MATTER, ONLY ITS
+// TRANSPARENCY VALUE IS USED!!!
+function imagealphamask( &$picture, $mask ) {
+    // Get sizes and set up new picture
+    $xSize = imagesx( $picture );
+    $ySize = imagesy( $picture );
+    $newPicture = imagecreatetruecolor( $xSize, $ySize );
+    imagesavealpha( $newPicture, true );
+    imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) );
+
+    // Resize mask if necessary
+    if( $xSize != imagesx( $mask ) || $ySize != imagesy( $mask ) ) {
+        $tempPic = imagecreatetruecolor( $xSize, $ySize );
+        imagecopyresampled( $tempPic, $mask, 0, 0, 0, 0, $xSize, $ySize, imagesx( $mask ), imagesy( $mask ) );
+        imagedestroy( $mask );
+        $mask = $tempPic;
+    }
+
+    // Perform pixel-based alpha map application
+    for( $x = 0; $x < $xSize; $x++ ) {
+        for( $y = 0; $y < $ySize; $y++ ) {
+            $maskPixel = imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
+            $imagePixel = imagecolorsforindex( $picture, imagecolorat( $picture, $x, $y ) );
+            file_put_contents("/home/fabi/test.txt", "x=$x|y=$y|maskPixel=" . print_r($maskPixel, TRUE) . "\n" . "imagePixel=" . print_r($imagePixel, TRUE), FILE_APPEND);
+            // how much more transparent do we want to make the pixel?
+            // pixel['alpha'] gives a value between 0 and 127
+            // 0 means: not transparent
+            // 127 means: absolutely transparent
+            $transparencyAdd = 127 - $maskPixel["alpha"];
+            $newTransparency = $imagePixel["alpha"] + $transparencyAdd;
+            if ($newTransparency < 0) {
+              $newTransparency = 0;
+            }
+            if ($newTransparency > 127) {
+              $newTransparency = 127;
+            }
+            $color = 
+              imagecolorsforindex( 
+                $picture, 
+                imagecolorat( $picture, $x, $y ) );
+            imagesetpixel( $newPicture, $x, $y, 
+              imagecolorallocatealpha( 
+                $newPicture, 
+                $color[ 'red' ], 
+                $color[ 'green' ], 
+                $color[ 'blue' ], 
+                $newTransparency ) );
+        }
+    }
+
+    // Copy back to original picture
+    imagedestroy( $picture );
+    $picture = $newPicture;
+}
 
