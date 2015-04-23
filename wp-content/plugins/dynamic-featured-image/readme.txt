@@ -3,15 +3,15 @@ Contributors: ankitpokhrel, cfoellmann
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J9FVY3ESPPD58
 Tags: dynamic featured image, featured image, post thumbnail, dynamic post thumbnail, multiple featured image, multiple post thumbnail
 Requires at least: 3.5
-Tested up to: 4.1.1
-Stable tag: 3.4.0
+Tested up to: 4.2
+Stable tag: 3.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Dynamically adds multiple featured image (post thumbnail) functionality to posts, pages and custom post types.
 
 == Description ==
-Dynamically adds multiple featured image or multiple post thumbnail functionality to your page, posts and custom post types. This plugin provides you an interface to add any number of featured image as you want without writing a single code. These dynamic featured images can then be collected by the various theme functions.
+Dynamically adds multiple featured image or multiple post thumbnail functionality to your page, posts and custom post types. This plugin provides you an interface to add any number of featured image as you want without writing a single line of code. These featured images can then be collected by the various theme functions.
 
 > **A NOTE ABOUT SUPPORT:** We’re here to help troubleshoot bugs, but please don't set expectations early as the support forums at WordPress.org are only checked once a week. All the support of the Dynamic Featured Image plugin will now be provided from within [this support forum](http://ankitpokhrel.com.np/blog/forums/forum/dynamic-featured-image-free-version/ "Dynamic Featured Image Support Forum").
 
@@ -21,7 +21,7 @@ Dynamically adds multiple featured image or multiple post thumbnail functionalit
   - Settings Page to control various settings.  
   - Shortcodes to make your life easier.  
   - Featured Image Slider.
-  - Pro-level support on all forums, including the free forum.  
+  - Priority support on all forums, including the free forum.  
   - Dedicated email and chat support.  
   - Access to more advance features and future updates for free.  
 
@@ -117,6 +117,13 @@ Please feel free to report any bug found at https://github.com/ankitpokhrel/Dyna
 3. Add new featured image box.
 
 == Changelog ==
+= 3.5.0 =
+* Unit Tests.
+* Added support for github updater. Issue #44
+* Fix get_the_ID issue in WordPress below 4.0.
+* Remove extra quotation mark that was making the html invalid.
+* Added uninstall script.
+
 = 3.4.0 =
 * Added _Link to Image_ field.
 * Portuguese Brazilian translation (Thanks to @bruno-rodrigues).
@@ -199,6 +206,9 @@ Please feel free to report any bug found at https://github.com/ankitpokhrel/Dyna
 * Fixed some minor issues.
 
 == Upgrade Notice ==
+= 3.5.0 =
+* Unit tests and bug fixes.
+
 = 3.4.0 =
 Now with ability to add custom fields in media uploader for features targeted for future.
 

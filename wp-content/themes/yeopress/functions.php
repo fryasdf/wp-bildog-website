@@ -619,7 +619,9 @@ function mask_and_copy($post_ID) {
   // only if the filename starts with ehrenamtliche_ and its a png...
   // (if its a jpg then we cant apply transparency because jpg
   // does not know this concept!)
-  if ($type == "image/png" && preg_match('/\Aehrenamtliche_/', $filename)) {
+  if ($type == "image/png" && 
+    (preg_match('/\Aehrenamtliche_/', $filename) ||
+     preg_match('/\Ateam_/', $filename))) {
     $source = imagecreatefrompng($filename_complete);
  
     // /home/.../ 

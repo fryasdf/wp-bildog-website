@@ -306,6 +306,9 @@
     z-index: 988040;
     visibility: hidden;
 }
+body.envira-touch .envirabox-nav span {
+    visibility: visible;
+}
 
 .envirabox-prev span {
     left: 10px;
@@ -383,6 +386,10 @@ a.envirabox-nav:hover {
     position: relative;
     text-shadow: none;
     z-index: 988090;
+
+    a {
+        color: #fff;
+    }
 }
 
 .envirabox-opened .envirabox-title {
