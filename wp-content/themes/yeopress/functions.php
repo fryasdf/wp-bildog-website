@@ -600,9 +600,11 @@ function getFullPath($url){
 
 
 // If the user adds a png image with a filename beginning with "ehrenamtliche_"
+// or "team_"
 // then a mask is applied (making the borders of the image 'smoothly'
 // transparent) and the image is copied and registered as a wordpress attachment
 // with a filename_masked.png in the same folder
+//   maskfile: theme_directory/images/mask.png
 function mask_and_copy($post_ID) {
   // get the path and directory
   $url = wp_get_attachment_image_src( $post_ID, 'large' )[0];
@@ -620,8 +622,9 @@ function mask_and_copy($post_ID) {
   // (if its a jpg then we cant apply transparency because jpg
   // does not know this concept!)
   if ($type == "image/png" && 
-    (preg_match('/\Aehrenamtliche_/', $filename) ||
-     preg_match('/\Ateam_/', $filename))) {
+       (preg_match('/\Aehrenamtliche_/', $filename) || 
+        preg_match('/\Ateam_/', $filename))
+     ) {
     $source = imagecreatefrompng($filename_complete);
  
     // /home/.../ 
@@ -716,7 +719,7 @@ function imagealphamask( &$picture, $mask ) {
         for( $y = 0; $y < $ySize; $y++ ) {
             $maskPixel = imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
             $imagePixel = imagecolorsforindex( $picture, imagecolorat( $picture, $x, $y ) );
-            file_put_contents("/home/fabi/test.txt", "x=$x|y=$y|maskPixel=" . print_r($maskPixel, TRUE) . "\n" . "imagePixel=" . print_r($imagePixel, TRUE), FILE_APPEND);
+            //file_put_contents("/home/fabi/test.txt", "x=$x|y=$y|maskPixel=" . print_r($maskPixel, TRUE) . "\n" . "imagePixel=" . print_r($imagePixel, TRUE), FILE_APPEND);
             // how much more transparent do we want to make the pixel?
             // pixel['alpha'] gives a value between 0 and 127
             // 0 means: not transparent
