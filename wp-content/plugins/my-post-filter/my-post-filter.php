@@ -270,6 +270,15 @@ function cast_string_to_boolean($string) {
      Value: If $add_custom_css_class is set then 
             short-description-box-$custom_css_class is appended
             as a css class.
+
+   $mytag_filter 
+     Type:  String
+     Value: For example "ORT:CONTAINS:Berlin" then only those children are 
+            shown that contain a mytag "ORT" in their page content
+            and such that the string 'Berlin' is contained as a substring.
+            See the function mytag_filter_function() below.
+
+
   */
 
 
@@ -396,15 +405,15 @@ function my_show_children_shortcode_function($params_from_shortcode) {
     }
   }
    
-/*
+  /*echo "DOLLY";
   print_r($params_from_shortcode);
   echo '<br><br>';
   print_r($defaultArray);
   echo '<br><br>';
   print_r($params);
   echo '<br><br><br><br>';
-  return;
-*/
+  return;*/
+
 
   // cast all the values that are of boolean type to boolean
   foreach($boolean_values as $key) {

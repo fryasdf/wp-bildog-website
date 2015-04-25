@@ -66,14 +66,16 @@
   $params = $GLOBALS['my_show_children_params'];
   $page = $GLOBALS["my_show_children_page"];
   
-  $css_classes = $params['css_classes'];
-  $add_custom_css_class = $params['add_custom_css_class'];
-  $custom_css_class = $params['custom_css_class'];
-  $header_is_link_to_page = $params['header_is_link_to_page'];
-  $header_pic = $params['header_pic'];
   $box_content = $params['box_content'];
   $box_content_default = $params['box_content_default'];
+  $header_pic = $params['header_pic'];
   $expandable = $params['expandable'];
+  $link_to_page = $params['link_to_page'];
+  $link_title = $params['link_title'];
+  $header_is_link_to_page = $params['header_is_link_to_page'];
+  $custom_css_class = $params['custom_css_class'];
+  $css_classes = $params['css_classes'];
+  $add_custom_css_class = $params['add_custom_css_class'];
   $nr_of_entries_per_row = $params['nr_of_entries_per_row'];
 ?>
 
@@ -151,6 +153,9 @@
           echo prepare_content_as_wordpress_would_do($content);
         ?>
         <?php if ($link_to_page) : ?>
+<?php echo "DOLLY: link_to_page='" . $link_to_page . "' !!!"; ?>
+<?php echo "DOLLY: page_id='" . $page->ID . "' !!!"; ?>
+<?php echo "DOLLY: permalink='" . get_permalink($page->ID) . "' !!!"; ?>
           <center>
           <strong>
           <a href="<?php 
