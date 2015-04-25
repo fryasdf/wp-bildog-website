@@ -153,9 +153,6 @@
           echo prepare_content_as_wordpress_would_do($content);
         ?>
         <?php if ($link_to_page) : ?>
-<?php echo "DOLLY: link_to_page='" . $link_to_page . "' !!!"; ?>
-<?php echo "DOLLY: page_id='" . $page->ID . "' !!!"; ?>
-<?php echo "DOLLY: permalink='" . get_permalink($page->ID) . "' !!!"; ?>
           <center>
           <strong>
           <a href="<?php 
