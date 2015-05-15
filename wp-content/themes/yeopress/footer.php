@@ -6,10 +6,20 @@
     <?php // BILDOG WIRD UNTERSTUETZT SPALTE: 8?>
     <div class="col-md-8 smaller-than-md-center">
       bildog wird unterstützt von:<br/><br/>
-      <?php foreach (range(1, 20) as $number):
-        if(!get_custom('supporter_' . $number)) {continue;} ?>
-          <img src="<?php echo get_custom('supporter_' . $number); ?>" />
-      <?php endforeach; ?>
+      <?php 
+        //foreach (range(1, 20) as $number):
+        //if(!get_custom('supporter_' . $number)) {continue;} 
+      ?>
+        <!-- <img src="<?php echo get_custom('supporter_' . $number); ?>" /> -->
+      <?php 
+          $imageDirPath = get_bloginfo('template_directory') . '/images/supporter/';
+      ?>
+      
+      <a href="http://www.felix-roth.de"><img src=<?php echo $imageDirPath . "frd.png" ?> height="68" width="150"></a>
+      <a href="http://www.steuerberater-tijssen.de"><img src=<?php echo $imageDirPath . "stb_tijssen.png" ?> height="68" width="150"></a>
+      <a href="http://www.willer.de"><img src=<?php echo $imageDirPath . "willer.png" ?> height="68" width="150"></a>
+        
+      <?php //endforeach; ?>
     </div>
     <?php // KONTAKT-UND-SOCIAL MEDIA SPALTE: 4?>
     <div class="col-md-4">
@@ -33,14 +43,15 @@
         <div class="col-xs-2">
           <div class="row">
             <div class="col-md-12 icon-fb">
-              <a href="https://de-de.facebook.com/bildung.ohnegrenzen">
+              <a href="https://www.facebook.com/bildogEV">
                 <img src="<?php echo bloginfo('template_directory') ?>/images/icon_fb.png" />
               </a>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12 icon-yt">
-              <img src="<?php echo bloginfo('template_directory') ?>/images/icon_yt.png" />
+              <a href="https://www.youtube.com/channel/UChgdT1Lw9UPJRoFcjcu8-ww">
+                <img src="<?php echo bloginfo('template_directory') ?>/images/icon_yt.png" /></a>
             </div>
           </div>
         </div>
