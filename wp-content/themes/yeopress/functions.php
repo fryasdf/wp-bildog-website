@@ -148,7 +148,7 @@ class MyWalker extends Walker_Page {
     $newPartRight = $newPartSplittet[1];
 
     // substitute $specialPageName by $resultTitle
-    $specialPageName = "Mitmachen";
+    $specialPageName = "Spenden + Mitmachen";
     $resultTitle = '<span id="spenden-mitmachen-one-line">Spenden + Mitmachen</span><span id="spenden-mitmachen-large">Spenden<br>+<br>Mitmachen</span>';
     if ($titleAdded == $specialPageName) {
       $titleAdded = $resultTitle;
@@ -347,6 +347,7 @@ function get_real_title() {
   if (is_home()) {
     return "Blog";
   }
+  
   return get_the_title();
 }
 
