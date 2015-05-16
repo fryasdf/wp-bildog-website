@@ -561,7 +561,9 @@ function envira_gallery_add_image_caption( $output, $id, $item, $data, $i) {
 
   // $description = wp_prepare_attachment_for_js($id)['description'];
   // $alt = wp_prepare_attachment_for_js($id)['alt'];
-  $caption = wp_prepare_attachment_for_js($id)['caption'];
+  
+  $caption = wp_prepare_attachment_for_js($id);
+  $caption = $caption['caption'];
   $toAppend = "<center>$caption</center>";
   return $output . $toAppend;
 }
@@ -608,11 +610,15 @@ function getFullPath($url){
 //   maskfile: theme_directory/images/mask.png
 function mask_and_copy($post_ID) {
   // get the path and directory
-  $url = wp_get_attachment_image_src( $post_ID, 'large' )[0];
+  $url = wp_get_attachment_image_src( $post_ID, 'large' );
+  $url = $url[0];
   $filename_complete = getFullPath($url);
-  $dir = pathinfo($filename_complete)['dirname'] . "/";
-  $filename = pathinfo($filename_complete)['filename'];
-  $extension = pathinfo($filename_complete)['extension'];
+  $dir = pathinfo($filename_complete);
+  $dir = $dir['dirname'] . "/";
+  $filename = pathinfo($filename_complete);
+  $filename = $filename['filename'];
+  $extension = pathinfo($filename_complete);
+  $extension = $extension['extension'];
 
   $attachment_post = get_post( $post_ID );
   $type = get_post_mime_type($post_ID);
