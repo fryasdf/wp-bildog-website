@@ -104,6 +104,40 @@ class MyWalker extends Walker_Page {
     return $matches[0];
   }
 
+
+  // like explode but
+  // splitAtLastOccurrence('<li class="page_item page-item-2 page_item_has_children current_page_item"><a href="http://bildog.de/">bildog</a>', 'bildog')
+  // returns an array of just 2 elements, not three (as explode), namely
+  // array(
+  //  [0] = '<li class="page_item page-item-2 page_item_has_children current_page_item"><a href="http://bildog.de/">'
+  //  [1] = '</a>
+  // )
+  //
+  // i.e. explode("AAAsssBBBsssCCC", "sss")
+  // returns "AAA", "BBB", "CCC" while
+  // splitAtLastOccurrence("AAAsssBBBsssCCC", "sss") rerturns just
+  // "AAAsssBBB" and "CCC"
+  // (actually static but there is some php version issue with the 1
+  //  and 1 server which has some old version of php installed
+  //  and static does not exist in this php version)
+  private function splitAtLastOccurrence($needle, $string) {
+    $res = explode($needle, $string);
+    $lengthRes = count($res);
+    if ($lengthRes > 2) {
+      $resLeft = "";
+      $resRight = $res[$lengthRes-1];
+      for ($i = 0; $i < $lengthRes - 2; $i++) {
+        $resLeft = $resLeft . $res[$i] . $needle;
+      }
+      $resLeft = $resLeft . $res[$lengthRes - 2];
+      return array($resLeft, $resRight);
+    } elseif ($lengthRes == 2) {
+      return $res;
+    }
+    trigger_error("Error: needle was not found in string!");
+  } 
+
+
   /* is called whenever a <li> <a href=...>...</a> is added
    */
   public function start_el( &$output, $page, $depth = 0, $args = array(), $current_page = 0 ) {
@@ -142,8 +176,11 @@ class MyWalker extends Walker_Page {
     // search for the first occurrence of <a ...>SOMETHING</a>
     // and extract it, save the part left and right of it
     $titleAdded = self::getTextBetweenTags($newPart, 'a');
-
-    $newPartSplittet = explode($titleAdded, $newPart);
+    // careful: special case with the start page
+    // the string 'bildog' actually occurs twice in
+    // $newPart = '<li class="page_item page-item-2 page_item_has_children current_page_item"><a href="http://bildog.de/">bildog</a>'
+    // -> dont explode, split at the last occurence
+    $newPartSplittet = self::splitAtLastOccurrence($titleAdded, $newPart);
     $newPartLeft = $newPartSplittet[0];
     $newPartRight = $newPartSplittet[1];
 
