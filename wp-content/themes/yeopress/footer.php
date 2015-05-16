@@ -15,9 +15,9 @@
           $imageDirPath = get_bloginfo('template_directory') . '/images/supporter/';
       ?>
       
-      <a href="http://www.felix-roth.de"><img src=<?php echo $imageDirPath . "frd.png" ?> height="68" width="150"></a>
-      <a href="http://www.steuerberater-tijssen.de"><img src=<?php echo $imageDirPath . "stb_tijssen.png" ?> height="68" width="150"></a>
       <a href="http://www.willer.de"><img src=<?php echo $imageDirPath . "willer.png" ?> height="68" width="150"></a>
+      <a href="http://www.steuerberater-tijssen.de"><img src=<?php echo $imageDirPath . "stb_tijssen.png" ?> height="68" width="150"></a>
+      <a href="http://www.felix-roth.de"><img src=<?php echo $imageDirPath . "frd.png" ?> height="68" width="150"></a>
         
       <?php //endforeach; ?>
     </div>
@@ -43,14 +43,14 @@
         <div class="col-xs-2">
           <div class="row">
             <div class="col-md-12 icon-fb">
-              <a href="https://www.facebook.com/bildogEV">
+              <a href="https://www.facebook.com/bildogEV" target="_blank">
                 <img src="<?php echo bloginfo('template_directory') ?>/images/icon_fb.png" />
               </a>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12 icon-yt">
-              <a href="https://www.youtube.com/channel/UChgdT1Lw9UPJRoFcjcu8-ww">
+              <a href="https://www.youtube.com/channel/UChgdT1Lw9UPJRoFcjcu8-ww" target="_blank">
                 <img src="<?php echo bloginfo('template_directory') ?>/images/icon_yt.png" /></a>
             </div>
           </div>
@@ -62,7 +62,7 @@
   <?php // ENDE KONTAKT-UND-SOCIAL MEDIA SPALTE?>
   </div>
   <div class="row copyright">
-    copyright 2014 bildog Bildung ohne Grenzen e.V.
+    copyright 2015 bildog Bildung ohne Grenzen e.V.
   </div>
 </footer>
 
