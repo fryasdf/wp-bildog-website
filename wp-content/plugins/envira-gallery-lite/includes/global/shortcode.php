@@ -317,6 +317,18 @@ class Envira_Gallery_Shortcode_Lite {
                     },
                     beforeLoad: function(){
                         this.title = $(this.element).attr('title');
+                    },
+                    afterShow: function() {
+                        <?php
+                        // If title helper = float_wrap, add a CSS class so we can disable word-wrap
+                        if ( $this->get_config( 'title_display', $data ) == 'float_wrap' ) {
+                            ?>
+                            if ( ! $( 'div.envirabox-title' ).hasClass( 'envirabox-title-text-wrap' ) ) {
+                                $( 'div.envirabox-title' ).addClass( 'envirabox-title-text-wrap' );
+                            }
+                            <?php
+                        }
+                        ?>
                     }
                 });
 
@@ -351,6 +363,11 @@ class Envira_Gallery_Shortcode_Lite {
         // If we have custom classes defined for this gallery, output them now.
         foreach ( (array) $this->get_config( 'classes', $data ) as $class ) {
             $classes[] = $class;
+        }
+
+        // If the gallery has RTL support, add a class for it.
+        if ( $this->get_config( 'rtl', $data ) ) {
+            $classes[] = 'envira-gallery-rtl';
         }
 
         // Allow filtering of classes and then return what's left.
@@ -466,9 +483,10 @@ class Envira_Gallery_Shortcode_Lite {
     public function minify( $string, $stripDoubleForwardslashes = true ) {
 
 	    // Added a switch for stripping double forwardslashes
-	    // This can be disabled when using URLs in JS, to ensure http:// doesn't get removed
-		// All other comment removal and minification will take place
-	    
+        // This can be disabled when using URLs in JS, to ensure http:// doesn't get removed
+        // All other comment removal and minification will take place
+        $stripDoubleForwardslashes = apply_filters( 'envira_minify_strip_double_forward_slashes', $stripDoubleForwardslashes );
+         
 		if ( $stripDoubleForwardslashes ) {
 	    	$clean = preg_replace( '/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/', '', $string );
 	    } else {

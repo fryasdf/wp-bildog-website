@@ -57,6 +57,18 @@ Also, I'm an <a href="https://thomasgriffin.io" rel="me" title="WordPress Develo
 
 == Changelog ==
 
+= 1.3.0 =
+* Fix: Sorting images in a gallery and not clicking Update would result in loss of gallery configuration
+
+= 1.2.9 =
+* Added: envira_minify_strip_double_forward_slashes filter when minifying, allowing developers to disable this for edge cases
+
+= 1.2.8 =
+* Added: RTL Support
+
+= 1.2.7 =
+* Added: Caption Position Float (Wrapped) option, to wrap Lightbox Caption text to match width of image.
+
 = 1.2.6 =
 * Added: Insert Images Modal automatically loads more images on scroll
 * Added: Insert Images Modal search functionality performance improved

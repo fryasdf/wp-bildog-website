@@ -644,6 +644,19 @@ class Envira_Gallery_Metaboxes_Lite {
                             <p class="description"><?php _e( 'Sets the theme for the gallery lightbox display.', 'envira-gallery' ); ?></p>
                         </td>
                     </tr>
+                    <tr id="envira-config-lightbox-title-display-box"> 
+                        <th scope="row">
+                            <label for="envira-config-lightbox-title-display"><?php _e( 'Caption Position', 'envira-gallery' ); ?></label>
+                        </th>
+                        <td>
+                            <select id="envira-config-lightbox-title-display" name="_envira_gallery[title_display]">
+                                <?php foreach ( (array) $this->get_title_displays() as $i => $data ) : ?>
+                                    <option value="<?php echo $data['value']; ?>"<?php selected( $data['value'], $this->get_config( 'title_display', $this->get_config_default( 'title_display' ) ) ); ?>><?php echo $data['name']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <p class="description"><?php _e( 'Sets the display of the lightbox image\'s caption.', 'envira-gallery' ); ?></p>
+                        </td>
+                    </tr>
                     <?php do_action( 'envira_gallery_lightbox_box', $post ); ?>
                 </tbody>
             </table>
@@ -694,6 +707,15 @@ class Envira_Gallery_Metaboxes_Lite {
                         <td>
                             <textarea id="envira-config-classes" rows="5" cols="75" name="_envira_gallery[classes]" placeholder="<?php _e( 'Enter custom gallery CSS classes here, one per line.', 'envira-gallery' ); ?>"><?php echo implode( "\n", (array) $this->get_config( 'classes', $this->get_config_default( 'classes' ) ) ); ?></textarea>
                             <p class="description"><?php _e( 'Adds custom CSS classes to this gallery. Enter one class per line.', 'envira-gallery' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr id="envira-config-rtl-box">
+                        <th scope="row">
+                            <label for="envira-config-rtl"><?php _e( 'Enable RTL Support?', 'envira-gallery' ); ?></label>
+                        </th>
+                        <td>
+                            <input id="envira-config-rtl" type="checkbox" name="_envira_gallery[rtl]" value="<?php echo $this->get_config( 'rtl', $this->get_config_default( 'rtl' ) ); ?>" <?php checked( $this->get_config( 'rtl', $this->get_config_default( 'rtl' ) ), 1 ); ?> />
+                            <span class="description"><?php _e( 'Enables or disables RTL support in Envira for right-to-left languages.', 'envira-gallery' ); ?></span>
                         </td>
                     </tr>
                     <?php do_action( 'envira_gallery_misc_box', $post ); ?>
@@ -761,15 +783,17 @@ class Envira_Gallery_Metaboxes_Lite {
         }
 
         // Save the config settings.
-        $settings['config']['columns']     = preg_replace( '#[^a-z0-9-_]#', '', $_POST['_envira_gallery']['columns'] );
-        $settings['config']['gutter']      = absint( $_POST['_envira_gallery']['gutter'] );
-        $settings['config']['margin']      = absint( $_POST['_envira_gallery']['margin'] );
-        $settings['config']['crop']        = isset( $_POST['_envira_gallery']['crop'] ) ? 1 : 0;
-        $settings['config']['crop_width']  = absint( $_POST['_envira_gallery']['crop_width'] );
-        $settings['config']['crop_height'] = absint( $_POST['_envira_gallery']['crop_height'] );
-        $settings['config']['classes']     = explode( "\n", $_POST['_envira_gallery']['classes'] );
-        $settings['config']['title']       = trim( strip_tags( $_POST['_envira_gallery']['title'] ) );
-        $settings['config']['slug']        = sanitize_text_field( $_POST['_envira_gallery']['slug'] );
+        $settings['config']['columns']      = preg_replace( '#[^a-z0-9-_]#', '', $_POST['_envira_gallery']['columns'] );
+        $settings['config']['gutter']       = absint( $_POST['_envira_gallery']['gutter'] );
+        $settings['config']['margin']       = absint( $_POST['_envira_gallery']['margin'] );
+        $settings['config']['crop']         = isset( $_POST['_envira_gallery']['crop'] ) ? 1 : 0;
+        $settings['config']['crop_width']   = absint( $_POST['_envira_gallery']['crop_width'] );
+        $settings['config']['crop_height']  = absint( $_POST['_envira_gallery']['crop_height'] );
+        $settings['config']['classes']      = explode( "\n", $_POST['_envira_gallery']['classes'] );
+        $settings['config']['title']        = trim( strip_tags( $_POST['_envira_gallery']['title'] ) );
+        $settings['config']['slug']         = sanitize_text_field( $_POST['_envira_gallery']['slug'] );
+        $settings['config']['title_display']= preg_replace( '#[^a-z0-9-_]#', '', $_POST['_envira_gallery']['title_display'] );
+        $settings['config']['rtl']          = isset( $_POST['_envira_gallery']['rtl'] ) ? 1 : 0;
 
         // If on an envira post type, map the title and slug of the post object to the custom fields if no value exists yet.
         if ( isset( $post->post_type ) && 'envira' == $post->post_type ) {
@@ -1088,6 +1112,20 @@ class Envira_Gallery_Metaboxes_Lite {
 
         $instance = Envira_Gallery_Common_Lite::get_instance();
         return $instance->get_lightbox_themes();
+
+    }
+
+    /**
+     * Helper method for retrieving title displays.
+     *
+     * @since 1.2.7
+     *
+     * @return array Array of title display data.
+     */
+    public function get_title_displays() {
+
+        $instance = Envira_Gallery_Common_Lite::get_instance();
+        return $instance->get_title_displays();
 
     }
 
