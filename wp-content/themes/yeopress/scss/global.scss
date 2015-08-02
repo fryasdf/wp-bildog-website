@@ -350,4 +350,9 @@ input.button:active {
     vertical-align: middle;
     float: none;
 }
-
+.bootstrap-image-gallery-image-centered {
+  margin: auto auto -10px auto;
+}
+.bootstrap-image-gallery-text-centered {
+  margin: auto auto auto auto;
+}
