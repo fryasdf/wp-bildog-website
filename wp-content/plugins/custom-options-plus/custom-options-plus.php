@@ -2,12 +2,28 @@
 /*
 Plugin Name: Custom Options Plus
 Plugin URI: https://github.com/leocaseiro/Wordpress-Plugin-Custom-Options-Plus
-Description: Custom Options Plus is the easiest way to add your custom variables as a Settings Page for your Theme.
+Description: The easiest way to add your custom variables as a Settings Page for your Theme. Even with no expertise in PHP.
 You can for example, register the address and phone numbers of your company to leave in the header of your site. So, if someday relocate, you do not need to change your theme. Just change administratively.
 You can also enter the login of your social networks. How to login twitter, Facebook, Youtube, contact email and more.
-Version: 1.5
+Version: 1.6
 Author: Leo Caseiro
 Author URI: http://leocaseiro.com.br/
+*/
+
+/*  Copyright 2011-2014 Leo Caseiro (http://leocaseiro.com.br/)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License, version 2, as
+    published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 // Make sure we don't expose any info if called directly
@@ -237,7 +253,7 @@ function custom_options_plus_adm() {
 							<label for="label">Label:</label>
 						</td>
 						<td>
-							<input name="label" type="text" id="label" value="<?php echo $label; ?>" class="regular-text">
+							<input name="label" required="required" type="text" id="label" value="<?php echo $label; ?>" class="regular-text">
 						</td>
 					</tr>
 					<tr>
@@ -245,7 +261,7 @@ function custom_options_plus_adm() {
 							<label for="name">*Name:</label>
 						</td>
 						<td>
-							<input name="name" type="text" id="name" value="<?php echo $name; ?>" class="regular-text">
+							<input name="name" required="required" type="text" id="name" value="<?php echo $name; ?>" class="regular-text">
 						</td>
 					</tr>
 					<tr>
@@ -253,7 +269,7 @@ function custom_options_plus_adm() {
 							<label for="value">Value:</label>
 						</td>
 						<td>
-							<textarea name="value" rows="7" cols="40" type="text" id="value" class="regular-text code"><?php echo $value; ?></textarea>
+							<textarea required="required" name="value" rows="7" cols="40" type="text" id="value" class="regular-text code"><?php echo $value; ?></textarea>
 						</td>
 					</tr>
 				</tbody>

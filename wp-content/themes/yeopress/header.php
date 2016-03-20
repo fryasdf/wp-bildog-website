@@ -91,7 +91,7 @@
                    ?> - <?php bloginfo('description') ?>">
           
              <img 
-              src="<?php bloginfo('template_directory'); i
+              src="<?php bloginfo('template_directory');
                     ?>/images/bldg_bldg_logo.png" 
               alt="<?php bloginfo('name') ?>"/>
           </a>

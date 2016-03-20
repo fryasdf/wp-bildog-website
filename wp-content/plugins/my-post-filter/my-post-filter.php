@@ -41,6 +41,9 @@ function mpfil_shortcode_function($params_from_shortcode) {
   global $post;
   $paged = wp_specialchars_decode(get_query_var( 'paged', 1 ));
 
+  // standard is '0'
+  //echo "\n\n\n\n<strong>PAGED='$paged'</strong>\n\n\n\n";
+
   // careful: wordpress automatically makes "categoryName" to "categoryname"
   // thats the reason for us to use underscore notation 
   $defaultArray = array(
@@ -74,36 +77,73 @@ function mpfil_shortcode_function($params_from_shortcode) {
    //$output = "DOLLY....................";
   //$output .= "CAT NAME='" . $category_name . "'<br><br>\n\n";
   //$output .= "POST NAME='" . $post_file_name . "'<br><br>\n\n";
+
+  // count how many posts are in this category in total
   $params = array(
       'post_type' => 'post',
       'posts_per_page' => $posts_per_page,
       'paged' => $paged,
       'category_name' => $category_name,
     );
+  $query = new WP_Query($params);
+  $count_posts = $query->found_posts;
+
+  // fetch the actual posts that are on the current pagination page
+  $params = array(
+      'post_type' => 'post',
+      'posts_per_page' => $posts_per_page,
+      'paged' => $paged,
+      'category_name' => $category_name,
+    );
+
+  
   //$filtered_posts = new WP_Query( $params );
   //echo "DOLLY=" . have_posts();
   //echo "DOLLY........................";
   //print_r($filtered_posts);
   // The Query
-  query_posts( $params );
+  $query = new WP_Query($params);
+  // WP-documentation advices one not to use this function!
+  //query_posts( $params );
   //echo "POST========" . $GLOBALS['wp_query']->request . "=============================<br><br>\n\n";
   $output = '';
   $output .= load_template_part($post_file_name . '_before');
-  while ( have_posts() ) : the_post();
+  while ( $query->have_posts() ) {
     // for each post: dont come up with a new design of how to print
     // out posts, use the same design as the template
+    $query->the_post();
     $output .= load_template_part($post_file_name);
-  endwhile;
+  }
   $output .= load_template_part($post_file_name . '_after');
 
   // if specified, write a little navbar 
   // (newer posts) 1 2 3 ... (older posts)
-  if ($pagination_script != "") {  
+  if ($pagination_script != "") {
+    // wordpress is a little weird here:
+    // the first page is $paged=0
+    // but the second one is $paged=2
+    // --> little gap between 0 and 2 :-)
+    $real_human_page = 1;
+    if ($paged != 0) {
+      $real_human_page = $paged;
+    }
+    $GLOBALS['pagination_script_params'] = array(
+      'posts_per_page' => $posts_per_page,
+      'real_human_page' => $real_human_page,
+      'count_posts' => $count_posts,
+    );
     $output .= load_template_part($pagination_script);
   }
 
-  // Reset Query
-  wp_reset_query();
+  // WP documentation: due to the fact that we are now using
+  // the wp machinery correctly and cleanly (by creating a new
+  // query and not messing with the main query which queries data for
+  // the actual page were on) we must not do that
+  // // Reset Query
+  // //wp_reset_query();
+  // but this:
+  wp_reset_postdata();
+
 
   return $output;
 }
