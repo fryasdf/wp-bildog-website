@@ -3,19 +3,29 @@ Contributors: ankitpokhrel, cfoellmann
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J9FVY3ESPPD58
 Tags: dynamic featured image, featured image, post thumbnail, dynamic post thumbnail, multiple featured image, multiple post thumbnail
 Requires at least: 3.5
-Tested up to: 4.3
-Stable tag: 3.5.1
+Tested up to: 4.4.2
+Stable tag: 3.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Dynamically adds multiple featured image (post thumbnail) functionality to posts, pages and custom post types.
 
 == Description ==
+
 Dynamically adds multiple featured image or multiple post thumbnail functionality to your page, posts and custom post types. This plugin provides you an interface to add any number of featured image as you want without writing a single line of code. These featured images can then be collected by the various theme functions.
 
-> **A NOTE ABOUT SUPPORT:** We’re here to help troubleshoot bugs, but please don't set expectations early as the support forums at WordPress.org are only checked once a week. All the support of the Dynamic Featured Image plugin will now be provided from within [this support forum](http://ankitpokhrel.com.np/blog/forums/forum/dynamic-featured-image-free-version/ "Dynamic Featured Image Support Forum").
+> **IMPORTANT NOTE TO PREMIUM THEME DEVELOPERS:** If you are using this plugin in premium themes or earning profit from any means, you need to buy a license first. Drop a line to info [at] ankitpokhrel.com.np for more details. This doesn't apply in case of free themes.
 
-> Users looking for more timely/in-depth support and extended features are encouraged to check out [Dynamic Featured Image PRO](http://ankitpokhrel.com.np/blog/downloads/dynamic-featured-image-pro/ "Dynamic Featured Image PRO").
+**Overview**  
+
+Dynamic Featured Image enables the option to have MULTIPLE featured images within a post or page. 
+This is especially helpful when you use other plugins, post thumbnails or sliders that use featured images. 
+Why limit yourself to only one featured image if you can do some awesome stuffs with multiple featured image? 
+DFI allows you to add different number of featured images to each post and page that can be collected by the various theme functions.
+
+> **A NOTE ABOUT SUPPORT:** We’re here to help troubleshoot bugs, but please don't set expectations early as the support forums at WordPress.org are only checked once a week. All the support of the Dynamic Featured Image plugin will now be provided from within [this support forum](http://ankitpokhrel.com/explore/forums/forum/dynamic-featured-image-free-version/ "Dynamic Featured Image Support Forum").
+
+> Users looking for more timely/in-depth support and extended features are encouraged to check out [Dynamic Featured Image PRO](http://ankitpokhrel.com/explore/dynamic-featured-image-pro/ "Dynamic Featured Image PRO").
 
 > **FEATURES OF PRO VERSION**  
   – Settings Page to control the visibility of DFI metabox.  
@@ -27,12 +37,6 @@ Dynamically adds multiple featured image or multiple post thumbnail functionalit
   – Access to more advance features and future updates for free.  
 
 > [Learn more &raquo;](http://ankitpokhrel.com.np/blog/downloads/dynamic-featured-image-pro/ "Dynamic Featured Image PRO")
-
-**Overview**  
-Dynamic Featured Image enables the option to have MULTIPLE featured images within a post or page. 
-This is especially helpful when you use other plugins, post thumbnails or sliders that use featured images. 
-Why limit yourself to only one featured image if you can do some awesome stuffs with multiple featured image? 
-DFI allows you to add different number of featured images to each post and page that can be collected by the various theme functions.
 
 **How it works?**  
 1. After successfull plugin activation go to `add` or `edit` page of posts or pages and you will notice a box for second featured image.  
@@ -57,7 +61,7 @@ array
 
 **Resources**  
 1. [Detail Documentation](https://github.com/ankitpokhrel/Dynamic-Featured-Image/wiki "Documentation for current ver.").  
-2. [DFI Blog](http://ankitpokhrel.com.np/blog/category/dynamic-featured-image/ "DFI Blog").  
+2. [DFI Blog](http://ankitpokhrel.com/explore/category/dynamic-featured-image/ "DFI Blog").  
 3. [StackOverflow Tag](http://stackoverflow.com/questions/tagged/dynamic-featured-image "StackOverflow Tag").
 
 **MultiSite Info**  
@@ -101,12 +105,12 @@ This usually happens because of cache. Clear all your cache and try again if you
 Yes! It is easily possible from version 3.1.13. A filter is added in the recent version for this purpose. Refer [this thread](http://ankitpokhrel.com.np/blog/is-it-possible-to-make-dfi-work-only-for-certain-post-types/) for mor info.
 
 = 6. Other problems or questions? =
-Other problems? Don't forget to check the [blog](http://ankitpokhrel.com.np/blog/category/dynamic-featured-image/) and learn to create some exciting things using DFI.
+Other problems? Don't forget to check the [blog](http://ankitpokhrel.com/explore/category/dynamic-featured-image/) and learn to create some exciting things using DFI.
 
 Please use [support forum](http://wordpress.org/support/plugin/dynamic-featured-image) first if you have any question or queries about the project. 
 If you don't receive any help in support forum then you can directly contact me at `info [at] ankitpokhrel.com.np`. Please atleast wait for 48hrs before sending another request.
 
-Please feel free to report any bug found at https://github.com/ankitpokhrel/Dynamic-Featured-Image/ or `info [at] ankitpokhrel.com.np`.
+Please feel free to report any bug found at https://github.com/ankitpokhrel/Dynamic-Featured-Image/ or `info [at] ankitpokhrel.com`.
 
 == Screenshots == 
 1. New featured image box.
@@ -114,6 +118,10 @@ Please feel free to report any bug found at https://github.com/ankitpokhrel/Dyna
 3. Add new featured image box.
 
 == Changelog ==
+= 3.5.2 =
+* Fix image url if image already points to CDN. PR #50
+* Internal refactorings
+
 = 3.5.1 =
 * Minor code refactorings.
 
@@ -206,6 +214,9 @@ Please feel free to report any bug found at https://github.com/ankitpokhrel/Dyna
 * Fixed some minor issues.
 
 == Upgrade Notice ==
+= 3.5.2 =
+* Some refactorings and bug fixes.
+
 = 3.5.1 =
 * Minor code refactorings.
 
@@ -234,7 +245,7 @@ This version has translation in 6 different languages, bug fix on edited image a
 This version has bug fixes on edited image. View issue #25 in Github for more info.
 
 = 3.1.0 =
-This version has some bug fix and code quality improvement. You may need to change database value manually because the plugin finds the uplod folder
+This version has some bug fix and code quality improvement. You may need to change database value manually because the plugin finds the upload folder
 automatically from now on.
 
 = 3.0.1 =
