@@ -3,7 +3,7 @@
 Plugin Name: Disable Comments
 Plugin URI: http://wordpress.org/extend/plugins/disable-comments/
 Description: Allows administrators to globally disable comments on their site. Comments can be disabled according to post type.
-Version: 1.4
+Version: 1.5
 Author: Samir Shah
 Author URI: http://rayofsolaris.net/
 License: GPL2
@@ -39,9 +39,6 @@ class Disable_Comments {
 		else {
 			$this->options = get_option( 'disable_comments_options', array() );
 		}
-
-		// load language files
-		load_plugin_textdomain( 'disable-comments', false, dirname( plugin_basename( __FILE__ ) ) .  '/languages' );
 
 		// If it looks like first run, check compat
 		if( empty( $this->options ) ) {
@@ -135,7 +132,12 @@ class Disable_Comments {
 		}
 
 		// These can happen later
+		add_action( 'plugins_loaded', array( $this, 'register_text_domain' ) );
 		add_action( 'wp_loaded', array( $this, 'init_wploaded_filters' ) );
+	}
+
+	public function register_text_domain() {
+		load_plugin_textdomain( 'disable-comments', false, dirname( plugin_basename( __FILE__ ) ) .  '/languages' );
 	}
 
 	public function init_wploaded_filters(){
@@ -188,6 +190,10 @@ class Disable_Comments {
 		// Filters for front end only
 		else {
 			add_action( 'template_redirect', array( $this, 'check_comment_template' ) );
+
+			if( $this->options['remove_everywhere'] ) {
+				add_filter( 'feed_links_show_comments_feed', '__return_false' );
+			}
 		}
 	}
 
@@ -249,9 +255,10 @@ class Disable_Comments {
 	 * Remove comment links from the admin bar in a multisite network.
 	 */
 	public function remove_network_comment_links( $wp_admin_bar ) {
-		if( $this->networkactive ) {
-			foreach( (array) $wp_admin_bar->user->blogs as $blog )
+		if( $this->networkactive && is_user_logged_in() ) {
+			foreach( (array) $wp_admin_bar->user->blogs as $blog ) {
 				$wp_admin_bar->remove_menu( 'blog-' . $blog->userblog_id . '-c' );
+			}
 		}
 		else {
 			// We have no way to know whether the plugin is active on other sites, so only remove this one

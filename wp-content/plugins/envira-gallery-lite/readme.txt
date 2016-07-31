@@ -1,8 +1,8 @@
 === Responsive WordPress Gallery - Envira Gallery Lite ===
 Contributors: griffinjt, smub
 Tags: wordpress gallery, gallery, wordpress gallery plugin, gallery plugin, responsive, responsive gallery, image gallery, image gallery plugin, responsive gallery plugin, responsive image gallery, responsive image gallery plugin, custom post types, slideshow, responsive slideshow, slideshow plugin, responsive slideshow plugin, rotator, image rotator, responsive rotator, jquery gallery, javascript gallery, jquery rotator, javascript rotator, picture gallery, photo gallery, photo rotator, shortcode, template tag, custom post type, media uploader, ajax, wordpress galleries, responsive galleries, fullscreen, deeplinking, best wordpress gallery, best wordpress gallery plugin, best gallery plugin, best gallery, best responsive gallery, best responsive wordpress gallery, best wp gallery, portfolio, design portfolio, lightroom, adobe lightroom, masonry gallery, polaroid gallery
-Requires at least: 3.8
-Tested up to: 4.4.2
+Requires at least: 4.0
+Tested up to: 4.6
 Stable tag: trunk
 License: GNU General Public License v2.0 or later
 
@@ -184,6 +184,63 @@ Envira Gallery is absolutely, positively the <a href="http://enviragallery.com/?
 Also, I'm an <a href="https://thomasgriffin.io" rel="me" title="WordPress Developer - Thomas Griffin">expert WordPress developer</a> and I write a lot about WordPress in general. You can check out my blog at the link above.
 
 == Changelog ==
+
+= 1.5.0.7 =
+* Fix: Addressing "unexpected end of input" JS Error.
+
+= 1.5.0.6 =
+* Fix: Took care of an issue with compatibility on PHP 5.2 that caused images not be editable in the image metadata modal
+* Fix: Make sure that the link modal appears above the metadata edit modal when inserting a link into the caption
+* Fix: Prevent the page from jumping to the top when navigating between images in the gallery lightbox
+* Fix: Prevent page from scrolling while lightbox is active on mobile devices
+* Fix: Images in the gallery on a mobile device now open with a single click
+* Fix: Adjust lightbox transitions so that they work properly
+
+= 1.5.0.5 =
+* Fix: Make sure columns on mobile correspond to the settings selected in general gallery config
+
+= 1.5.0.4 =
+* Fix: Improved default settings for new galleries
+* Fix: Correctly display the title in the lightbox if the lightbox view is defined
+* Fix: Sometimes galleries throwing JS errors in admin
+
+= 1.5.0.3 =
+* Fix: Ensure all CSS and JS is minified
+* Fix: Ensure all inline JS is minified
+* Fix: Prevent potential collisions with third party Plugins and Themes using different versions of the imagesLoaded library.
+* Fix: Minor layout issues with Addons screen
+* Fix: Improved Addons search and sorting performance
+* Fix: Prevent JS errors when Galleries are loaded by slug
+
+= 1.5.0.2 =
+* Added: ImageGallery and ImageObject Schema Markup to Galleries
+* Added: Option to insert Gallery Title as heading when using the Add Gallery button in a Visual Editor
+* Added: More detailed on screen progress bars when uploading multiple images
+* Added: envira_isotopes and envira_isotopes_config JS arrays for developers
+* Updated: Isotope to 3.0.0
+* Updated: ImagesLoaded to 4.1.0
+* Updated: Standardised edit screen titles and descriptions
+* Fix: Better rendering of Isotope layouts using imagesLoaded
+* Fix: Image uploader on Gallery Add/Edit screen not displaying on some tablet and mobile devices
+* Fix: Checkmark icon wrongly displaying on modal close when editing images.
+* Fix: Display text in warning when Envira Lite and Envira Gallery are both activated.
+* Fix: Ensure that third party notification plugins don’t remove the Envira Gallery logo and header from Envira’s screens
+* Fix: Various resets for images and captions to prevent themes overriding default behaviour
+* Fix: Minified admin CSS for faster load times
+* Fix: When editing an image, store any checkbox values if checked, instead of assuming 1 or 0 for better Addon compatibility.
+
+= 1.5.0.1 =
+* Updated: Standardised edit screen titles and descriptions
+* Updated: Screenshots
+
+= 1.5.0 =
+* Added: New UI
+* Added: WordPress native modal window for image upload, insertion from Media Library and edit
+* Added: Isotope / masonry layout on galleries
+* Added: Define Image Size for Gallery Images (either a WordPress registered size or your own dimensions)
+
+= 1.3.5.9 =
+* Fix: WordPress 4.5 compatibility.
 
 = 1.3.5.8 =
 * Fix: Changed retina icon filenames to ensure they work with All in One WP Security

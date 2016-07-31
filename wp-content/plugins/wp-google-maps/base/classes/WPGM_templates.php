@@ -3,9 +3,18 @@
 class WPGMAPS_templates {
 
 
+    function welcome_page_v6() {
+        include(dirname(dirname(__FILE__))."/includes/welcome.php");
+    }
+    function welcome_page_credits() {
+        include(dirname(dirname(__FILE__))."/includes/credits.php");
+    }
+
+
     function welcome_page() {
         global $wpgmza_global_array;
 ?>    
+
 
             <div class="wrap about-wrap">
 

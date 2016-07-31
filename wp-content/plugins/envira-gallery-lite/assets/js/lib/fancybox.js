@@ -127,7 +127,7 @@
 			// HTML templates
 			tpl: {
 				wrap     : '<div class="envirabox-wrap" tabIndex="-1"><div class="envirabox-skin"><div class="envirabox-outer"><div class="envirabox-inner"></div></div></div></div>',
-				image    : '<img class="envirabox-image" src="{href}" alt="" />',
+				image    : '<img class="envirabox-image" src="{href}" />',
 				iframe   : '<iframe id="envirabox-frame{rnd}" name="envirabox-frame{rnd}" class="envirabox-iframe" frameborder="0" vspace="0" hspace="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen' + (IE ? ' allowtransparency="true"' : '') + '></iframe>',
 				error    : '<p class="envirabox-error">The requested content cannot be loaded.<br/>Please try again later.</p>',
 				closeBtn : '<a title="Close" class="envirabox-item envirabox-close" href="javascript:;"></a>',
@@ -1207,6 +1207,13 @@
 			origWidth  = isPercentage(width)  ? (viewport.w - wSpace) * getScalar(width)  / 100 : width;
 			origHeight = isPercentage(height) ? (viewport.h - hSpace) * getScalar(height) / 100 : height;
 
+			// console.log ( "origWidth = " + origWidth );
+			// console.log ( "origHeight = " + origWidth );
+			// console.log ( "width = " + width );
+			// console.log ( "height = " + height );
+			// console.log ( "isPercentage(width) = " + isPercentage(width) );
+			// console.log ( "isPercentage(height) = " + isPercentage(height) );
+
 			if (current.type === 'iframe') {
 				iframe = current.content;
 
@@ -1252,6 +1259,9 @@
 
 			width  = getScalar( origWidth );
 			height = getScalar( origHeight );
+
+			// console.log ( "width = " + width );
+			// console.log ( "height = " + height );
 
 			ratio  = origWidth / origHeight;
 
@@ -1353,6 +1363,15 @@
 			if (scrollOut && scrolling === 'auto' && height < origHeight && (width + wPadding + scrollOut) < maxWidth_) {
 				width += scrollOut;
 			}
+
+			// console.log( "before width: " + width);
+			// console.log( "before height: " + height);
+
+			// width = width - (width * 0.01);
+			// height = height - (height * 0.01);
+
+			// console.log( "after width: " + width);
+			// console.log( "after height: " + height);
 
 			inner.width( width ).height( height );
 
