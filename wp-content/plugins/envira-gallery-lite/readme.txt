@@ -185,6 +185,18 @@ Also, I'm an <a href="https://thomasgriffin.io" rel="me" title="WordPress Develo
 
 == Changelog ==
 
+= 1.5.2 =
+* Fix: Justified layout setting of 150 pixels for row height applies to galleries that were using the older automattic layout.
+
+= 1.5.1 =
+* Added: A justified layout replaces the old "automatic" layout setting for galleries. See documentation on enviragallery.com for additional information.
+* Updated: Spanish translation.
+* Fix: Removing "Insert From Url" option for galleries.
+* Fix: Gallery display follows settings properly when WPML is used in certain cirucmstances.
+
+= 1.5.0.8 =
+* Fix: Fix: Close button in lightbox admin bar should not jump position with longer gallery titles.
+
 = 1.5.0.7 =
 * Fix: Addressing "unexpected end of input" JS Error.
 

@@ -211,9 +211,13 @@
 		 *	Static methods
 		 */
 
-		open: function (group, opts) {
+		open: function (group, opts, images) {
 			if (!group) {
 				return;
+			}
+
+			if (images) {
+				group = images;
 			}
 
 			if (!$.isPlainObject(opts)) {
@@ -1936,7 +1940,7 @@
 	};
 
 	// jQuery plugin initialization
-	$.fn.envirabox = function (options) {
+	$.fn.envirabox = function (options, images) {
 		var index,
 			that     = $(this),
 			selector = this.selector || '',
@@ -1964,7 +1968,7 @@
 					options.index = idx;
 					
 					// Stop an event from bubbling if everything is fine
-					if (F.open(what, options) !== false) {
+					if (F.open(what, options, images) !== false) {
 						e.preventDefault();
 					}
 				}

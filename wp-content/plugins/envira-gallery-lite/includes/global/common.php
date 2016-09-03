@@ -114,6 +114,27 @@ class Envira_Gallery_Common {
     }
 
     /**
+     * Helper method for retrieving justified gallery themes.
+     *
+     * @since 1.1.1
+     *
+     * @return array Array of gallery theme data.
+     */
+    public function get_justified_gallery_themes() {
+
+        $themes = array(
+            array(
+                'value' => 'normal',
+                'name'  => __( 'Normal', 'envira-gallery' ),
+                'file'  => $this->base->file
+            )
+        );
+
+        return apply_filters( 'envira_gallery_justified_gallery_themes', $themes );
+
+    }
+
+    /**
      * Helper method for retrieving display description options.
      *
      * @since 1.3.7.3
@@ -558,7 +579,9 @@ class Envira_Gallery_Common {
             'type'                => 'default',
 
             // Config Tab
-            'columns'             => '3',
+            'columns'             => '0',
+            'justified_row_height' => 150, // automatic/justified layout
+            'justified_gallery_theme' => 'normal',
             'gallery_theme'       => 'base',
             'display_description' => 0,
             'description'		  => '',
@@ -746,9 +769,10 @@ class Envira_Gallery_Common {
      * @param string $align    The crop position alignment.
      * @param bool $retina     Whether or not to make a retina copy of image.
      * @param array $data      Array of gallery data (optional).
+     * @param bool $force_overwrite      Forces an overwrite even if the thumbnail already exists (useful for applying watermarks)
      * @return WP_Error|string Return WP_Error on error, URL of resized image on success.
      */
-    public function resize_image( $url, $width = null, $height = null, $crop = true, $align = 'c', $quality = 100, $retina = false, $data = array() ) {
+    public function resize_image( $url, $width = null, $height = null, $crop = true, $align = 'c', $quality = 100, $retina = false, $data = array(), $force_overwrite = false ) {
 
         global $wpdb;
 
@@ -762,6 +786,13 @@ class Envira_Gallery_Common {
         // Strip ?lang=fr from blog's URL - WPML adds this on
         // and means our next statement fails
         $site_url = preg_replace( '/\?.*/', '', get_bloginfo( 'url' ) );
+
+        // WPML check - if there is a /fr or any domain in the url, then remove that from the $site_url
+        if ( defined('ICL_LANGUAGE_CODE') ) {
+            if ( strpos( $site_url, '/'.ICL_LANGUAGE_CODE ) !== false ) {
+                $site_url = str_replace( '/'.ICL_LANGUAGE_CODE, '', $site_url );
+            }
+        }
 
         if ( strpos( $url, $site_url ) === false ) {
             return $url;
@@ -778,14 +809,18 @@ class Envira_Gallery_Common {
         }
 
         // If the destination width/height values are the same as the original, don't do anything.
-        if ( $orig_width === $dest_width && $orig_height === $dest_height ) {
+        if ( !$force_overwrite && $orig_width === $dest_width && $orig_height === $dest_height ) {
             return $url;
         }
 
+
+
         // If the file doesn't exist yet, we need to create it.
-        if ( ! file_exists( $dest_file_name ) ) {
+        if ( ! file_exists( $dest_file_name ) || ( file_exists( $dest_file_name ) && $force_overwrite ) ) {
             // We only want to resize Media Library images, so we can be sure they get deleted correctly when appropriate.
             $get_attachment = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE guid='%s'", $url ) );
+
+            // print_r ($get_attachment); exit;
 
             // Load the WordPress image editor.
             $editor = wp_get_image_editor( $file_path );

@@ -7,6 +7,7 @@ jQuery( document ).ready( function( $ ) {
     // Show/hide elements as necessary when a conditional field is changed
     $( 'input, select' ).conditional( {
         data:               'envira-conditional',
+        toggle:             'envira-conditional-toggle',
         value:              'envira-conditional-value',
         displayOnEnabled:   'envira-conditional-display'
     } );
@@ -33,6 +34,7 @@ jQuery( document ).ready( function( $ ) {
         var settings = $.extend({
             data: 'conditional',
             value: 'conditional-value',
+            toggle: 'conditional-toggle',
             displayOnEnabled: 'conditional-display'
         }, options);
 
@@ -48,6 +50,7 @@ jQuery( document ).ready( function( $ ) {
             var conditionalElements,
                 displayOnEnabled,
                 value,
+                toggle,
                 displayElements;
             
             // Toggle + toggle on change
@@ -67,6 +70,12 @@ jQuery( document ).ready( function( $ ) {
                     value = '';
                 }
 
+                //
+                toggle = $( this ).data( settings.toggle );
+                if ( typeof value === 'undefined' ) {
+                    toggle = '';
+                }
+
                 // By default, don't display elements
                 displayElements = false;
 
@@ -81,6 +90,9 @@ jQuery( document ).ready( function( $ ) {
                         break;
                     
                     default:
+                        console.log( $( this ).attr( 'type' ) );
+                        console.log( displayOnEnabled );
+                        console.log( 'toggle: ' + toggle );
                         if ( displayOnEnabled ) {
                             if ( value !== '' ) {
                                 displayElements = ( ( String( $( this ).val() ) !== String( value ) ) ? false : true );
@@ -101,8 +113,14 @@ jQuery( document ).ready( function( $ ) {
                 for (var i = 0; i < conditionalElements.length; i++) {
                     if ( displayElements ) {
                         $( '#' + conditionalElements[i] ).fadeIn( 300 );
+                        if ( toggle ) {
+                            $( '#' + toggle ).fadeOut( 300 );
+                        }
                     } else {
                         $( '#' + conditionalElements[i] ).fadeOut( 300 );
+                        if ( toggle ) {
+                            $( '#' + toggle ).fadeIn( 300 );
+                        }
                     }
                 }
             });

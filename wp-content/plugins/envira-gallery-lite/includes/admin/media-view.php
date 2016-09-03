@@ -62,6 +62,16 @@ class Envira_Gallery_Media_View {
     */ 
     public function media_view_strings( $strings ) {
 
+        // Get the current screen, and check whether we're viewing the Envira or Envira Album Post Types.
+        $screen = get_current_screen(); 
+        if ( 'envira' !== $screen->post_type && 'envira_album' !== $screen->post_type ) {
+            return $strings;
+        }
+
+        // Remove The "insertFromUrlTitle" option
+
+        unset( $strings['insertFromUrlTitle'] );
+
         return $strings;
 
     }
@@ -300,8 +310,8 @@ class Envira_Gallery_Media_View {
     							<!-- Link in New Window -->
                                 <label class="setting">
                                 	<span class="name"><?php _e( 'Open URL in New Window?', 'envira-gallery' ); ?></span>
-    								<input type="checkbox" name="link_new_window" value="1"<# if ( data.link_new_window == '1' ) { #> checked <# } #> />
                                 	<span class="description">
+                                        <input type="checkbox" name="link_new_window" value="1"<# if ( data.link_new_window == '1' ) { #> checked <# } #> />
                                 		<?php _e( 'Opens your image links in a new browser window / tab.', 'envira-gallery' ); ?>
                                 	</span>
                                 </label>
@@ -425,8 +435,8 @@ class Envira_Gallery_Media_View {
 							<!-- Link in New Window -->
                             <label class="setting">
                             	<span class="name"><?php _e( 'Open URL in New Window?', 'envira-gallery' ); ?></span>
-								<input type="checkbox" name="link_new_window" value="1" />
 								<span class="description">
+                                    <input type="checkbox" name="link_new_window" value="1" />
                             		<?php _e( 'Opens your image links in a new browser window / tab.', 'envira-gallery' ); ?>
                             	</span>
                             </label>

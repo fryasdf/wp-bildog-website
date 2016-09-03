@@ -203,17 +203,24 @@ function wpgmaps_b_admin_add_polyline_javascript($mapid) {
         
         $wpgmza_settings = get_option("WPGMZA_OTHER_SETTINGS");
 
+        $api_version = $wpgmza_settings['wpgmza_api_version'];
+        if (isset($api_version) && $api_version != "") {
+            $api_version_string = "v=$api_version&";
+        } else {
+            $api_version_string = "v=3.exp&";
+        }
         ?>
         <?php if( get_option( 'wpgmza_google_maps_api_key' ) ){ ?>
             <script type="text/javascript">
                 var gmapsJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
                 var wpgmza_api_key = '<?php echo get_option( 'wpgmza_google_maps_api_key' ); ?>';
-                document.write(unescape("%3Cscript src='" + gmapsJsHost + "maps.google.com/maps/api/js?key="+wpgmza_api_key+"&language=<?php echo get_locale(); ?>&libraries=places,visualization' type='text/javascript'%3E%3C/script%3E"));
+                document.write(unescape("%3Cscript src='" + gmapsJsHost + "maps.google.com/maps/api/js?<?php echo $api_version_string; ?>key="+wpgmza_api_key+"' type='text/javascript'%3E%3C/script%3E"));
             </script>
         <?php } else { ?>
             <script type="text/javascript">
+                var wpgmza_temp_api_key = "<?php echo get_option('wpgmza_temp_api'); ?>";
                 var gmapsJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
-                document.write(unescape("%3Cscript src='" + gmapsJsHost + "maps.google.com/maps/api/js?language=<?php echo get_locale(); ?>&libraries=places,visualization' type='text/javascript'%3E%3C/script%3E"));
+                document.write(unescape("%3Cscript src='" + gmapsJsHost + "maps.google.com/maps/api/js?<?php echo $api_version_string; ?>key="+wpgmza_temp_api_key+"&libraries=places' type='text/javascript'%3E%3C/script%3E"));
             </script>
         <?php } ?>
         <link rel='stylesheet' id='wpgooglemaps-css'  href='<?php echo wpgmaps_get_plugin_url(); ?>/css/wpgmza_style.css' type='text/css' media='all' />
@@ -406,13 +413,28 @@ function wpgmaps_b_admin_edit_polyline_javascript($mapid,$polyid) {
         if (!$fillopacity) { $fillopacity = "0.5"; }
         $linecolor = "#".$linecolor;
                         
+        $api_version = $wpgmza_settings['wpgmza_api_version'];
+        if (isset($api_version) && $api_version != "") {
+            $api_version_string = "v=$api_version&";
+        } else {
+            $api_version_string = "v=3.exp&";
+        }
         
 
         ?>
-        <script type="text/javascript">
-                       var gmapsJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
-                       document.write(unescape("%3Cscript src='" + gmapsJsHost + "maps.google.com/maps/api/js?sensor=false' type='text/javascript'%3E%3C/script%3E"));
-        </script>
+        <?php if( get_option( 'wpgmza_google_maps_api_key' ) ){ ?>
+            <script type="text/javascript">
+                var gmapsJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+                var wpgmza_api_key = '<?php echo get_option( 'wpgmza_google_maps_api_key' ); ?>';
+                document.write(unescape("%3Cscript src='" + gmapsJsHost + "maps.google.com/maps/api/js?<?php echo $api_version_string; ?>key="+wpgmza_api_key+"' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+        <?php } else { ?>
+            <script type="text/javascript">
+                var wpgmza_temp_api_key = "<?php echo get_option('wpgmza_temp_api'); ?>";
+                var gmapsJsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+                document.write(unescape("%3Cscript src='" + gmapsJsHost + "maps.google.com/maps/api/js?<?php echo $api_version_string; ?>key="+wpgmza_temp_api_key+"&libraries=places' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+        <?php } ?>
         <link rel='stylesheet' id='wpgooglemaps-css'  href='<?php echo wpgmaps_get_plugin_url(); ?>/css/wpgmza_style.css' type='text/css' media='all' />
         <script type="text/javascript" >
              // polygons variables
