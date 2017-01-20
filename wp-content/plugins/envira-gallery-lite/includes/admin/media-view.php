@@ -44,7 +44,7 @@ class Envira_Gallery_Media_View {
     public function __construct() {
 
         // Base
-        $this->base = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance() : Envira_Gallery_Lite::get_instance() );
+        $this->base = Envira_Gallery_Lite::get_instance();
 
         // Modals
         add_filter( 'envira_gallery_media_view_strings', array( $this, 'media_view_strings' ) );
@@ -253,32 +253,7 @@ class Envira_Gallery_Media_View {
 	                            	<?php _e( 'Image titles can take any type of HTML. You can adjust the position of the titles in the main Lightbox settings.', 'envira-gallery' ); ?>
 	                            </div>
 	                        </label>
-	                        
-                            <?php
-                            if ( class_exists( 'Envira_Gallery' ) ) {
-                                ?>
-    	                        <!-- Caption -->
-    	                        <div class="setting">
-    	                            <span class="name"><?php _e( 'Caption', 'envira-gallery' ); ?></span>	
-    	                            <?php 
-                                    wp_editor( '', 'caption', array( 
-                                    	'media_buttons' => false, 
-                                    	'wpautop' 		=> false, 
-                                    	'tinymce' 		=> false, 
-                                    	'textarea_name' => 'caption', 
-                                    	'quicktags' => array( 
-                                    		'buttons' => 'strong,em,link,ul,ol,li,close' 
-                                    	),
-                                    	'editor_height'	=> 100,
-                                    ) ); 
-                                    ?>
-                                    <div class="description">
-    									<?php _e( 'Captions can take any type of HTML, and are displayed when an image is clicked.', 'envira-gallery' ); ?>
-    								</div>
-    	                        </div>
-                                <?php
-                            }
-                            ?>
+	                      
 	                        
 	                        <!-- Alt Text -->
 	                        <label class="setting">
@@ -303,41 +278,9 @@ class Envira_Gallery_Media_View {
 									<?php _e( 'Enter a hyperlink if you wish to link this image to somewhere other than its full size image.', 'envira-gallery' ); ?>
 								</span>
 							</label>
-							
-                            <?php
-                            if ( class_exists( 'Envira_Gallery' ) ) {
-                                ?>
-    							<!-- Link in New Window -->
-                                <label class="setting">
-                                	<span class="name"><?php _e( 'Open URL in New Window?', 'envira-gallery' ); ?></span>
-                                	<span class="description">
-                                        <input type="checkbox" name="link_new_window" value="1"<# if ( data.link_new_window == '1' ) { #> checked <# } #> />
-                                		<?php _e( 'Opens your image links in a new browser window / tab.', 'envira-gallery' ); ?>
-                                	</span>
-                                </label>
-                                <?php
-                            } else {
-                                ?>
-                                <label class="setting">
-                                    <!-- Upgrade -->
-                                    <?php
-                                    Envira_Gallery_Notice_Admin::get_instance()->display_inline_notice( 
-                                        'envira_gallery_edit_metadata',
-                                        __( 'Want Captions and more options?', 'envira-gallery' ),
-                                        __( 'By upgrading to Envira Pro, you can get access to numerous other features, including: HTML captions, open links in new windows, WooCommerce product integration and so much more!', 'envira-gallery' ),
-                                        'warning',
-                                        __( 'Click here to Upgrade', 'envira-gallery' ),
-                                        Envira_Gallery_Common_Admin::get_instance()->get_upgrade_link(),
-                                        false
-                                    );
-                                    ?>
-                                </label>
-                                <?php
-                            }
-                            ?>
 
 							<!-- Addons can populate the UI here -->
-							<div class="addons"></div>
+							<div class="envira-addons"></div>
 	                    </div>
 	                    <!-- /.settings -->     
 	                   
@@ -442,7 +385,7 @@ class Envira_Gallery_Media_View {
                             </label>
 
 							<!-- Addons can populate the UI here -->
-							<div class="addons"></div>
+							<div class="envira-addons"></div>
 	                    </div>
 	                    <!-- /.settings -->     
 	                   

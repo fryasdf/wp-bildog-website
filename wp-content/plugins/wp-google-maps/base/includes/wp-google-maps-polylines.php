@@ -1,13 +1,15 @@
 <?php
 /*
 Polylines functionality for WP Google Maps
-
-
 */
 
 
 
-
+/**
+ * Render polyline editor HTML
+ * @param  integer $mid     Map ID
+ * @return string           HTML outut
+ */
 function wpgmza_b_pro_add_polyline($mid) {
     global $wpgmza_tblname_maps;
     global $wpdb;
@@ -78,7 +80,7 @@ function wpgmza_b_pro_add_polyline($mid) {
 
 
                      <p style='clear: both;'>Polyline data:<br /><textarea name=\"wpgmza_polyline\" id=\"poly_line_list\" style=\"width:90%; height:100px; border:1px solid #ccc; background-color:#FFF; padding:5px; overflow:auto;\"></textarea>
-                    <p class='submit'><input type='submit' name='wpgmza_save_polyline' class='button-primary' value='".__("Save Polyline","wp-google-maps")." &raquo;' /></p>
+                    <p class='submit'><a href='javascript:history.back();' class='button button-secondary' title='".__("Cancel")."'>".__("Cancel")."</a> <input type='submit' name='wpgmza_save_polyline' class='button-primary' value='".__("Save Polyline","wp-google-maps")." &raquo;' /></p>
 
                     </form>
                 </div>
@@ -95,6 +97,13 @@ function wpgmza_b_pro_add_polyline($mid) {
 
 
 }
+
+
+/**
+ * Render polyline editor HTML (edit mode)
+ * @param  integer $mid     Map ID
+ * @return string           HTML outut
+ */
 function wpgmza_b_pro_edit_polyline($mid) {
     global $wpgmza_tblname_maps;
     global $wpdb;
@@ -161,7 +170,7 @@ function wpgmza_b_pro_edit_polyline($mid) {
                     </div>
 
                      <p style='clear: both;'>Polyline data:<br /><textarea name=\"wpgmza_polyline\" id=\"poly_line_list\" style=\"width:90%; height:100px; border:1px solid #ccc; background-color:#FFF; padding:5px; overflow:auto;\"></textarea>
-                    <p class='submit'><input type='submit' name='wpgmza_edit_polyline' class='button-primary' value='".__("Save Polyline","wp-google-maps")." &raquo;' /></p>
+                    <p class='submit'><a href='javascript:history.back();' class='button button-secondary' title='".__("Cancel")."'>".__("Cancel")."</a> <input type='submit' name='wpgmza_edit_polyline' class='button-primary' value='".__("Save Polyline","wp-google-maps")." &raquo;' /></p>
 
                     </form>
                 </div>
@@ -178,6 +187,15 @@ function wpgmza_b_pro_edit_polyline($mid) {
 
 
 }
+/**
+ * Render polyline JS
+ *
+ * @todo  This needs to be converted to a native JS file with localized variables
+ * 
+ * @param  integer $mapid   Map ID
+ * 
+ * @return void
+ */
 function wpgmaps_b_admin_add_polyline_javascript($mapid) {
         $res = wpgmza_get_map_data(sanitize_text_field($_GET['map_id']));
         $wpgmza_settings = get_option("WPGMZA_OTHER_SETTINGS");
@@ -199,13 +217,12 @@ function wpgmaps_b_admin_add_polyline_javascript($mapid) {
         if ($start_zoom < 1 || !$start_zoom) {
             $start_zoom = 5;
         }
+        if (isset($res->kml)) { $kml = $res->kml; } else { $kml = false; }
 
         
         $wpgmza_settings = get_option("WPGMZA_OTHER_SETTINGS");
-
-        $api_version = $wpgmza_settings['wpgmza_api_version'];
-        if (isset($api_version) && $api_version != "") {
-            $api_version_string = "v=$api_version&";
+        if (isset($wpgmza_settings['wpgmza_api_version']) && $wpgmza_settings['wpgmza_api_version'] != "") {
+            $api_version_string = "v=".$wpgmza_settings['wpgmza_api_version']."&";
         } else {
             $api_version_string = "v=3.exp&";
         }
@@ -317,8 +334,23 @@ function wpgmaps_b_admin_add_polyline_javascript($mapid) {
                   
                 });
 
+
+
                 WPGM_PathLine_<?php echo $poly_id; ?>.setMap(this.map);
+
+
+
                 <?php } } } ?> 
+
+                <?php if ($kml != false) { ?>
+                var temp = '<?php echo $kml; ?>';
+                arr = temp.split(',');
+                arr.forEach(function(entry) {
+                    var georssLayer = new google.maps.KmlLayer(entry+'?tstamp=<?php echo time(); ?>',{suppressInfoWindows: true, zindex: 0, clickable : false});
+                    georssLayer.setMap(MYMAP.map);
+
+                });
+                <?php } ?>
 
             }
             function addPoint(event) {
@@ -373,6 +405,17 @@ function wpgmaps_b_admin_add_polyline_javascript($mapid) {
         </script>
         <?php
 }
+
+/**
+ * Render polyline edit JS
+ *
+ * @todo  This needs to be converted to a native JS file with localized variables
+ * 
+ * @param  integer $mapid       Map ID
+ * @param  integer $polyid      Polygon ID
+ * 
+ * @return void
+ */
 function wpgmaps_b_admin_edit_polyline_javascript($mapid,$polyid) {
         $res = wpgmza_get_map_data($mapid);
         
@@ -396,7 +439,7 @@ function wpgmaps_b_admin_edit_polyline_javascript($mapid,$polyid) {
         if ($start_zoom < 1 || !$start_zoom) {
             $start_zoom = 5;
         }
-
+        if (isset($res->kml)) { $kml = $res->kml; } else { $kml = false; }
         
         $wpgmza_settings = get_option("WPGMZA_OTHER_SETTINGS");
         
@@ -413,9 +456,9 @@ function wpgmaps_b_admin_edit_polyline_javascript($mapid,$polyid) {
         if (!$fillopacity) { $fillopacity = "0.5"; }
         $linecolor = "#".$linecolor;
                         
-        $api_version = $wpgmza_settings['wpgmza_api_version'];
-        if (isset($api_version) && $api_version != "") {
-            $api_version_string = "v=$api_version&";
+        
+        if (isset($wpgmza_settings['wpgmza_api_version']) && $wpgmza_settings['wpgmza_api_version'] != "") {
+            $api_version_string = "v=".$wpgmza_settings['wpgmza_api_version']."&";
         } else {
             $api_version_string = "v=3.exp&";
         }
@@ -541,6 +584,16 @@ function wpgmaps_b_admin_edit_polyline_javascript($mapid,$polyid) {
                     <?php } } } }   ?> 
 
 
+                <?php if ($kml != false) { ?>
+                var temp = '<?php echo $kml; ?>';
+                arr = temp.split(',');
+                arr.forEach(function(entry) {
+                    var georssLayer = new google.maps.KmlLayer(entry+'?tstamp=<?php echo time(); ?>',{suppressInfoWindows: true, zindex: 0, clickable : false});
+                    georssLayer.setMap(MYMAP.map);
+
+                });
+                <?php } ?>
+
 
                 addPolyline();
                 
@@ -661,7 +714,16 @@ function wpgmaps_b_admin_edit_polyline_javascript($mapid,$polyid) {
         </script>
         <?php
 }
-
+/**
+ * Returns the list of polylines displayed in the map editor
+ *
+ * @todo Build this as a hook or filter instead of a function call
+ * 
+ * @param  integer  $map_id Map ID
+ * @param  boolean  $admin  Identify if user is admin or not
+ * @param  string   $width  Width to be used for HTML output
+ * @return string           List HTML
+ */
 function wpgmza_b_return_polyline_list($map_id,$admin = true,$width = "100%") {
     wpgmaps_debugger("return_marker_start");
 
@@ -716,6 +778,12 @@ function wpgmza_b_return_polyline_list($map_id,$admin = true,$width = "100%") {
     return $wpgmza_tmp;
     
 }
+/**
+ * Retrieve polyline options from DB
+ * 
+ * @param  integer $poly_id Polyline ID
+ * @return array            MYSQL Array
+ */
 function wpgmza_b_return_polyline_options($poly_id) {
     global $wpdb;
     global $wpgmza_tblname_polylines;
@@ -725,6 +793,12 @@ function wpgmza_b_return_polyline_options($poly_id) {
     }
 }
 
+/**
+ * Return the polyline data in the correct format
+ * 
+ * @param  integer $poly_id Polyline ID
+ * @return array            Poly data array
+ */
 function wpgmza_b_return_polyline_array($poly_id) {
     global $wpdb;
     global $wpgmza_tblname_polylines;
@@ -742,6 +816,15 @@ function wpgmza_b_return_polyline_array($poly_id) {
         return $ret;
     }
 }
+
+/**
+ * Return polyline ID array
+ *
+ * This is used when creating the JSON array of all the polylines and their unique options
+ * 
+ * @param  integer  $map_id     Map ID
+ * @return array                Array of IDs
+ */
 function wpgmza_b_return_polyline_id_array($map_id) {
     global $wpdb;
     global $wpgmza_tblname_polylines;

@@ -39,63 +39,25 @@
 
 	<!-- External Gallery -->
 	<div id="envira-gallery-external" class="envira-tab envira-clear<?php echo ( ( $data['instance']->get_config( 'type', $data['instance']->get_config_default( 'type' ) ) != 'default' ) ? ' envira-active' : '' ); ?>">
-		<?php
-		// If one or more External Gallery Types are registered, display them now.
-		if ( count( $data['types'] ) > 1 ) {
-			?>
-			<p class="envira-intro"><?php _e( 'Select Your Service', 'envira-gallery' ); ?></p>
-			<ul id="envira-gallery-types-nav">
-				<?php
-				foreach ( $data['types'] as $id => $title ) {
-					// Don't output the default type as an option here
-					if ( 'default' == $id ) {
-						continue;
-					}
+	
+		<?php	$upgrade_link = Envira_Gallery_Common_Admin::get_instance()->get_upgrade_link(); ?>
+		<p class="envira-intro"><?php _e( 'Create Dynamic Galleries with Envira', 'envira-gallery' ); ?></p>
+		<ul id="envira-gallery-types-nav">
+			<li id="envira-gallery-type-instagram">
+				<a href="<?php echo $upgrade_link; ?>" title="<?php _e( 'Build Galleries from Instagram images.', 'envira-gallery' ); ?>" target="_blank">
+					<div class="icon"></div>
+					<div class="title"><?php _e( 'Instagram', 'envira-gallery' ); ?></div>
+				</a>
+			</li>
+		</ul>
+		<p>
+			<?php _e( 'Envira Pro allows you to build galleries from Instagram photos, images from your posts, and more.', 'envira-gallery' ); ?>
+		</p>
+		<p>
+			<a href="<?php echo $upgrade_link; ?>" class="button button-primary button-x-large" title="<?php _e( 'Click Here to Upgrade', 'envira-gallery' ); ?>" target="_blank">
+				<?php _e( 'Click Here to Upgrade', 'envira-gallery' ); ?>
+			</a>
+		</p>
 
-					// Output the type as a radio option
-					?>
-					<li id="envira-gallery-type-<?php echo sanitize_html_class( $id ); ?>"<?php echo ( ( $data['instance']->get_config( 'type', $data['instance']->get_config_default( 'type' ) ) == $id ) ? ' class="envira-active"' : '' ); ?>>
-						<label for="envira-gallery-type-<?php echo $id; ?>">
-							<input id="envira-gallery-type-<?php echo sanitize_html_class( $id ); ?>" type="radio" name="_envira_gallery[type]" value="<?php echo $id; ?>" <?php checked( $data['instance']->get_config( 'type', $data['instance']->get_config_default( 'type' ) ), $id ); ?> /> 
-							<div class="icon"></div>
-							<div class="title"><?php echo $title; ?></div>
-						</label>
-					</li>
-					<?php
-				}
-				?>
-			</ul>
-			<?php
-		} else {
-			// No External Gallery Types are registered.
-			// If we're on the Lite version, show a notice.
-			if ( class_exists( 'Envira_Gallery_Lite' ) ) {
-				$upgrade_link = Envira_Gallery_Common_Admin::get_instance()->get_upgrade_link();
-				?>
-				<p class="envira-intro"><?php _e( 'Create Dynamic Galleries with Envira', 'envira-gallery' ); ?></p>
-				<ul id="envira-gallery-types-nav">
-					<li id="envira-gallery-type-instagram">
-						<a href="<?php echo $upgrade_link; ?>" title="<?php _e( 'Build Galleries from Instagram images.', 'envira-gallery' ); ?>" target="_blank">
-							<div class="icon"></div>
-							<div class="title"><?php _e( 'Instagram', 'envira-gallery' ); ?></div>
-						</a>
-					</li>
-				</ul>
-				<p>
-					<?php _e( 'Envira Pro allows you to build galleries from Instagram photos, images from your posts, and more.', 'envira-gallery' ); ?>
-				</p>
-				<p>
-					<a href="<?php echo $upgrade_link; ?>" class="button button-primary button-x-large" title="<?php _e( 'Click Here to Upgrade', 'envira-gallery' ); ?>" target="_blank">
-						<?php _e( 'Click Here to Upgrade', 'envira-gallery' ); ?>
-					</a>
-				</p>
-				<?php
-			} else {
-				?>
-				<p><?php _e( 'It doesn\'t look like you have any Addons activated which import images from external sources.', 'envira-gallery' ); ?></p>
-				<?php
-			}
-		}
-		?>
 	</div>
 </div>

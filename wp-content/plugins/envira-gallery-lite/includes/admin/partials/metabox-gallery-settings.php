@@ -39,6 +39,7 @@
         ?>
         <div id="envira-tab-<?php echo $id; ?>" class="envira-tab envira-clear <?php echo $class; ?>">
         	<?php do_action( 'envira_gallery_tab_' . $id, $data['post'] ); ?>
+        	
         </div>
         <?php
         $i++;

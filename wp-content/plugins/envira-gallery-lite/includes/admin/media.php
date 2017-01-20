@@ -44,7 +44,7 @@ class Envira_Gallery_Media {
     public function __construct() {
 
         // Load the base class object.
-        $this->base = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance() : Envira_Gallery_Lite::get_instance() );
+        $this->base = Envira_Gallery_Lite::get_instance();
 
         add_filter( 'wp_handle_upload', array( $this, 'fix_image_orientation' ) );
 

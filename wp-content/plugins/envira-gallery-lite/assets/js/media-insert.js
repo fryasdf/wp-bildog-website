@@ -78,7 +78,8 @@ jQuery( document ).ready( function( $ ) {
                     action:     'envira_gallery_insert_images',
                     nonce:      envira_gallery_metabox.insert_nonce,
                     post_id:    envira_gallery_metabox.id,
-                    images:     images,
+                    // make this a JSON string so we can send larger amounts of data (images), otherwise max is around 20 by default for most server configs
+                    images:     JSON.stringify(images),
                 },
                 function( response ) {
                     // Response should be a JSON success with the HTML for the image grid

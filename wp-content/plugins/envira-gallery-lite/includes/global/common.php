@@ -44,7 +44,7 @@ class Envira_Gallery_Common {
     public function __construct() {
 
         // Load the base class object.
-        $this->base = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance() : Envira_Gallery_Lite::get_instance() );
+        $this->base = Envira_Gallery_Lite::get_instance();
 
     }
 
@@ -244,9 +244,14 @@ class Envira_Gallery_Common {
     public function get_lightbox_themes() {
 
         $themes = array(
+//            array(
+//                'value' => 'base_dark',
+//                'name'  => __( 'Base (Dark)', 'envira-gallery' ),
+//                'file'  => $this->base->file
+//            ),
             array(
                 'value' => 'base',
-                'name'  => __( 'Base', 'envira-gallery' ),
+                'name'  => __( 'Legacy', 'envira-gallery' ),
                 'file'  => $this->base->file
             )
         );
@@ -624,7 +629,7 @@ class Envira_Gallery_Common {
             'thumbnails_position' => 'bottom',
 
             // Mobile
-            'mobile_columns'      => 1,
+      //     'mobile_columns'      => 1,
             'mobile'              => 1,
             'mobile_width'        => 320,
             'mobile_height'       => 240,
@@ -634,6 +639,8 @@ class Envira_Gallery_Common {
             'mobile_arrows'       => 1,
             'mobile_toolbar'      => 1,
             'mobile_thumbnails'   => 1,
+            'mobile_thumbnails_width'    => 75,
+            'mobile_thumbnails_height'   => 50,
 
             // Misc
             'title'               => '',
@@ -643,13 +650,11 @@ class Envira_Gallery_Common {
         );
 
         // For Lite, change some defaults
-        if ( class_exists( 'Envira_Gallery_Lite' ) ) {
-            $defaults['toolbar']            = 0;
-            $defaults['thumbnails']         = 0;
-            $defaults['mobile_touchwipe']   = 0;
-            $defaults['mobile_toolbar']     = 0;
-            $defaults['mobile_thumbnails']  = 0;
-        }
+		$defaults['toolbar']            = 0;
+		$defaults['thumbnails']         = 0;
+		$defaults['mobile_touchwipe']   = 0;
+		$defaults['mobile_toolbar']     = 0;
+		$defaults['mobile_thumbnails']  = 0;
 
         // Allow devs to filter the defaults.
         $defaults = apply_filters( 'envira_gallery_defaults', $defaults, $post_id );
@@ -785,7 +790,11 @@ class Envira_Gallery_Common {
         // Don't resize images that don't belong to this site's URL
         // Strip ?lang=fr from blog's URL - WPML adds this on
         // and means our next statement fails
-        $site_url = preg_replace( '/\?.*/', '', get_bloginfo( 'url' ) );
+        if ( is_multisite() ) {
+            $site_url = preg_replace( '/\?.*/', '', network_site_url() );
+        } else {
+            $site_url = preg_replace( '/\?.*/', '', get_bloginfo( 'url' ) );
+        }
 
         // WPML check - if there is a /fr or any domain in the url, then remove that from the $site_url
         if ( defined('ICL_LANGUAGE_CODE') ) {
@@ -819,8 +828,6 @@ class Envira_Gallery_Common {
         if ( ! file_exists( $dest_file_name ) || ( file_exists( $dest_file_name ) && $force_overwrite ) ) {
             // We only want to resize Media Library images, so we can be sure they get deleted correctly when appropriate.
             $get_attachment = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE guid='%s'", $url ) );
-
-            // print_r ($get_attachment); exit;
 
             // Load the WordPress image editor.
             $editor = wp_get_image_editor( $file_path );
@@ -942,9 +949,15 @@ class Envira_Gallery_Common {
             $file_path = $wp_upload_dir['basedir'] . $matches[0];
         } else {
             $pathinfo    = parse_url( $url );
-            $uploads_dir = is_multisite() ? '/files/' : '/wp-content/';
+            // $uploads_dir = is_multisite() ? '/files/' : '/wp-content/';
+            $uploads_dir = is_multisite() ? '/files/' : '/' . str_replace( ABSPATH, '', WP_CONTENT_DIR ) . '/';
             $file_path   = ABSPATH . str_replace( dirname( $_SERVER['SCRIPT_NAME'] ) . '/', '', strstr( $pathinfo['path'], $uploads_dir ) );
             $file_path   = preg_replace( '/(\/\/)/', '/', $file_path );
+        }
+
+        // Attempt to stream and import the image if it does not exist based on URL provided.
+        if ( ! file_exists( $file_path ) ) {
+            return new WP_Error( 'envira-gallery-error-no-file', __( 'No file could be found for the image URL specified.', 'envira-gallery' ) );
         }
 
         // Attempt to stream and import the image if it does not exist based on URL provided.

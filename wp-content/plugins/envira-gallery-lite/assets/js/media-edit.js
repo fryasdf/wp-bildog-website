@@ -132,7 +132,7 @@ var EnviraGalleryEditView = wp.Backbone.View.extend( {
                 } );
 
                 // Render view within our main view
-                this.$el.find( 'div.addons' ).append( child_view.render().el );
+                this.$el.find( 'div.envira-addons' ).append( child_view.render().el );
             }, this );
         }
 

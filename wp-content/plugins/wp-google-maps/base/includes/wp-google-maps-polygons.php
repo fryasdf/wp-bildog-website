@@ -1,13 +1,15 @@
 <?php
 /*
 Polygon functionality for WP Google Maps
-
-
 */
 
 
 
-
+/**
+ * Render polygon editor HTML
+ * @param  integer $mid     Map ID
+ * @return string           HTML outut
+ */
 function wpgmza_b_pro_add_poly($mid) {
     global $wpgmza_tblname_maps;
     global $wpdb;
@@ -78,23 +80,22 @@ function wpgmza_b_pro_add_poly($mid) {
                     </div>
 
                      <p style='clear: both;'>Polygon data:<br /><textarea name=\"wpgmza_polygon\" id=\"poly_line_list\" style=\"width:90%; height:100px; border:1px solid #ccc; background-color:#FFF; padding:5px; overflow:auto;\"></textarea>
-                    <p class='submit'><input type='submit' name='wpgmza_save_poly' class='button-primary' value='".__("Save Polygon","wp-google-maps")." &raquo;' /></p>
+                     <p style='clear: both;'>Polygon data:<br /><textarea name=\"wpgmza_polygon_inner\" id=\"poly_line_list_inner\" style=\"width:90%; height:100px; border:1px solid #ccc; background-color:#FFF; padding:5px; overflow:auto;\"></textarea>
+                    <p class='submit'><a href='javascript:history.back();' class='button button-secondary' title='".__("Cancel")."'>".__("Cancel")."</a> <input type='submit' name='wpgmza_save_poly' class='button-primary' value='".__("Save Polygon","wp-google-maps")." &raquo;' /></p>
 
                     </form>
                 </div>
-
-
             </div>
-
-
-
         ";
-
     }
-
-
-
 }
+
+
+/**
+ * Render polygon editor HTML (edit mode)
+ * @param  integer $mid     Map ID
+ * @return string           HTML outut
+ */
 function wpgmza_b_pro_edit_poly($mid) {
     global $wpgmza_tblname_maps;
     global $wpdb;
@@ -164,7 +165,8 @@ function wpgmza_b_pro_edit_poly($mid) {
                     
 
                      <p style='clear: both;' >Polygon data:<br /><textarea name=\"wpgmza_polygon\" id=\"poly_line_list\" style=\"width:90%; height:100px; border:1px solid #ccc; background-color:#FFF; padding:5px; overflow:auto;\"></textarea>
-                    <p class='submit'><input type='submit' name='wpgmza_edit_poly' class='button-primary' value='".__("Save Polygon","wp-google-maps")." &raquo;' /></p>
+                     <p style='clear: both;' >Polygon data (inner):<br /><textarea name=\"wpgmza_polygon_inner\" id=\"poly_line_list_inner\" style=\"width:90%; height:100px; border:1px solid #ccc; background-color:#FFF; padding:5px; overflow:auto;\">".$pol->innerpolydata."</textarea>
+                    <p class='submit'><a href='javascript:history.back();' class='button button-secondary' title='".__("Cancel")."'>".__("Cancel")."</a> <input type='submit' name='wpgmza_edit_poly' class='button-primary' value='".__("Save Polygon","wp-google-maps")." &raquo;' /></p>
 
                     </form>
                 </div>
@@ -181,6 +183,16 @@ function wpgmza_b_pro_edit_poly($mid) {
 
 
 }
+
+/**
+ * Render polygons JS
+ *
+ * @todo  This needs to be converted to a native JS file with localized variables
+ * 
+ * @param  integer $mapid   Map ID
+ * 
+ * @return void
+ */
 function wpgmaps_b_admin_add_poly_javascript($mapid) {
         $res = wpgmza_get_map_data(sanitize_text_field($_GET['map_id']));
         $wpgmza_settings = get_option("WPGMZA_OTHER_SETTINGS");
@@ -203,14 +215,17 @@ function wpgmaps_b_admin_add_poly_javascript($mapid) {
             $start_zoom = 5;
         }
 
+
+        if (isset($res->kml)) { $kml = $res->kml; } else { $kml = false; }
+
         
         $wpgmza_settings = get_option("WPGMZA_OTHER_SETTINGS");
-        $api_version = $wpgmza_settings['wpgmza_api_version'];
-        if (isset($api_version) && $api_version != "") {
-            $api_version_string = "v=$api_version&";
+        if (isset($wpgmza_settings['wpgmza_api_version']) && $wpgmza_settings['wpgmza_api_version'] != "") {
+            $api_version_string = "v=".$wpgmza_settings['wpgmza_api_version']."&";
         } else {
             $api_version_string = "v=3.exp&";
         }
+
 
         ?>
         <?php if( get_option( 'wpgmza_google_maps_api_key' ) ){ ?>
@@ -337,6 +352,19 @@ function wpgmaps_b_admin_add_poly_javascript($mapid) {
 
                 <?php } ?>
 
+                
+                <?php if ($kml != false) { ?>
+                var temp = '<?php echo $kml; ?>';
+                arr = temp.split(',');
+                arr.forEach(function(entry) {
+                    var georssLayer = new google.maps.KmlLayer(entry+'?tstamp=<?php echo time(); ?>',{suppressInfoWindows: true, zindex: 0, clickable : false});
+                    georssLayer.setMap(MYMAP.map);
+
+                });
+                <?php } ?>
+
+
+
             }
             function addPoint(event) {
                 
@@ -388,6 +416,17 @@ function wpgmaps_b_admin_add_poly_javascript($mapid) {
         </script>
         <?php
 }
+
+/**
+ * Render polygon edit JS
+ *
+ * @todo  This needs to be converted to a native JS file with localized variables
+ * 
+ * @param  integer $mapid       Map ID
+ * @param  integer $polyid      Polygon ID
+ * 
+ * @return void
+ */
 function wpgmaps_b_admin_edit_poly_javascript($mapid,$polyid) {
         $res = wpgmza_get_map_data($mapid);
         
@@ -411,12 +450,11 @@ function wpgmaps_b_admin_edit_poly_javascript($mapid,$polyid) {
         if ($start_zoom < 1 || !$start_zoom) {
             $start_zoom = 5;
         }
-
+        if (isset($res->kml)) { $kml = $res->kml; } else { $kml = false; }
         
         $wpgmza_settings = get_option("WPGMZA_OTHER_SETTINGS");
-        $api_version = $wpgmza_settings['wpgmza_api_version'];
-        if (isset($api_version) && $api_version != "") {
-            $api_version_string = "v=$api_version&";
+        if (isset($wpgmza_settings['wpgmza_api_version']) && $wpgmza_settings['wpgmza_api_version'] != "") {
+            $api_version_string = "v=".$wpgmza_settings['wpgmza_api_version']."&";
         } else {
             $api_version_string = "v=3.exp&";
         }
@@ -546,6 +584,17 @@ function wpgmaps_b_admin_edit_poly_javascript($mapid,$polyid) {
                 <?php } ?>
 
 
+                <?php if ($kml != false) { ?>
+                var temp = '<?php echo $kml; ?>';
+                arr = temp.split(',');
+                arr.forEach(function(entry) {
+                    var georssLayer = new google.maps.KmlLayer(entry+'?tstamp=<?php echo time(); ?>',{suppressInfoWindows: true, zindex: 0, clickable : false});
+                    georssLayer.setMap(MYMAP.map);
+
+                });
+                <?php } ?>
+
+
                 
                 addPolygon();
                 
@@ -670,6 +719,16 @@ function wpgmaps_b_admin_edit_poly_javascript($mapid,$polyid) {
         <?php
 }
 
+/**
+ * Returns the list of polygons displayed in the map editor
+ *
+ * @todo Build this as a hook or filter instead of a function call
+ * 
+ * @param  integer  $map_id Map ID
+ * @param  boolean  $admin  Identify if user is admin or not
+ * @param  string   $width  Width to be used for HTML output
+ * @return string           List HTML
+ */
 function wpgmza_b_return_polygon_list($map_id,$admin = true,$width = "100%") {
     wpgmaps_debugger("return_marker_start");
 
@@ -724,6 +783,13 @@ function wpgmza_b_return_polygon_list($map_id,$admin = true,$width = "100%") {
     return $wpgmza_tmp;
     
 }
+
+/**
+ * Retrieve polygon options from DB
+ * 
+ * @param  integer $poly_id Polygon ID
+ * @return array            MYSQL Array
+ */
 function wpgmza_b_return_poly_options($poly_id) {
     global $wpdb;
     global $wpgmza_tblname_poly;
@@ -733,6 +799,12 @@ function wpgmza_b_return_poly_options($poly_id) {
     }
 }
 
+/**
+ * Return the polygon data in the correct format
+ * 
+ * @param  integer $poly_id Polygon ID
+ * @return array            Poly data array
+ */
 function wpgmza_b_return_polygon_array($poly_id) {
     global $wpdb;
     global $wpgmza_tblname_poly;
@@ -750,6 +822,15 @@ function wpgmza_b_return_polygon_array($poly_id) {
         return $ret;
     }
 }
+
+/**
+ * Return polygon ID array
+ *
+ * This is used when creating the JSON array of all the polygons and their unique options
+ * 
+ * @param  integer  $map_id     Map ID
+ * @return array                Array of IDs
+ */
 function wpgmza_b_return_polygon_id_array($map_id) {
     global $wpdb;
     global $wpgmza_tblname_poly;

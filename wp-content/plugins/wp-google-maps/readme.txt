@@ -3,7 +3,7 @@ Contributors: WPGMaps, NickDuncan, CodeCabin_, Jarryd Long, DylanAuty
 Donate link: http://www.wpgmaps.com
 Tags: google maps, maps, map, map markers, google map, google maps plugin, wp google maps, wp google map, map plugin, directions, google map plugin, map widget
 Requires at least: 3.5
-Tested up to: 4.6
+Tested up to: 4.6.1
 Stable tag: trunk
 License: GPLv2
 
@@ -29,6 +29,7 @@ The [WP Google Maps Pro Version](http://www.wpgmaps.com/purchase-professional-ve
 * Google Maps Streetview supported
 * UTF-8 character support
 * Map widget functionality
+* Full screen map functionality
 * Support for localization
 * Choose from four Google maps types: roadmap, terrain, satellite and hybrid
 * Define your own width, height and zoom level for your Google Map
@@ -212,6 +213,46 @@ We no longer support timthumb and we have opted to remove it from WP Google Maps
 Please upgrade your version of WP Google Maps to version 6.0.27 as it includes multiple security improvements.
 
 == Changelog ==
+
+= 6.4.02 - 2017-01-20 - Low priority =
+* Removed an echo that was incorrectly placed
+
+= 6.4.01 - 2017-01-20 - Low priority =
+* Added the ability for users to subscribe to our mailing list
+
+= 6.4.00 - 2017-01-11 - Medium priority =
+* Added an option to set default store locator address
+* Full screen map functionality added
+* Fixed a bug that caused custom css to be incorrectly escaped
+* Fixed the bug that caused the "save marker" button to not revert when an address couldnt be geocoded
+* Added caching notices to notify users to clear their cache when a marker is added or edited or when map settings were changed
+* Estonian translation added
+* Fixed the incorrect locale setting with the Google Maps API
+* Fixed a bug that caused the admin style sheet to load on all admin pages
+* Added the ability to change the gesture input
+* Fixed a bug that caused PHP warnings when a polygon or polyline had no polydata
+* Fixed a bug that caused non-utf8 characters within an address to cause the insertion of the marker to fail
+* Documented all PHP functions
+
+= 6.3.20 - 2016-09-27 =
+* Fixed a big that prevented the map from loading in a widget
+* Refactored code used to load the Google Maps API and Script files
+
+= 6.3.19 - 2016-09-21 =
+* Fixed a bug that caused some maps to not load markers on page load
+
+= 6.3.18 - 2016-09-15 =
+* Chinese support - when your language is set to Chinese (ZN_cn), the map will now load from maps.google.cn
+* Hebrew language code fixed when accessing the Google Maps API in Hebrew
+* Added support for the KML layer to be visible when adding/editing polygons or polylines
+* Fixed a bug with the store locator not using miles when selected
+* Moved up to versions 3.25 and 3.26 of the Google Maps JavaScript API
+* Datatables updated
+* When a marker is deleted, the view does not reset
+* User javascript has been ported over to a JavaScript file
+* A minimifed and unminified version of the user-side JS file is now included - The minifed version is used by default
+* You can now set the google map zoom level via the shortcode. Example: [wpgmza id='1' zoom=8]
+* Fixed a PHP warning on the error log page
 
 = 6.3.17 - 2016-08-07 - Medium priority =
 * Added a temporary Google Maps JavaScript API key for users so that the UX is not negatively affected on the user's first attempt at using the plugin.

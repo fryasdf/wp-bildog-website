@@ -44,7 +44,7 @@ class Envira_Gallery_Addons {
      * @var string
      */
     public $hook;
-
+	public $key;
     /**
      * Primary class constructor.
      *
@@ -53,7 +53,7 @@ class Envira_Gallery_Addons {
     public function __construct() {
 
         // Load the base class object.
-        $this->base = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance() : Envira_Gallery_Lite::get_instance() );
+        $this->base = Envira_Gallery_Lite::get_instance();
 
         // Add custom addons submenu.
         add_action( 'admin_menu', array( $this, 'admin_menu' ), 12 );
@@ -363,10 +363,12 @@ class Envira_Gallery_Addons {
      * @return  array               Array of addon data otherwise.
      */
     public function get_addons_data( $key ) {
-
+		
+		$this->key = $key;
+		
         // Get Addons
         // If the key is valid, we'll get personalised upgrade URLs for each Addon (if necessary) and plugin update information.
-        $addons = Envira_Gallery_License::get_instance()->perform_remote_request( 'get-addons-data-v15', array( 'tgm-updater-key' => $key ) );
+        $addons = $this->perform_remote_request( 'get-addons-data-v15', array( 'tgm-updater-key' => $key ) );
 
         // If there was an API error, set transient for only 10 minutes.
         if ( ! $addons ) {
@@ -444,7 +446,7 @@ class Envira_Gallery_Addons {
      */
     public function addons_link( $links ) {
 
-        $addons_link = sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( array( 'post_type' => 'envira', 'page' => ( class_exists( 'Envira_Gallery' ) ? 'envira-gallery-addons' : 'envira-gallery-lite-addons' ) ), admin_url( 'edit.php' ) ) ), __( 'Addons', 'envira-gallery' ) );
+        $addons_link = sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( array( 'post_type' => 'envira', 'page' => 'envira-gallery-lite-addons' ), admin_url( 'edit.php' ) ) ), __( 'Addons', 'envira-gallery' ) );
         array_unshift( $links, $addons_link );
 
         return $links;
@@ -564,6 +566,60 @@ class Envira_Gallery_Addons {
             ?>
         </div>
         <?php
+
+    }
+    /**
+     * Queries the remote URL via wp_remote_post and returns a json decoded response.
+     *
+     * @since 1.0.0
+     *
+     * @param string $action        The name of the $_POST action var.
+     * @param array $body           The content to retrieve from the remote URL.
+     * @param array $headers        The headers to send to the remote URL.
+     * @param string $return_format The format for returning content from the remote URL.
+     * @return string|bool          Json decoded response on success, false on failure.
+     */
+    public function perform_remote_request( $action, $body = array(), $headers = array(), $return_format = 'json' ) {
+
+        // Build the body of the request.
+        $body = wp_parse_args(
+            $body,
+            array(
+                'tgm-updater-action'     => $action,
+                'tgm-updater-key'        => $this->key,
+                'tgm-updater-wp-version' => get_bloginfo( 'version' ),
+                'tgm-updater-referer'    => site_url()
+            )
+        );
+        $body = http_build_query( $body, '', '&' );
+
+        // Build the headers of the request.
+        $headers = wp_parse_args(
+            $headers,
+            array(
+                'Content-Type'   => 'application/x-www-form-urlencoded',
+                'Content-Length' => strlen( $body )
+            )
+        );
+
+        // Setup variable for wp_remote_post.
+        $post = array(
+            'headers' => $headers,
+            'body'    => $body
+        );
+
+        // Perform the query and retrieve the response.
+        $response      = wp_remote_post( 'http://enviragallery.com', $post );
+        $response_code = wp_remote_retrieve_response_code( $response );
+        $response_body = wp_remote_retrieve_body( $response );
+
+        // Bail out early if there are any errors.
+        if ( 200 != $response_code || is_wp_error( $response_body ) ) {
+            return false;
+        }
+
+        // Return the json decoded content.
+        return json_decode( $response_body );
 
     }
 

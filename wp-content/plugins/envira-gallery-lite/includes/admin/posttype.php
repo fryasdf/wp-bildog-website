@@ -44,7 +44,7 @@ class Envira_Gallery_Posttype_Admin {
     public function __construct() {
 
         // Load the base class object.
-        $this->base = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance() : Envira_Gallery_Lite::get_instance() );
+        $this->base = Envira_Gallery_Lite::get_instance();
         $this->metabox = Envira_Gallery_Metaboxes::get_instance();
 
         // Update post type messages.

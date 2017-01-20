@@ -5,7 +5,7 @@
  * Description: Envira Gallery is best responsive WordPress gallery plugin. This is the lite version.
  * Author:      Thomas Griffin
  * Author URI:  http://enviragallery.com
- * Version:     1.5.2
+ * Version:     1.5.6.2
  * Text Domain: envira-gallery
  *
  * Envira Gallery is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ class Envira_Gallery_Lite {
 	 *
 	 * @var string
 	 */
-	public $version = '1.5.2';
+	public $version = '1.5.6.2';
 
 	/**
 	 * The name of the plugin.
@@ -155,14 +155,13 @@ class Envira_Gallery_Lite {
 		require plugin_dir_path( __FILE__ ) . 'includes/admin/ajax.php';
 		require plugin_dir_path( __FILE__ ) . 'includes/admin/common.php';
 		require plugin_dir_path( __FILE__ ) . 'includes/admin/editor.php';
-		require plugin_dir_path( __FILE__ ) . 'includes/admin/license.php';
 		require plugin_dir_path( __FILE__ ) . 'includes/admin/media.php';
 		require plugin_dir_path( __FILE__ ) . 'includes/admin/media-view.php';
 		require plugin_dir_path( __FILE__ ) . 'includes/admin/metaboxes.php';
 		require plugin_dir_path( __FILE__ ) . 'includes/admin/notice.php';
 		require plugin_dir_path( __FILE__ ) . 'includes/admin/posttype.php';
-		require plugin_dir_path( __FILE__ ) . 'includes/admin/settings.php';
 		require plugin_dir_path( __FILE__ ) . 'includes/admin/table.php';
+		require plugin_dir_path( __FILE__ ) . 'includes/admin/review.php';
 
 	}
 
@@ -512,6 +511,30 @@ function envira_gallery_lite_activation_hook( $network_wide ) {
 
 // Load the main plugin class.
 $envira_gallery_lite = Envira_Gallery_Lite::get_instance();
+
+
+if ( ! function_exists( 'envira_mobile_detect' ) ) {
+
+	/**
+	 * Holder for mobile detect.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	function envira_mobile_detect(){
+
+		//Check for mobile detect class before loading it again //prevents conflicts with themes
+		if ( ! class_exists( 'Mobile_Detect' ) ) {
+
+			require_once trailingslashit( plugin_dir_path( __FILE__ ) ) . 'includes/global/Mobile_Detect.php';
+
+		}
+
+		return new Mobile_Detect;
+
+	}
+
+}
 
 // Conditionally load the template tag.
 if ( ! function_exists( 'envira_gallery' ) ) {

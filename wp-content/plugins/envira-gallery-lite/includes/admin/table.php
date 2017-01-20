@@ -53,7 +53,7 @@ class Envira_Gallery_Table_Admin {
     public function __construct() {
 
         // Load the base class object.
-        $this->base = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance() : Envira_Gallery_Lite::get_instance() );
+        $this->base = Envira_Gallery_Lite::get_instance();
 
         // Load the metabox class object.
         $this->metabox = Envira_Gallery_Metaboxes::get_instance();
@@ -65,13 +65,6 @@ class Envira_Gallery_Table_Admin {
         // Append data to various admin columns.
         add_filter( 'manage_edit-envira_columns', array( &$this, 'envira_columns' ) );
         add_action( 'manage_envira_posts_custom_column', array( &$this, 'envira_custom_columns'), 10, 2 );
-
-        // Only load Quick and Bulk Editing support if we're running Envira Gallery, and not Envira Gallery Lite.
-        if ( class_exists( 'Envira_Gallery' ) ) {
-            add_action( 'quick_edit_custom_box', array( $this, 'quick_edit_custom_box' ), 10, 2 ); // Single Item.
-            add_action( 'bulk_edit_custom_box', array( $this, 'bulk_edit_custom_box' ), 10, 2 ); // Multiple Items.
-            add_action( 'post_updated', array( $this, 'bulk_edit_save' ) );
-        }
 
     }
     
@@ -164,8 +157,8 @@ class Envira_Gallery_Table_Admin {
         // Add additional columns we want to display.
         $envira_columns = array(
             'cb'            => '<input type="checkbox" />',
-            'title'         => __( 'Title', 'envira-gallery' ),
             'image'         => __( '', 'envira-gallery' ),
+            'title'         => __( 'Title', 'envira-gallery' ),
             'shortcode'     => __( 'Shortcode', 'envira-gallery' ),
             'posts'         => __( 'Posts', 'envira-gallery' ),
             'modified'      => __( 'Last Modified', 'envira-gallery' ),

@@ -17,7 +17,7 @@ add_action( 'wp_ajax_envira_gallery_change_type', 'envira_gallery_ajax_change_ty
 function envira_gallery_ajax_change_type() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-change-type', 'nonce' );
+    check_admin_referer( 'envira-gallery-change-type', 'nonce' );
 
     // Prepare variables.
     $post_id = absint( $_POST['post_id'] );
@@ -45,17 +45,17 @@ add_action( 'wp_ajax_envira_gallery_change_preview', 'envira_gallery_ajax_change
 function envira_gallery_ajax_change_preview() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-change-preview', 'nonce' );
+    check_admin_referer( 'envira-gallery-change-preview', 'nonce' );
 
     // Prepare variables.
     $post_id = absint( $_POST['post_id'] );
     $type    = stripslashes( $_POST['type'] );
 
     // Get the saved Gallery configuration.
-    $data    = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance()->get_gallery( $post_id ) : Envira_Gallery_Lite::get_instance()->get_gallery( $post_id ) );
+    $data    = Envira_Gallery_Lite::get_instance()->get_gallery( $post_id );
 
     // Iterate through the POSTed Gallery configuration (which comprises of index based fields),
-    // overwriting the above with the supplied values.  This gives us the most up to date, 
+    // overwriting the above with the supplied values.  This gives us the most up to date,
     // unsaved configuration.
     foreach ( $_POST['data'] as $index => $field ) {
 
@@ -69,7 +69,7 @@ function envira_gallery_ajax_change_preview() {
         if ( ! isset( $matches[1] ) || count( $matches[1] ) == 0 ) {
             continue;
         }
-        
+
         // Add this field key/value pair to the configuration
         $data['config'][ $matches[1][0] ] = $field['value'];
 
@@ -95,7 +95,7 @@ add_action( 'wp_ajax_envira_gallery_set_user_setting', 'envira_gallery_ajax_set_
 function envira_gallery_ajax_set_user_setting() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-set-user-setting', 'nonce' );
+    check_admin_referer( 'envira-gallery-set-user-setting', 'nonce' );
 
     // Prepare variables.
     $name    = stripslashes( $_POST['name'] );
@@ -119,7 +119,7 @@ add_action( 'wp_ajax_envira_gallery_load_image', 'envira_gallery_ajax_load_image
 function envira_gallery_ajax_load_image() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-load-image', 'nonce' );
+    check_admin_referer( 'envira-gallery-load-image', 'nonce' );
 
     // Prepare variables.
     $id      = absint( $_POST['id'] );
@@ -184,14 +184,15 @@ add_action( 'wp_ajax_envira_gallery_insert_images', 'envira_gallery_ajax_insert_
 function envira_gallery_ajax_insert_images() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-insert-images', 'nonce' );
+    check_admin_referer( 'envira-gallery-insert-images', 'nonce' );
 
     // Prepare variables.
     $images = array();
+
     if ( isset( $_POST['images'] ) ) {
-        $images  = stripslashes_deep( (array) $_POST['images'] );
+        $images = json_decode( stripslashes( $_POST['images'] ), true );
     }
-    
+
     // Get the Envira Gallery ID
     $post_id = absint( $_POST['post_id'] );
 
@@ -214,6 +215,12 @@ function envira_gallery_ajax_insert_images() {
 
     // Loop through the images and add them to the gallery.
     foreach ( (array) $images as $i => $image ) {
+
+        // If the image is already in the gallery, lets skip it since we don't want to override the image metadata settings
+        if ( in_array( $image['id'], $in_gallery ) ) {
+            continue;
+        }
+
         // Update the attachment image post meta first.
         $has_gallery = get_post_meta( $image['id'], '_eg_has_gallery', true );
         if ( empty( $has_gallery ) ) {
@@ -259,13 +266,13 @@ add_action( 'wp_ajax_envira_gallery_sort_images', 'envira_gallery_ajax_sort_imag
 function envira_gallery_ajax_sort_images() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-sort', 'nonce' );
+    check_admin_referer( 'envira-gallery-sort', 'nonce' );
 
     // Prepare variables.
     $order        = explode( ',', $_POST['order'] );
     $post_id      = absint( $_POST['post_id'] );
     $gallery_data = get_post_meta( $post_id, '_eg_gallery_data', true );
-    
+
     // Copy the gallery config, removing the images
     // Stops config from getting lost when sorting + not clicking Publish/Update
     $new_order = $gallery_data;
@@ -297,7 +304,7 @@ add_action( 'wp_ajax_envira_gallery_remove_image', 'envira_gallery_ajax_remove_i
 function envira_gallery_ajax_remove_image() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-remove-image', 'nonce' );
+    check_admin_referer( 'envira-gallery-remove-image', 'nonce' );
 
     // Prepare variables.
     $post_id      = absint( $_POST['post_id'] );
@@ -325,19 +332,6 @@ function envira_gallery_ajax_remove_image() {
     // Run hook before finishing the reponse.
     do_action( 'envira_gallery_ajax_remove_image', $attach_id, $post_id );
 
-    // If the global setting for deleting images on gallery image deletion is enabled, check
-    // that the image doesn't belong to another gallery and isn't attached
-    $image_delete = Envira_Gallery_Settings::get_instance()->get_setting( 'image_delete' );
-    if ( $image_delete ) {
-        // Get attachment
-        $attachment = get_post( $attach_id );
-
-        // If post parent is the Gallery ID, and the image isn't in another gallery, we're OK to delete the image
-        if ( ( $attachment->post_parent == $post_id ) && ( count( $in_gallery ) == 0 ) ) {
-            wp_delete_attachment( $attach_id );
-        }
-    }
-
     // Flush the gallery cache.
     Envira_Gallery_Common::get_instance()->flush_gallery_caches( $post_id );
 
@@ -355,7 +349,7 @@ add_action( 'wp_ajax_envira_gallery_remove_images', 'envira_gallery_ajax_remove_
 function envira_gallery_ajax_remove_images() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-remove-image', 'nonce' );
+    check_admin_referer( 'envira-gallery-remove-image', 'nonce' );
 
     // Prepare variables.
     $post_id      = absint( $_POST['post_id'] );
@@ -405,14 +399,14 @@ add_action( 'wp_ajax_envira_gallery_save_meta', 'envira_gallery_ajax_save_meta' 
 function envira_gallery_ajax_save_meta() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-save-meta', 'nonce' );
+    check_admin_referer( 'envira-gallery-save-meta', 'nonce' );
 
     // Prepare variables.
     $post_id      = absint( $_POST['post_id'] );
     $attach_id    = absint( $_POST['attach_id'] );
     $meta         = $_POST['meta'];
     $gallery_data = get_post_meta( $post_id, '_eg_gallery_data', true );
-    
+
     if ( isset( $meta['title'] ) ) {
         $gallery_data['gallery'][ $attach_id ]['title'] = trim( $meta['title'] );
     }
@@ -428,7 +422,7 @@ function envira_gallery_ajax_save_meta() {
     if ( isset( $meta['link_new_window'] ) ) {
         $gallery_data['gallery'][ $attach_id ]['link_new_window'] = trim( $meta['link_new_window'] );
     }
-    
+
     if ( isset( $meta['caption'] ) ) {
         $gallery_data['gallery'][ $attach_id ]['caption'] = trim( $meta['caption'] );
     }
@@ -457,13 +451,13 @@ add_action( 'wp_ajax_envira_gallery_save_bulk_meta', 'envira_gallery_ajax_save_b
 function envira_gallery_ajax_save_bulk_meta() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-save-meta', 'nonce' );
+    check_admin_referer( 'envira-gallery-save-meta', 'nonce' );
 
     // Prepare variables.
     $post_id      = absint( $_POST['post_id'] );
     $image_ids    = $_POST['image_ids'];
     $meta         = $_POST['meta'];
-    
+
     // Check the required variables exist.
     if ( empty( $post_id ) ) {
         wp_send_json_error();
@@ -504,7 +498,7 @@ function envira_gallery_ajax_save_bulk_meta() {
         if ( isset( $meta['link_new_window'] ) && ! empty( $meta['link_new_window'] )  ) {
             $gallery_data['gallery'][ $image_id ]['link_new_window'] = trim( $meta['link_new_window'] );
         }
-        
+
         if ( isset( $meta['caption'] ) && ! empty( $meta['caption'] )  ) {
             $gallery_data['gallery'][ $image_id ]['caption'] = trim( $meta['caption'] );
         }
@@ -534,7 +528,7 @@ add_action( 'wp_ajax_envira_gallery_refresh', 'envira_gallery_ajax_refresh' );
 function envira_gallery_ajax_refresh() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-refresh', 'nonce' );
+    check_admin_referer( 'envira-gallery-refresh', 'nonce' );
 
     // Prepare variables.
     $post_id = absint( $_POST['post_id'] );
@@ -586,7 +580,7 @@ add_action( 'wp_ajax_envira_gallery_install_addon', 'envira_gallery_ajax_install
 function envira_gallery_ajax_install_addon() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-install', 'nonce' );
+    check_admin_referer( 'envira-gallery-install', 'nonce' );
 
     // Install the addon.
     if ( isset( $_POST['plugin'] ) ) {
@@ -655,7 +649,7 @@ add_action( 'wp_ajax_envira_gallery_activate_addon', 'envira_gallery_ajax_activa
 function envira_gallery_ajax_activate_addon() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-activate', 'nonce' );
+    check_admin_referer( 'envira-gallery-activate', 'nonce' );
 
     // Activate the addon.
     if ( isset( $_POST['plugin'] ) ) {
@@ -681,7 +675,7 @@ add_action( 'wp_ajax_envira_gallery_deactivate_addon', 'envira_gallery_ajax_deac
 function envira_gallery_ajax_deactivate_addon() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-deactivate', 'nonce' );
+    check_admin_referer( 'envira-gallery-deactivate', 'nonce' );
 
     // Deactivate the addon.
     if ( isset( $_POST['plugin'] ) ) {
@@ -741,27 +735,10 @@ function envira_gallery_ajax_prepare_gallery_data( $gallery_data, $id, $image = 
         $gallery_data['gallery'] = array();
         $gallery_data['gallery'][ $id ] = $image;
     } else {
-        // Add this image to the start or end of the gallery, depending on the setting
-        $instance = Envira_Gallery_Settings::get_instance();
-        $media_position = $instance->get_setting( 'media_position' );
-
-        switch ( $media_position ) {
-            case 'before':
-                // Add image to start of images array
-                // Store copy of images, reset gallery array and rebuild
-                $images = $gallery_data['gallery'];
-                $gallery_data['gallery'] = array();
-                $gallery_data['gallery'][ $id ] = $image;
-                foreach ( $images as $old_image_id => $old_image ) {
-                    $gallery_data['gallery'][ $old_image_id ] = $old_image;
-                }
-                break;
-            case 'after':
-            default: 
-                // Add image, this will default to the end of the array
-                $gallery_data['gallery'][ $id ] = $image;  
-                break;
-        } 
+		
+		// Add image, this will default to the end of the array
+        $gallery_data['gallery'][ $id ] = $image;
+       
     }
 
     // Filter and return
@@ -782,7 +759,7 @@ function envira_gallery_ajax_prepare_gallery_data( $gallery_data, $id, $image = 
 function envira_gallery_ajax_dismiss_notice() {
 
     // Run a security check first.
-    check_ajax_referer( 'envira-gallery-dismiss-notice', 'nonce' );
+    check_admin_referer( 'envira-gallery-dismiss-notice', 'nonce' );
 
     // Deactivate the notice
     if ( isset( $_POST['notice'] ) ) {
@@ -833,7 +810,7 @@ add_action( 'wp_ajax_envira_gallery_editor_get_galleries', 'envira_gallery_edito
 function envira_gallery_editor_get_galleries() {
 
     // Check nonce
-    check_ajax_referer( 'envira-gallery-editor-get-galleries', 'nonce' );
+    check_admin_referer( 'envira-gallery-editor-get-galleries', 'nonce' );
 
     // Get POSTed fields
     $search         = (bool) $_POST['search'];
@@ -841,7 +818,7 @@ function envira_gallery_editor_get_galleries() {
     $prepend_ids    = stripslashes_deep( $_POST['prepend_ids'] );
 
     // Get galleries
-    $instance = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance() : Envira_Gallery_Lite::get_instance() );
+    $instance = Envira_Gallery_Lite::get_instance();
     $galleries = $instance->get_galleries( false, true, ( $search ? $search_terms : '' ) );
 
     // Build array of just the data we need.
@@ -854,21 +831,38 @@ function envira_gallery_editor_get_galleries() {
             $thumbnail = wp_get_attachment_image_src( $key, 'thumbnail' );
         }
 
+        if ( ! empty( $gallery['config']['title'] ) ) {
+            $gallery_title = $gallery['config']['title'];
+        } else {
+            $gallery_title = false;
+        }
+
+        // Check to make sure variables are there
+        $gallery_id = false;
+        $gallery_config_slug = false;
+
+        if ( isset( $gallery['id'] ) ) {
+            $gallery_id = $gallery['id'];
+        }
+        if ( isset( $gallery['config']['slug'] ) ) {
+            $gallery_config_slug = $gallery['config']['slug'];
+        }
+
         // Add gallery to results
         $results[] = array(
-            'id'        => $gallery['id'],
-            'slug'      => $gallery['config']['slug'],
-            'title'     => $gallery['config']['title'],
+            'id'        => $gallery_id,
+            'slug'      => $gallery_config_slug,
+            'title'     => $gallery_title,
             'thumbnail' => ( ( isset( $thumbnail ) && is_array( $thumbnail ) ) ? $thumbnail[0] : '' ),
             'action'    => 'gallery', // Tells the editor modal whether this is a Gallery or Album for the shortcode output
         );
     }
- 
+
     // If any prepended Gallery IDs were specified, get them now
     // These will typically be a Defaults Gallery, which wouldn't be included in the above get_galleries() call
     if ( is_array( $prepend_ids ) && count( $prepend_ids ) > 0 ) {
         $prepend_results = array();
-        
+
         // Get each Gallery
         foreach ( $prepend_ids as $gallery_id ) {
             // Get gallery
@@ -912,7 +906,7 @@ add_action( 'wp_ajax_envira_gallery_move_media', 'envira_gallery_move_media' );
 function envira_gallery_move_media() {
 
     // Check nonce
-    check_ajax_referer( 'envira-gallery-move-media', 'nonce' );
+    check_admin_referer( 'envira-gallery-move-media', 'nonce' );
 
     // Get POSTed fields
     $from_gallery_id    = absint( $_POST['from_gallery_id'] );
@@ -932,7 +926,7 @@ function envira_gallery_move_media() {
     // Get from and to Galleries
     $from_gallery   = Envira_Gallery::get_instance()->get_gallery( $from_gallery_id );
     $to_gallery     = Envira_Gallery::get_instance()->get_gallery( $to_gallery_id );
-    
+
     // Iterate through each image ID, adding the image to $to_gallery, then removing from $from_gallery
     foreach ( $image_ids as $image_id ) {
         // Check the image exists in $from_gallery

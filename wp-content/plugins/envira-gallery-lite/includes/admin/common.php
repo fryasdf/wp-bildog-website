@@ -35,7 +35,7 @@ class Envira_Gallery_Common_Admin {
      * @var object
      */
     public $base;
-    
+
     /**
      * Holds the metabox class object.
      *
@@ -53,15 +53,15 @@ class Envira_Gallery_Common_Admin {
     public function __construct() {
 
         // Load the base class object.
-        $this->base = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance() : Envira_Gallery_Lite::get_instance() );
+        $this->base = Envira_Gallery_Lite::get_instance();
 
         // Handle any necessary DB upgrades.
         add_action( 'admin_init', array( $this, 'db_upgrade' ) );
-        
+
         // Load admin assets.
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
-        
+
         // Delete any gallery association on attachment deletion. Also delete any extra cropped images.
         add_action( 'delete_attachment', array( $this, 'delete_gallery_association' ) );
         add_action( 'delete_attachment', array( $this, 'delete_cropped_image' ) );
@@ -85,7 +85,7 @@ class Envira_Gallery_Common_Admin {
         // Upgrade to allow captions (v1.1.6).
         $captions = get_option( 'envira_gallery_116' );
         if ( ! $captions ) {
-            $galleries = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance()->_get_galleries() : Envira_Gallery_Lite::get_instance()->_get_galleries() );
+            $galleries = Envira_Gallery_Lite::get_instance()->_get_galleries();
             if ( $galleries ) {
                 foreach ( $galleries as $gallery ) {
                     foreach ( (array) $gallery['gallery'] as $id => $item ) {
@@ -104,7 +104,7 @@ class Envira_Gallery_Common_Admin {
         if ( ! $cptGalleries ) {
             // Get Post Types, excluding our own
             // We don't use post_status => 'any', as this doesn't include CPTs where exclude_from_search = true.
-            $postTypes = get_post_types( array( 
+            $postTypes = get_post_types( array(
                 'public' => true,
             ) );
             $excludedPostTypes = array( 'envira', 'envira_album', 'attachment' );
@@ -113,7 +113,7 @@ class Envira_Gallery_Common_Admin {
                     unset( $postTypes[ $key ] );
                 }
             }
-            
+
             // Get all Posts that have _eg_gallery_data set
             $inPostGalleries = new WP_Query( array(
                 'post_type'     => $postTypes,
@@ -126,7 +126,7 @@ class Envira_Gallery_Common_Admin {
                     ),
                 )
             ) );
-            
+
             // Check if any Posts with galleries exist
             if ( count( $inPostGalleries->posts ) > 0 ) {
                 $migrated_galleries = 0;
@@ -138,7 +138,7 @@ class Envira_Gallery_Common_Admin {
                     if ( $post->post_type == 'envira' || $post->post_type == 'envira_album' ) {
                         continue;
                     }
-                    
+
                     // Get metadata
                     $data = get_post_meta( $post->ID, '_eg_gallery_data', true);
                     $in = get_post_meta( $post->ID, '_eg_in_gallery', true);
@@ -239,7 +239,7 @@ class Envira_Gallery_Common_Admin {
         <?php
 
     }
-    
+
     /**
      * Loads styles for all Envira-based Administration Screens.
      *
@@ -251,7 +251,7 @@ class Envira_Gallery_Common_Admin {
 
         // Get current screen.
         $screen = get_current_screen();
-        
+
         // Bail if we're not on the Envira Post Type screen.
         if ( 'envira' !== $screen->post_type && 'envira_album' !== $screen->post_type ) {
             return;
@@ -277,7 +277,7 @@ class Envira_Gallery_Common_Admin {
 
         // Get current screen.
         $screen = get_current_screen();
-        
+
         // Bail if we're not on the Envira Post Type screen.
         if ( 'envira' !== $screen->post_type && 'envira_album' !== $screen->post_type ) {
             return;
@@ -299,7 +299,7 @@ class Envira_Gallery_Common_Admin {
         do_action( 'envira_gallery_admin_scripts' );
 
     }
- 
+
     /**
      * Deletes the Envira gallery association for the image being deleted.
      *
@@ -467,11 +467,11 @@ class Envira_Gallery_Common_Admin {
     public function delete_gallery( $id ) {
 
         // Check if the media_delete setting is enabled
-        $media_delete = Envira_Gallery_Settings::get_instance()->get_setting( 'media_delete' );
+        $media_delete = false;
         if ( $media_delete != '1' ) {
             return;
-        } 
-        
+        }
+
         // Get post
         $gallery = get_post( $id );
 
@@ -514,14 +514,6 @@ class Envira_Gallery_Common_Admin {
      */
     public function get_upgrade_link() {
 
-        if ( class_exists( 'Envira_Gallery' ) ) {
-            // User is using Envira Gallery, so just take them to the Pricing page.
-            // Note: On the Addons screen, if the user has a license, we won't hit this function,
-            // as the API will tell us the direct URL to send the user to based on their license key,
-            // so they see pro-rata pricing.
-            return 'http://enviragallery.com/pricing/?utm_source=proplugin&utm_medium=link&utm_campaign=WordPress';
-        }
-
         // Check if there's a constant.
         $shareasale_id = '';
         if ( defined( 'ENVIRA_GALLERY_SHAREASALE_ID' ) ) {
@@ -535,7 +527,7 @@ class Envira_Gallery_Common_Admin {
 
         // Whether we have an ID or not, filter the ID.
         $shareasale_id = apply_filters( 'envira_gallery_shareasale_id', $shareasale_id );
-        
+
         // If at this point we still don't have an ID, we really don't have one!
         // Just return the standard upgrade URL.
         if ( empty( $shareasale_id ) ) {

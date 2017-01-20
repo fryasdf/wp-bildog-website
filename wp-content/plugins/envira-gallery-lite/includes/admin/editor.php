@@ -53,7 +53,7 @@ class Envira_Gallery_Editor {
     public function __construct() {
 
         // Load the base class object.
-        $this->base = ( class_exists( 'Envira_Gallery' ) ? Envira_Gallery::get_instance() : Envira_Gallery_Lite::get_instance() );
+        $this->base = Envira_Gallery_Lite::get_instance();
 
         // Add a custom media button to the editor.
         add_filter( 'media_buttons_context', array( $this, 'media_button' ) );
