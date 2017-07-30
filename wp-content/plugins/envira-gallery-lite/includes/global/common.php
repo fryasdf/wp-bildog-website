@@ -603,6 +603,8 @@ class Envira_Gallery_Common {
             'isotope'			  => 1,
             'css_animations'	  => 1,
             'css_opacity'         => 100,
+            'lazy_loading'        => 1, // lazy loading 'ON' for new galleries
+            'lazy_loading_delay'  => 500,
 
             // Lightbox
             'lightbox_enabled'    => 1,

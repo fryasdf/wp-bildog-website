@@ -59,6 +59,11 @@
             if ((/^(?:javascript)/i).test(W) || W == "#") {
                 W = null
             }
+            /* is href/W a link? */
+            if ( typeof W === 'string' && B.envirabox.isUrl(W) && !B.envirabox.isImage(W) ) {
+                document.getElementById("envirabox-loading").style.visibility = "hidden";
+                window.location.href = W;
+            }
             if (H.type) {
                 Y = H.type;
                 if (!W) {
@@ -786,6 +791,12 @@
             M.addClass("envirabox-ie6");
             B('<iframe id="envirabox-hide-sel-frame" src="' + (/^https/i.test(window.location.href || "") ? "javascript:void(false)" : "about:blank") + '" scrolling="no" border="0" frameborder="0" tabindex="-1"></iframe>').prependTo(d)
         }
+    };
+    B.envirabox.isUrl = function(str) {
+        return str.match(/^(https?):\/\/((?:[a-z0-9.-]|%[0-9A-F]{2}){3,})(?::(\d+))?((?:\/(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})*)*)(?:\?((?:[a-z0-9-._~!$&'()*+,;=:\/?@]|%[0-9A-F]{2})*))?(?:#((?:[a-z0-9-._~!$&'()*+,;=:\/?@]|%[0-9A-F]{2})*))?$/i);
+    };
+    B.envirabox.isImage = function(str) {
+        return str.match(/(^data:image\/.*,)|(\.(jp(e|g|eg)|gif|png|bmp|webp|svg)((\?|#).*)?$)/i);
     };
     B.fn.envirabox.defaults = {
         padding: 10,

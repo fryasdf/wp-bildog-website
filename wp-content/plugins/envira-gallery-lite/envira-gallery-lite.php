@@ -3,9 +3,9 @@
  * Plugin Name: Envira Gallery Lite
  * Plugin URI:  http://enviragallery.com
  * Description: Envira Gallery is best responsive WordPress gallery plugin. This is the lite version.
- * Author:      Thomas Griffin
+ * Author:      Envira Gallery Team
  * Author URI:  http://enviragallery.com
- * Version:     1.5.6.2
+ * Version:     1.6.1.5
  * Text Domain: envira-gallery
  *
  * Envira Gallery is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ class Envira_Gallery_Lite {
 	 *
 	 * @var string
 	 */
-	public $version = '1.5.6.2';
+	public $version = '1.6.1.5';
 
 	/**
 	 * The name of the plugin.
@@ -506,6 +506,9 @@ function envira_gallery_lite_activation_hook( $network_wide ) {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
 		wp_die( sprintf( __( 'Sorry, but your version of WordPress does not meet Envira Gallery\'s required version of <strong>4.0</strong> to run properly. The plugin has been deactivated. <a href="%s">Click here to return to the Dashboard</a>.', 'envira-gallery' ), get_admin_url() ) );
 	}
+
+	// Make sure Envira Pro plugin, if activated is deactivated
+	deactivate_plugins( 'envira-gallery/envira-gallery.php' );
 
 }
 

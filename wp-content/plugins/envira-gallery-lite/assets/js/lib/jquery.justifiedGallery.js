@@ -851,9 +851,11 @@
           if (!that.isSpinnerActive()) that.startLoadingSpinnerAnimation();
 
           that.onImageEvent(imageSrc, function (loadImg) { // image loaded
-            $entry.data('jg.width', loadImg.width);
-            $entry.data('jg.height', loadImg.height);
+            $entry.data('jg.width', $entry.find('.envira-gallery-image').data('envira-width') );
+            $entry.data('jg.height', $entry.find('.envira-gallery-image').data('envira-height') );
             $entry.data('jg.loaded', true);
+
+            
             that.startImgAnalyzer(false);
           }, function () { // image load error
             $entry.data('jg.loaded', 'error');

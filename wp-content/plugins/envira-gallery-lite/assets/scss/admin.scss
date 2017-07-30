@@ -63,7 +63,7 @@ body.post-type-envira_album {
 		a.page-title-action {
 			position: relative;
 			top: -55px;
-			left: 185px;
+			left: 185px; /* default - English */
 			&:hover {
 				background: $primary_button_color_hover;
 				border-color: $primary_button_color_hover;
@@ -258,6 +258,25 @@ body.post-type-envira_album {
 		}
 	}
 }
+
+/* ==========================================================================
+   Language Specific
+   ========================================================================== */
+body.post-type-envira.locale-fr-fr,
+body.post-type-envira_album.locale-fr-fr {
+	/**
+	* Wrapper
+	*/
+	div.wrap {
+		/**
+		* Page Title Action (i.e. Add New)
+		*/
+		a.page-title-action {
+			left: 220px;
+		}
+	}
+}
+
 
 /* ==========================================================================
    Header
@@ -618,6 +637,16 @@ body.post-type-envira {
             }
         }
     }
+}
+
+/* ==========================================================================
+   Gallery List
+   ========================================================================== */
+
+@media screen and (max-width: 782px) {
+	body.post-type-envira .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.check-column) {
+	    display: table-cell;
+	}
 }
 
 /* ==========================================================================

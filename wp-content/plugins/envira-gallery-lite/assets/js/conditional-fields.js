@@ -302,6 +302,27 @@ jQuery( document ).ready( function( $ ) {
 					]
 				}
 			},
+			{	// Album Mobile Touchwipe
+				conditions: {
+					element: '[name="_envira_gallery[lazy_loading]"]',
+					type: 'checked',
+					operator: 'is'
+				},
+				actions: {
+					if: [
+						{
+							element: '#envira-config-lazy-loading-delay',
+							action: 'show'
+						}
+					],
+					else: [
+						{
+							element: '#envira-config-lazy-loading-delay',
+							action: 'hide'
+						}
+					]
+				}
+			},
 
 		]
 	);

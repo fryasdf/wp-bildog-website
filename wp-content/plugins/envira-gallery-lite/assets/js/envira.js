@@ -13,6 +13,7 @@
 // @codekit-append "lib/fancybox-media.js";
 // @codekit-append "lib/fancybox-thumbs.js";
 // @codekit-append "lib/fancybox-video.js";
+// @codekit-append "lib/responsivelyLazy.js";
 /**
 * To load more JS resources:
 * - Add them to the lib subfolder
@@ -32,6 +33,59 @@ jQuery( document ).ready( function( $ ) {
       	}
 
 	} );
+
+    /* setup lazy load event */
+    $( document ).on( "envira_image_lazy_load_complete", function( event ) {
+        if ( event !== undefined && event.image_id !== undefined && event.image_id !== null ) {
+
+            var envira_container = $('div.envira-gallery-public').find('img#' + event.image_id);
+
+            if ( $('div.envira-gallery-public').hasClass('envira-gallery-0-columns') ) {
+                /* this is an automatic gallery */
+                $( envira_container ).closest('div.envira-gallery-item-inner').find( 'div.envira-gallery-position-overlay' ).delay( 100 ).show();
+            } else {
+                /* this is a legacy gallery */
+                $( envira_container ).closest('div.envira-gallery-item-inner').find( 'div.envira-gallery-position-overlay' ).delay( 100 ).show();
+
+                /* re-do the padding bottom */
+                /* $padding_bottom = ( $output_height / $output_width ) * 100; */
+
+                var envira_lazy_width = $( envira_container ).closest('div.envira-gallery-item-inner').find('.envira-lazy').width();
+                var ratio1 = ( event.naturalHeight / event.naturalWidth );
+                var ratio2 = ( event.naturalHeight / envira_lazy_width );
+
+                if ( ratio2 < ratio1 ) {
+                    var ratio = ratio2;
+                } else {
+                    var ratio = ratio1;
+                }
+                
+                var padding_bottom = ratio * 100;
+                
+                $( envira_container ).closest('div.envira-gallery-item-inner').find('.envira-lazy').css('padding-bottom', padding_bottom + '%');
+                $( envira_container ).closest('div.envira-gallery-item-inner').find('.envira-lazy').data('envira-changed', 'true');
+
+                if ( window["envira_container_" + event.gallery_id] !== undefined ) {
+
+                    window["envira_container_" + event.gallery_id].on( 'layoutComplete',
+                      function( event, laidOutItems ) {
+                        
+                        $( envira_container ).closest('div.envira-gallery-item-inner').find( 'span.envira-title' ).delay( 1000 ).css('visibility', 'visible');
+                        $( envira_container ).closest('div.envira-gallery-item-inner').find( 'span.envira-caption' ).delay( 1000 ).css('visibility', 'visible');
+
+
+                      }
+                    );
+
+                }
+
+                
+                $('#envira-gallery-' + event.gallery_id).enviratope('layout');
+
+            }
+
+        }
+    });
 
 } );
 

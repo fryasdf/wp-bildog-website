@@ -12,6 +12,8 @@
     var obj = justifiedGallery.apply(this, arguments);
     EnviraJustifiedGallery = obj.data('jg.controller');
 
+    if (EnviraJustifiedGallery !== undefined) {
+
     EnviraJustifiedGallery.displayEntryCaption = function ($entry) {
 
         var $image = this.imgFromEntry($entry);
@@ -22,6 +24,7 @@
           if ($imgCaption === null) {
 
             var caption = $image.data('envira-caption');
+            caption = caption.replace('<', '&lt;');
 
             if (this.isValidCaption(caption)) { // Create only we found something
               $imgCaption = $('<div class="caption">' + caption + '</div>');
@@ -41,6 +44,8 @@
     };
 
     return EnviraJustifiedGallery;
+
+    }
 
   };
 })(jQuery);

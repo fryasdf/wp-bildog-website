@@ -96,9 +96,11 @@ jQuery( document ).ready( function( $ ) {
 
         } );
 
-        // Open the media frame
         wp.media.frames.envira.open();
-
+        // Remove the 'Create Gallery' left hand menu item in the modal, as we don't
+        // want users inserting galleries!
+        $( 'div.media-menu a.media-menu-item:nth-child(2)' ).addClass( 'hidden' );
+        $( 'div.media-menu a.media-menu-item:nth-child(4)' ).addClass( 'hidden' );
         return;
 
     } );

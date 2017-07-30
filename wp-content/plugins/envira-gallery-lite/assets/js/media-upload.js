@@ -2,7 +2,7 @@
  * Hooks into the global Plupload instance ('uploader'), which is set when includes/admin/metaboxes.php calls media_form()
  * We hook into this global instance and apply our own changes during and after the upload.
  *
- * @since 1.3.1.3
+ * @since 1.3.1.3 
  */
 (function( $ ) {
     $(function() {
@@ -45,7 +45,11 @@
                 $( '.done', $( envira_status ) ).hide();
 
                 // Fade in the upload progress bar
-                $( envira_bar ).fadeIn();
+                $( envira_bar ).fadeIn( "fast", function() {
+                    $( 'p.max-upload-size' ).css('padding-top', '10px');
+                });
+
+                
 
             } );
 
@@ -104,7 +108,9 @@
 
                 // Hide Progress Bar
                 setTimeout( function() {
-                    $( envira_bar ).fadeOut();
+                    $( envira_bar ).fadeOut( "fast", function() {
+                        $( 'p.max-upload-size' ).css('padding-top', '0');
+                    });
                 }, 1000 );
 
             });

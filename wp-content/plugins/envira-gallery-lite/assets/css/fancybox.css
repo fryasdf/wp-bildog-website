@@ -302,6 +302,12 @@ body.envira-touch #envirabox-right {
 	padding: 0 0 0 15px;
 }
 
+/* UPDATED FOR TWENTY-SEVENTEEN */
+
+#envirabox-title-float-wrap tr {
+	border-bottom: 0;
+}
+
 /* IE6 */
 
 .envirabox-ie6 #envirabox-close { background: transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/envirabox/fancy_close.png', sizingMethod='scale'); }

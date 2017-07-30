@@ -74,18 +74,10 @@
     margin: 0 0 20px 0;
     padding: 10px;
     background: #eee;
-    clear: both;
 
     a {
         text-decoration: none;
     }
-}
-
-/**
-* WooCommerce Addon
-*/
-.envira-hidden {
-    display: none;
 }
 
 /**
@@ -334,7 +326,7 @@
 /**
 * Main Wrapper
 */
-.envira-gallery-public.envira-justified-gallery {
+.envira-gallery-public.justified-gallery {
     /**
     * Inner
     */
@@ -373,7 +365,7 @@
 * Mobile Landscape Size to Tablet Portrait (devices and browsers)
 * - Envira Gallery Columns: If 4, 5 or 6, reduce to 3 columns. Isotope will detect change + resize automatically.
 */
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 768px) {
     /**
     * Main Wrapper
     */
@@ -462,17 +454,17 @@
             &.envira-gallery-5-columns,
             &.envira-gallery-6-columns {
                 .envira-gallery-item {
-                    width: 50% ;
+                    width: 50% !important;
 
                     &:nth-child(3n+1),
                     &:nth-child(4n+1),
                     &:nth-child(5n+1),
                     &:nth-child(6n+1) {
-                        clear: none;
+                        clear: none !important;
                     }
 
                     &:nth-child(2n+1) {
-                        clear: both;
+                        clear: both !important;
                     }
                 }
             }
@@ -516,7 +508,7 @@
             &.envira-gallery-5-columns,
             &.envira-gallery-6-columns {
                 .envira-gallery-item {
-                    width: 100% ;
+                    width: 100% !important;
 
                     &:nth-child(2n+1),
                     &:nth-child(3n+1),
@@ -546,7 +538,6 @@
    Envira Lightbox Gallery Styles
    ========================================================================== */
 
-/*! envirabox v2.1.5 fancyapps.com | fancyapps.com/envirabox/#license */
 .envirabox-wrap,
 .envirabox-skin,
 .envirabox-outer,
@@ -636,15 +627,6 @@
     overflow: hidden;
 
     /**
-     * Actions
-     */
-
-    .envirabox-actions {
-        position: absolute;
-        z-index: 988050;
-    }
-
-    /**
     * Dynamic Positioning
     */
     .envirabox-position-overlay {
@@ -660,7 +642,6 @@
         &.envira-gallery-top-left {
             top: 0;
             left: 0;
-            text-align: left;
         }
 
         /**
@@ -678,7 +659,6 @@
         &.envira-gallery-bottom-left {
             bottom: 0;
             left: 0;
-            text-align: left;
         }
 
         /**
@@ -695,11 +675,6 @@
 
 .envirabox-type-iframe .envirabox-inner {
     -webkit-overflow-scrolling: touch;
-    height: 100%;
-    .envirabox-iframe {
-        width: 100%;
-        height: 100%;
-    }
 }
 
 .envirabox-error {
@@ -726,7 +701,7 @@
 }
 
 #envirabox-loading {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     margin-top: -22px;
@@ -763,10 +738,6 @@
     background: transparent url('images/blank.gif'); /* helps IE */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     z-index: 988040;
-}
-
-.envirabox-nav:focus {
-    outline:none;
 }
 
 .envirabox-prev {
@@ -861,7 +832,8 @@ a.envirabox-nav:hover {
 }
 
 .envirabox-lock .envirabox-overlay {
-  //  overflow: auto;
+    overflow: auto;
+    overflow-y: scroll;
 }
 
 /* Title helper */
@@ -1118,8 +1090,6 @@ a.envirabox-nav:hover {
     border: 0;
     padding: 0;
     max-width: none;
-    width: 100%;
-    height: auto;
 }
 
 
@@ -1143,35 +1113,6 @@ only screen and (                min-resolution: 2dppx) {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-@media only screen and (max-width: 600px) {
-
-    .envirabox-prev.envirabox-arrows-outside {
-        left: -75px;
-        width: 12%;
-    }
-    .envirabox-next.envirabox-arrows-outside {
-        right: -75px;
-        width: 12%;
-    }
-
-}
-
-
-
-
-
-
 
 /*
 #content img{

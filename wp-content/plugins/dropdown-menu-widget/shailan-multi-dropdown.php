@@ -2,9 +2,17 @@
 
 class shailan_MultiDropDown extends WP_Widget {
     /** constructor */
-    function shailan_MultiDropDown() {
+    //function shailan_MultiDropDown() {
+    public function __construct() {
 		$widget_ops = array('classname' => 'shailan-dropdown-menu shailan-multi-dropdown', 'description' => __( 'Dropdown page & category menu', 'shailan-dropdown-menu' ) );
-		$this->WP_Widget('multi-dropdown-menu', __('Dropdown Multi', 'shailan-multi-dropdown'), $widget_ops);
+		
+		parent::__construct(
+			'multi-dropdown-menu', 
+			__('Dropdown Multi', 'shailan-multi-dropdown'), 
+			$widget_ops
+		);
+		
+		
 		$this->alt_option_name = 'widget_multi_dropdown';	
 		
 		$this->defaults = array(
@@ -175,9 +183,10 @@ class shailan_MultiDropDown extends WP_Widget {
 		
 		<p><?php _e('Align:', 'shailan-dropdown-menu'); ?> <label for="left"><input type="radio" id="left" name="<?php echo $this->get_field_name('align'); ?>" value="left" <?php if($align=='left'){ echo 'checked="checked"'; } ?> /> <?php _e('Left', 'shailan-dropdown-menu'); ?></label> <label for="center"><input type="radio" id="center" name="<?php echo $this->get_field_name('align'); ?>" value="center" <?php if($align=='center'){ echo 'checked="checked"'; } ?>/> <?php _e('Center', 'shailan-dropdown-menu'); ?></label> <label for="right"><input type="radio" id="right" name="<?php echo $this->get_field_name('align'); ?>" value="right" <?php if($align=='right'){ echo 'checked="checked"'; } ?>/> <?php _e('Right', 'shailan-dropdown-menu'); ?></label></p>
 			
-<div class="widget-control-actions alignright">
-<p><small><a href="options-general.php?page=dropdown-menu"><?php esc_attr_e('Menu Style', 'shailan-dropdown-menu'); ?></a> | <a href="http://shailan.com/wordpress/plugins/dropdown-menu"><?php esc_attr_e('Visit plugin site', 'shailan-dropdown-menu'); ?></a></small></p>
-</div>
+		<div class="widget-control-actions">
+			<p><small>Powered by <a href="http://metinsaylan.com/wordpress/plugins/dropdown-menu/" title="Wordpress Tips and tricks, Freelancing, Web Design">MetinSaylan.com</a> | <a href="http://metinsaylan.com/wordpress/" title="Get more wordpress widgets and themes" target="_blank" >Get more..</a></small></p>
+		</div>
+		<br class="clear" />
 			
         <?php 
 	}

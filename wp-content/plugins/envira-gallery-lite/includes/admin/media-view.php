@@ -279,6 +279,15 @@ class Envira_Gallery_Media_View {
 								</span>
 							</label>
 
+                            <!-- Link in New Window -->
+                            <label class="setting">
+                                <span class="name"><?php _e( 'Open URL in New Window?', 'envira-gallery' ); ?></span>
+                                <span class="description">
+                                    <input type="checkbox" name="link_new_window" value="1"<# if ( data.link_new_window == '1' ) { #> checked <# } #> />
+                                    <?php _e( 'Opens your image links in a new browser window / tab.', 'envira-gallery' ); ?>
+                                </span>
+                            </label>
+
 							<!-- Addons can populate the UI here -->
 							<div class="envira-addons"></div>
 	                    </div>
