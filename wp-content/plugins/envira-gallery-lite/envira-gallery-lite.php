@@ -5,7 +5,7 @@
  * Description: Envira Gallery is best responsive WordPress gallery plugin. This is the lite version.
  * Author:      Envira Gallery Team
  * Author URI:  http://enviragallery.com
- * Version:     1.6.1.5
+ * Version:     1.6.1.6
  * Text Domain: envira-gallery
  *
  * Envira Gallery is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ class Envira_Gallery_Lite {
 	 *
 	 * @var string
 	 */
-	public $version = '1.6.1.5';
+	public $version = '1.6.1.6';
 
 	/**
 	 * The name of the plugin.

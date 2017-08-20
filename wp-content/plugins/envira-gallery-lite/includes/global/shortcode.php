@@ -393,7 +393,7 @@ class Envira_Gallery_Shortcode {
         $gallery_theme = $this->get_config( 'columns', $data ) == 0 ? ' envira-' . $this->get_config( 'justified_gallery_theme', $data ) : '';
                 
         // Build the image and allow filtering
-        // Update: how we build the html depends on the lazy load script
+        // How we build the html depends on the lazy load script
 
         // Check if user has lazy loading on - if so, we add the css class
 
@@ -789,12 +789,11 @@ class Envira_Gallery_Shortcode {
 
                     <?php if ( $this->get_config( 'lazy_loading', $data ) ) { ?>
                     
-                    /* console.log ('load_images for ' + $id);
-                    // responsivelyLazy.setGalleryClass('#envira-gallery-<?php echo $data['id']; ?>'); */
                     responsivelyLazy.run('#envira-gallery-'+ $id);
 
                     <?php } else { ?>
-                        console.log ('load_images was pinged, but lazy load turned off');
+                        /* to do: enable ENVIRA DEBUG to display this and other errors */
+                        /* console.log ('load_images was pinged, but lazy load turned off'); */
                     <?php } ?>
 
                 }
@@ -931,7 +930,6 @@ class Envira_Gallery_Shortcode {
                         
                         $('#envira-gallery-<?php echo $data["id"]; ?>').on( 'layoutComplete',
                           function( event, laidOutItems ) {
-                            /* console.log( 'Isotope layout completed on ' + laidOutItems.length + ' items' ); */
                             envira_album_lazy_load_image(<?php echo $data['id']; ?>);
                             $(window).scroll(function(event){
                                 envira_album_lazy_load_image(<?php echo $data['id']; ?>);
@@ -942,7 +940,6 @@ class Envira_Gallery_Shortcode {
                         $( document ).on( "envira_pagination_ajax_load_completed", function() {
                             $('#envira-gallery-<?php echo $data["id"]; ?>').on( 'layoutComplete',
                               function( event, laidOutItems ) {
-                                /* console.log( 'Isotope layout completed on ' + laidOutItems.length + ' items' ); */
                                 envira_album_lazy_load_image(<?php echo $data['id']; ?>);
                                 $(window).scroll(function(event){
                                     envira_album_lazy_load_image(<?php echo $data['id']; ?>);
@@ -1373,7 +1370,6 @@ class Envira_Gallery_Shortcode {
             if ( $theme !== $data['value'] ) {
                 continue;
             }
-
             if ( file_exists( plugin_dir_path( $data['file'] ) . 'themes/' . $theme . '/style.css' ) ) {
                 wp_enqueue_style( $this->base->plugin_slug . $theme . '-theme', plugins_url( 'themes/' . $theme . '/style.css', $data['file'] ), array( $this->base->plugin_slug . '-style' ) );
             }

@@ -138,8 +138,51 @@
           'walker'            => new MyWalker()
         )) 
       ?>
+      <?php
+        // print customized language switcher
+        // pll_the_languages is a wordpress built-in php function which 
+        // deals with getting the translation menu
+        // however, the default call 
+        //   pll_the_languages( array( 'show_flags' => 1,'show_names' => 0 ) );
+        // prints out a shitty looking html list
+        // --> do it in a customized way: just put the two flags next to each other
+        //     below the nav bar
+        
+        // polylang interfers in such a way that when doing the call below one
+        // gets a nice array with all the information about the current page one
+        // needs
+        $translations = pll_the_languages( array( 'raw' => 1 ) );
+        // problematic: when there is no translation availble then the array still
+        // contains an entry for the foreign language but its entry 'no_translation'
+        // is then set to 1
+        // --> throw out all languages for which no translation of the current 
+        // (i.e. this page that the users looks at) exists 
+        foreach ($translations as $languageKey => $translation) {
+          if ($translation['no_translation']) {
+            unset($translations[$languageKey]);
+          }
+        }
+        // debug: check the language array
+        //echo "\n\nDOLLY\n\n";
+        //print_r($translations);
+        //echo "\n\n DOLLYDOLLY \n\n";
+
+        // for every translation available:
+        // show a little flag with the corresponding country
+        // 'containing' a link to the translated page
+        if (count($translations) > 1) {
+          echo "<div style=\"clear:right;text-align:center\">";
+          foreach ($translations as $languageKey => $translation) {
+            $url = $translation['url'];
+            $flagURL = $translation['flag'];
+            $languageName = $translation['name'];
+            echo "<a href=\"$url\"><img style=\"margin:5px\" src=\"$flagURL\" alt=\"$languageName\"></a>";
+          }
+          echo "</div>";
+        }
+      ?>
     </header>
-    
+   
 
     <?php
          /*
@@ -154,7 +197,7 @@
         <div id="parallax-layer" style="
            background:url(
            '<?php echo get_featured_image(my_get_current_page_ID()); ?>'
-           );
+           ); 
            background-size: 100%;
            height:2000px; /* to be honest: i dont know what this setting actually does...*/
            " 

@@ -2,7 +2,7 @@
 Contributors: griffinjt, smub
 Tags: gallery, image gallery, photo gallery, responsive gallery, wordpress gallery plugin, album, content gallery, fancy gallery, fullscreen gallery, gallery lightbox, gallery plugin, gallery slider, gallery slideshow, gallery widget, grid gallery, masonry gallery, media gallery, mosaic gallery, photo album, polaroid gallery, portfolio gallery, post gallery, thumbnail gallery, video gallery, wordpress gallery, youtube gallery
 Requires at least: 4.0
-Tested up to: 4.7
+Tested up to: 4.8.1
 Stable tag: trunk
 License: GNU General Public License v2.0 or later
 
@@ -229,6 +229,9 @@ Also, I'm an <a href="https://thomasgriffin.io" rel="me" title="WordPress Develo
 
 == Changelog ==
 
+= 1.6.1.6 =
+
+* Fix: Minor bug fixes
 = 1.6.1.5 =
 
 * Fix: Minor bug fixes
