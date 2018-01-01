@@ -8,7 +8,7 @@
  * @since 1.3.5
  *
  * @package Envira_Gallery
- * @author  Tim Carr
+ * @author  Envira Team
  */
 class Envira_Gallery_Notice_Admin {
 

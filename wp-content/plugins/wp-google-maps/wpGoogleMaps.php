@@ -3,7 +3,7 @@
 Plugin Name: WP Google Maps
 Plugin URI: https://www.wpgmaps.com
 Description: The easiest to use Google Maps plugin! Create custom Google Maps with high quality markers containing locations, descriptions, images and links. Add your customized map to your WordPress posts and/or pages quickly and easily with the supplied shortcode. No fuss.
-Version: 6.4.05
+Version: 6.4.06
 Author: WP Google Maps
 Author URI: https://www.wpgmaps.com
 Text Domain: wp-google-maps
@@ -11,7 +11,9 @@ Domain Path: /languages
 */
 
 /* 
- *
+ * 6.4.06 - 2017-09-07 - Medium Priority
+ * Bug Fix: Zoom level is not respected when saving
+ * 
  * 6.4.05 - 2017-06-13 - Medium priority
  * Fixed the bug that caused JS errors to show up in the map editor
  * Fixed a bug that caused the XML File option (for markers) to cause issues when trying to add a marker in the backend
@@ -331,7 +333,7 @@ $wpgmza_tblname_poly = $wpdb->prefix . "wpgmza_polygon";
 $wpgmza_tblname_polylines = $wpdb->prefix . "wpgmza_polylines";
 $wpgmza_tblname_categories = $wpdb->prefix. "wpgmza_categories";
 $wpgmza_tblname_category_maps = $wpdb->prefix. "wpgmza_category_maps";
-$wpgmza_version = "6.4.05";
+$wpgmza_version = "6.4.06";
 $wpgmza_p_version = "6.13";
 $wpgmza_t = "basic";
 define("WPGMAPS", $wpgmza_version);
@@ -1283,6 +1285,9 @@ function wpgmaps_admin_javascript_basic() {
                
             });
             
+            /**
+             * Deprecated in 6.4.05
+             * This was deprecated in wpgmaps-admin-core.js however caused a bug instead
 
             google.maps.event.addListener(MYMAP.map, 'zoom_changed', function() {
                 zoomLevel = MYMAP.map.getZoom();
@@ -1293,6 +1298,7 @@ function wpgmaps_admin_javascript_basic() {
                 }
             });
             
+            */            
             
 <?php
                 $total_poly_array = wpgmza_b_return_polygon_id_array(sanitize_text_field($_GET['map_id']));

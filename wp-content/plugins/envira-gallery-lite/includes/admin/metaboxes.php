@@ -174,6 +174,12 @@ class Envira_Gallery_Metaboxes {
                 <span class="done"><?php _e( 'All images uploaded.', 'envira-gallery' ); ?></span>
             </div>
         </div>
+
+        <div class="envira-progress-adding-images">
+            <div class="envira-progress-status">
+                <span class="spinner"></span><span class="adding_images"><?php _e( 'Adding items to gallery.', 'envira-gallery' ); ?></span>
+            </div>
+        </div>
         <?php
 
     }

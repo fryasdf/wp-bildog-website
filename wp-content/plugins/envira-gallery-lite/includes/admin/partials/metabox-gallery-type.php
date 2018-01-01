@@ -5,7 +5,7 @@
  * @since   1.5.0
  *
  * @package Envira_Gallery
- * @author 	Tim Carr
+ * @author 	Envira Team
  */
 
 ?>

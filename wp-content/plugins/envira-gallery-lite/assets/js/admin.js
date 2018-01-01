@@ -14,8 +14,8 @@ jQuery( document ).ready( function( $ ) {
     * Copy to Clipboard
     */
     if ( typeof Clipboard !== 'undefined' ) {
-        var envira_clipboard = new Clipboard( '.envira-clipboard' );
         $( document ).on( 'click', '.envira-clipboard', function( e ) {
+            var envira_clipboard = new Clipboard('.envira-clipboard');
             e.preventDefault();
         } );
     }

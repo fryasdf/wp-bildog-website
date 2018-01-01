@@ -71,6 +71,9 @@ jQuery( document ).ready( function( $ ) {
                 images.push( attachment.toJSON() );
             }, this );
 
+            // Make visible the "items are being added"
+            $( document ).find('.envira-progress-adding-images').css('display', 'block');
+
             // Send the ajax request with our data to be processed.
             $.post(
                 envira_gallery_metabox.ajax,
@@ -89,6 +92,8 @@ jQuery( document ).ready( function( $ ) {
 
                         // Repopulate the Envira Gallery Image Collection
                         EnviraGalleryImagesUpdate( false );
+
+                        $( document ).find('.envira-progress-adding-images').css('display', 'none');
                     }
                 },
                 'json'

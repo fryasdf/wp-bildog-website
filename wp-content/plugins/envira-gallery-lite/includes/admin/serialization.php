@@ -8,7 +8,7 @@
  * @since 1.3.1.6
  *
  * @package Envira
- * @author  Tim Carr
+ * @author  Envira Team
  */
 class Envira_Serialization_Admin {
 

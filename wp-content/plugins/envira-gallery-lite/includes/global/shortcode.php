@@ -371,10 +371,12 @@ class Envira_Gallery_Shortcode {
         // Lite doesn't support captions, so we fallback to the title.
         $caption = $title;
 
-
-
         // Determine if we create a link.
-        if ( ! empty( $item['link'] ) ) {
+        // If the user has disabled lightbox, there should not be a link
+        // "Turn off the lightbox then the image shouldn't be clicked"
+        if (!$this->get_config( 'lightbox_enabled', $data ) ) {
+            $create_link = false;
+        } else if ( ! empty( $item['link'] ) ) {
             $create_link = true;
         } else {
             $create_link = false;

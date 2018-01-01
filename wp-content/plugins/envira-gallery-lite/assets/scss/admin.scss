@@ -368,6 +368,21 @@ body.post-php.post-type-envira {
 				left: auto !important;
 			}
 		}
+		span.subtitle {
+			display: block;
+			margin-top: -10px;
+			padding-left: 21px;
+		}
+	}
+}
+body.edit-php.post-type-envira {
+	div.wrap {
+		span.subtitle {
+			display: block;
+			margin-top: -15px;
+			margin-bottom: 10px;
+			padding-left: 22px;
+		}
 	}
 }
 

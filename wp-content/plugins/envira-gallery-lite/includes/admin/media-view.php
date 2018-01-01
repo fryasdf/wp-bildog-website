@@ -5,7 +5,7 @@
  * @since 1.0.3
  *
  * @package Envira_Gallery
- * @author  Tim Carr
+ * @author  Envira Team
  */
 class Envira_Gallery_Media_View {
 

@@ -5,7 +5,7 @@
  * @since 1.5.0
  *
  * @package Envira_Gallery
- * @author  Tim Carr
+ * @author  Envira Team
  */
 class Envira_Gallery_Table_Admin {
 
@@ -303,7 +303,7 @@ class Envira_Gallery_Table_Admin {
                             </select>
                         </label>
 
-                        <label class="inline-edit-group">
+                        <?php /* <label class="inline-edit-group">
                             <span class="title"><?php _e( 'Column Gutter Width', 'envira-gallery'); ?></span>
                             <input type="number" name="_envira_gallery[gutter]" value="" />
                         </label>
@@ -320,7 +320,7 @@ class Envira_Gallery_Table_Admin {
                             x
                             <input type="number" name="_envira_gallery[crop_height]" value="" />
                             px
-                        </label>
+                        </label> */ ?>
                     </div>
                 </fieldset>
                 <?php
@@ -382,7 +382,7 @@ class Envira_Gallery_Table_Admin {
                             </select>
                         </label>
 
-                        <label class="inline-edit-group">
+                        <?php /* <label class="inline-edit-group">
                             <span class="title"><?php _e( 'Column Gutter Width', 'envira-gallery'); ?></span>
                             <input type="number" name="_envira_gallery[gutter]" value="" placeholder="<?php _e( '— No Change —', 'envira-gallery' ); ?>" />
                         </label>
@@ -398,7 +398,7 @@ class Envira_Gallery_Table_Admin {
                             x
                             <input type="number" name="_envira_gallery[crop_height]" value="" placeholder="<?php _e( '— No Change —', 'envira-gallery' ); ?>" />
                             px
-                        </label>
+                        </label> */ ?>
                     </div>
                 </fieldset>
                 <?php

@@ -17,7 +17,6 @@ class PLL_Query {
 		'page_id',
 		'category_name',
 		'tag',
-		'cat',
 		'tag_id',
 		'category__in',
 		'category__and',
@@ -54,14 +53,16 @@ class PLL_Query {
 	 * @return bool
 	 */
 	protected function have_translated_taxonomy( $tax_queries ) {
-		foreach ( $tax_queries as $tax_query ) {
-			if ( isset( $tax_query['taxonomy'] ) && $this->model->is_translated_taxonomy( $tax_query['taxonomy'] ) && ! ( isset( $tax_query['operator'] ) && 'NOT IN' === $tax_query['operator'] ) ) {
-				return true;
-			}
+		if ( is_array( $tax_queries ) ) {
+			foreach ( $tax_queries as $tax_query ) {
+				if ( isset( $tax_query['taxonomy'] ) && $this->model->is_translated_taxonomy( $tax_query['taxonomy'] ) && ! ( isset( $tax_query['operator'] ) && 'NOT IN' === $tax_query['operator'] ) ) {
+					return true;
+				}
 
-			// Nested queries
-			elseif ( is_array( $tax_query ) && $this->have_translated_taxonomy( $tax_query ) ) {
-				return true;
+				// Nested queries
+				elseif ( is_array( $tax_query ) && $this->have_translated_taxonomy( $tax_query ) ) {
+					return true;
+				}
 			}
 		}
 
@@ -107,11 +108,20 @@ class PLL_Query {
 	public function filter_query( $lang ) {
 		$qvars = &$this->query->query_vars;
 
-		// Do not filter the query if the language is already specified in another way
 		if ( ! isset( $qvars['lang'] ) ) {
+			// Do not filter the query if the language is already specified in another way
 			foreach ( self::$excludes as $k ) {
 				if ( ! empty( $qvars[ $k ] ) ) {
 					return;
+				}
+			}
+
+			// Specific case for 'cat' as it can contain negative values
+			if ( ! empty( $qvars['cat'] ) ) {
+				foreach ( explode( ',', $qvars['cat'] ) as $cat ) {
+					if ( $cat > 0 ) {
+						return;
+					}
 				}
 			}
 
@@ -124,7 +134,7 @@ class PLL_Query {
 				}
 			}
 
-			if ( ! empty( $qvars['tax_query'] ) && is_array( $qvars['tax_query'] ) && $this->have_translated_taxonomy( $qvars['tax_query'] ) ) {
+			if ( ! empty( $qvars['tax_query'] ) && $this->have_translated_taxonomy( $qvars['tax_query'] ) ) {
 				return;
 			}
 
@@ -146,7 +156,7 @@ class PLL_Query {
 			}
 		} else {
 			// Do not filter untranslatable post types such as nav_menu_item
-			if ( isset( $qvars['post_type'] ) && ! $this->model->is_translated_post_type( $qvars['post_type'] ) ) {
+			if ( isset( $qvars['post_type'] ) && ! $this->model->is_translated_post_type( $qvars['post_type'] ) && ( empty( $qvars['tax_query'] ) || ! $this->have_translated_taxonomy( $qvars['tax_query'] ) ) ) {
 				unset( $qvars['lang'] );
 			}
 

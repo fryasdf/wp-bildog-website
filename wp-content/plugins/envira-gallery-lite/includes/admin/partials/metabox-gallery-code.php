@@ -5,7 +5,7 @@
  * @since   1.5.0
  *
  * @package Envira_Gallery
- * @author 	Tim Carr
+ * @author 	Envira Team
  */
 ?>
 <p><?php _e( 'You can place this gallery anywhere into your posts, pages, custom post types or widgets by using <strong>one</strong> the shortcode(s) below:', 'envira-gallery' ); ?></p>

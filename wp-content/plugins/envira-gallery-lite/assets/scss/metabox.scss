@@ -629,6 +629,59 @@ form#post.envira-gallery {
                                 }
                             }
 
+                        }
+
+                        /**
+                        * Upload Progress Bar
+                        */
+                        .envira-progress-adding-images {
+                            display: none;
+                            width: 100%;
+                            position: relative;
+                            height: 10px;
+                            width: 100%;
+                            margin: 5px auto;
+                            border-radius: 10px;
+/*                            background: #dfdfdf;
+                            background: rgba(0,0,0,.1);
+*/
+                            .envira-progress-bar-inner {
+                                height: 10px;
+                                min-width: 20px;
+                                width: 0;
+/*                                background: #aaa;
+                                background: rgba(0,0,0,.2);*/
+                                border-radius: 10px;
+/*                                -webkit-transition: width 300ms;
+                                -moz-transition: width 300ms;
+                                -ms-transition: width 300ms;
+                                -o-transition: width 300ms;
+                                transition: width 300ms;*/
+                            }
+
+                            .envira-progress-status {
+                                clear: both;
+                                position: absolute;
+                                right: 0;
+                                width: 50%;
+                                height: 30px;
+                                margin: 12px 0 0 0;
+                                text-align: right;
+                                color: green;
+                                -webkit-transition: 0.05s color ease-in-out;
+                                transition: 0.05s color ease-in-out;
+
+                                .spinner {
+                                    float: right;
+                                    margin-top: 0;
+                                    visibility: visible;
+                                }
+
+                                .adding_images {
+                                    float: right;
+                                    display: inline-block;
+                                }
+                            }
 
                         }
 

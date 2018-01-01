@@ -214,6 +214,9 @@ Please upgrade your version of WP Google Maps to version 6.0.27 as it includes m
 
 == Changelog ==
 
+= 6.4.06 - 2017-09-07 - Medium Priority =
+* Bug Fix: Zoom level is not respected when saving
+
 = 6.4.05 - 2017-06-13 - Medium priority =
 * Fixed the bug that caused JS errors to show up in the map editor
 * Fixed a bug that caused the XML File option (for markers) to cause issues when trying to add a marker in the backend

@@ -5,7 +5,7 @@
  * @since   1.5.0
  *
  * @package Envira_Gallery
- * @author 	David Bisset, Tim Carr
+ * @author 	David Bisset, Envira Team
  */
 ?>
 <div id="envira-header-temp"></div>

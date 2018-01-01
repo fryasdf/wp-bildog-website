@@ -42,9 +42,7 @@ class PLL_Frontend_Filters extends PLL_Filters {
 		add_filter( 'sidebars_widgets', array( $this, 'sidebars_widgets' ) );
 
 		if ( $this->options['media_support'] ) {
-			foreach ( array( 'audio', 'image', 'video' ) as $media ) {
-				add_filter( "widget_media_{$media}_instance", array( $this, 'widget_media_instance' ), 1 ); // Since WP 4.8
-			}
+			add_filter( 'widget_media_image_instance', array( $this, 'widget_media_instance' ), 1 ); // Since WP 4.8
 		}
 
 		// Strings translation ( must be applied before WordPress applies its default formatting filters )
@@ -69,6 +67,11 @@ class PLL_Frontend_Filters extends PLL_Filters {
 		if ( isset( $_POST['wp_customize'], $_POST['customized'] ) ) {
 			add_filter( 'pre_option_blogname', 'pll__', 20 );
 			add_filter( 'pre_option_blogdescription', 'pll__', 20 );
+		}
+
+		// FIXME test get_user_locale for backward compatibility with WP < 4.7
+		if ( Polylang::is_ajax_on_front() && function_exists( 'get_user_locale' ) ) {
+			add_filter( 'load_textdomain_mofile', array( $this, 'load_textdomain_mofile' ) );
 		}
 	}
 
@@ -151,6 +154,17 @@ class PLL_Frontend_Filters extends PLL_Filters {
 		// Since WP 4.7, make sure not to filter wp_get_object_terms()
 		if ( ! $this->model->is_translated_taxonomy( $taxonomies ) || ! empty( $args['object_ids'] ) ) {
 			return $clauses;
+		}
+
+		// Ugly hack to fix the issue introduced by WP 4.9. See also https://core.trac.wordpress.org/ticket/42104
+		if ( version_compare( $GLOBALS['wp_version'], '4.9', '>=' ) ) {
+			$traces = version_compare( PHP_VERSION, '5.2.5', '>=' ) ? debug_backtrace( false ) : debug_backtrace();
+
+			// PHP 7 does not include call_user_func
+			$n = version_compare( PHP_VERSION, '7', '>=' ) ? 5 : 6;
+			if ( isset( $traces[ $n ]['function'] ) && 'transform_query' === $traces[ $n ]['function'] ) {
+				return $clauses;
+			}
 		}
 
 		// Adds our clauses to filter by language
@@ -365,5 +379,19 @@ class PLL_Frontend_Filters extends PLL_Filters {
 				$this->model->term->set_language( $term_id, $this->curlang );
 			}
 		}
+	}
+
+	/**
+	 * Filters the translation files to load when doing ajax on front
+	 * This is needed because WP the language files associated to the user locale when a user is logged in
+	 *
+	 * @since 2.2.6
+	 *
+	 * @param string $mofile Translation file name
+	 * @return string
+	 */
+	public function load_textdomain_mofile( $mofile ) {
+		$user_locale = get_user_locale();
+		return str_replace( "{$user_locale}.mo", "{$this->curlang->locale}.mo", $mofile );
 	}
 }

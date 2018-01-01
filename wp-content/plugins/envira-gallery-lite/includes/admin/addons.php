@@ -609,7 +609,7 @@ class Envira_Gallery_Addons {
         );
 
         // Perform the query and retrieve the response.
-        $response      = wp_remote_post( 'http://enviragallery.com', $post );
+        $response      = wp_remote_post( 'https://enviragallery.com', $post );
         $response_code = wp_remote_retrieve_response_code( $response );
         $response_body = wp_remote_retrieve_body( $response );
 

@@ -1,4 +1,4 @@
-=== Gallery by Envira - Responsive Photo Gallery for WordPress ===
+=== Photo Gallery by Envira - Responsive Image Gallery for WordPress ===
 Contributors: griffinjt, smub
 Tags: gallery, image gallery, photo gallery, responsive gallery, wordpress gallery plugin, album, content gallery, fancy gallery, fullscreen gallery, gallery lightbox, gallery plugin, gallery slider, gallery slideshow, gallery widget, grid gallery, masonry gallery, media gallery, mosaic gallery, photo album, polaroid gallery, portfolio gallery, post gallery, thumbnail gallery, video gallery, wordpress gallery, youtube gallery
 Requires at least: 4.0
@@ -6,30 +6,30 @@ Tested up to: 4.8.1
 Stable tag: trunk
 License: GNU General Public License v2.0 or later
 
-The best WordPress gallery plugin. Drag & Drop photo gallery builder that helps you create beautiful image gallery with just a few clicks.
+The best WordPress image gallery plugin. Drag & Drop photo gallery builder that helps you create beautiful photo galleries with just a few clicks.
 
 == Description ==
 
-= WordPress Gallery Plugin =
+= WordPress Photo Gallery Plugin =
 
-Here at **Envira Gallery**, we believe that you shouldn't have to hire a developer to create a WordPress gallery. That's why we built <a href="http://enviragallery.com/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend" title="Envira Gallery">Envira Gallery</a>, a drag & drop **photo gallery plugin** that's both EASY and POWERFUL.
+Here at **Envira Gallery**, we believe that you shouldn't have to hire a developer to create a WordPress image gallery. That's why we built <a href="http://enviragallery.com/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend" title="Envira Gallery">Envira Gallery</a>, a drag & drop **photo gallery plugin** that's both EASY and POWERFUL.
 
 **Envira Gallery** allows you to create beautiful responsive photo gallery and video gallery for your WordPress site in minutes, not hours!
 
 At Envira Gallery, user experience is our #1 priority. That's why we put in extra effort to ensure that Envira is the best responsive **photo gallery** for WordPress. This means that your image gallery will always look great on all devices (mobile, tablet, laptop, and desktop).
 
-Envira Gallery is highly optimized for web and server performance because we understand the importance of speed when it comes to SEO and conversion. We can honestly say that Envira Gallery is the **fastest WordPress gallery plugin** in the market.
+Envira Gallery is highly optimized for web and server performance because we understand the importance of speed when it comes to SEO and conversion. We can honestly say that Envira Gallery is the **fastest WordPress photo gallery plugin** in the market.
 
 > <strong>Envira Gallery Pro</strong><br />
-> This plugin is the lite version of the popular Envira Gallery plugin that comes with all the gallery features you will ever need including albums, tags, social media integration, gallery templates, deeplinking, pagination, ecommerce, image proofing, and tons more. <a href="http://enviragallery.com/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend" title="Envira Gallery">Click here to purchase the best premium WordPress gallery plugin now!</a>
+> Photo Gallery by Envira is the lite version of the popular Envira Gallery plugin that comes with all the photo gallery features you will ever need including albums, tags, social media integration, gallery templates, deeplinking, pagination, ecommerce, image proofing, and tons more. <a href="http://enviragallery.com/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend" title="Envira Gallery">Click here to purchase the best premium WordPress gallery plugin now!</a>
 
-**Gallery by Envira** has been downloaded over 500,000 times. Here's why smart photographers, designers, and developers love Envira Gallery, and you will too!
+**Photo Gallery by Envira** has been downloaded over 900,000 times. Here's why smart photographers, designers, and developers love Envira Gallery, and you will too!
 
 https://www.youtube.com/watch?v=4jHG3LOmV-c&w=532&rel=0
 
 = Drag & Drop Photo Gallery Builder =
 
-We were tired with the bloated and buggy image gallery plugins. That's why we built Envira Gallery to adapt to your workflow and allow you to create responsive WordPress galleries in minutes. By using our easy to use <a href="http://enviragallery.com/features/drag-drop-builder/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">drag and drop builder</a>, you can upload your photos, rearrange them, and basically create an image gallery in 5 minutes or less.
+We were tired with the bloated and buggy image gallery plugins. That's why we built Envira Gallery to adapt to your workflow and allow you to create responsive WordPress photo galleries in minutes. By using our easy to use <a href="http://enviragallery.com/features/drag-drop-builder/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">drag and drop builder</a>, you can upload your photos, rearrange them, and basically create an image gallery in 5 minutes or less.
 
 But don't just take our word. See what one of the WordPress experts are saying:
 
@@ -66,10 +66,10 @@ See why one of the leading WordPress developers love Envira:
 
 = Full Envira Gallery Feature List =
 
-* Drag & Drop Gallery Builder
-* 100% Responsive Gallery - Mobile Friendly
-* Beautiful Gallery Templates for Customization
-* <a href="http://enviragallery.com/addons/albums-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">Albums</a> - Easily organize your galleries, choose cover photos, and more.
+* Drag & Drop Photo Gallery Builder
+* 100% Responsive Photo Gallery - Mobile Friendly
+* Beautiful Photo Gallery Templates for Customization
+* <a href="http://enviragallery.com/addons/albums-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">Albums</a> - Easily organize your photo galleries, choose cover photos, and more.
 * <a href="http://enviragallery.com/addons/social-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">Social Sharing</a> - Share your photos on Facebook, Twitter, Pinterest, and Google+
 * <a href="http://enviragallery.com/addons/videos-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">Video Galleries</a> - Not just for photos! You can add YouTube, Vimeo, Wistia, and other videos in your **video gallery**.
 * <a href="http://enviragallery.com/addons/watermarking-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">Watermarking</a> - Protect your images from theft with watermarking.
@@ -95,18 +95,18 @@ See why one of the leading WordPress developers love Envira:
 * <a href="http://enviragallery.com/addons/nextgen-importer-addon/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">NextGen Importer</a> - Not a fan of NextGen Gallery? Want to switch from NextGen Gallery? You can do that in few simple clicks.
 * Want us to add something else? Suggest a feature and we'll get it added!
 
-After reading this feature list, you can probably imagine why Envira is the best WordPress gallery plugin in the market.
+After reading this feature list, you can probably imagine why Envira is the best WordPress photo gallery plugin in the market.
 
 But don't just take our word. See what one of the expert WordPress consultants and core contributor is saying:
 
 > When it comes to WordPress gallery plugins, <strong>Envira has no equal</strong>. Solid enough to do the job right, while flexible enough to handle any situation you can throw at it.<br>
 > Andrew Norcross - Expert WordPress Consultant
 
-= WordPress Gallery Demo =
+= WordPress Photo Gallery Demo =
 
 Envira Gallery is truly the perfect combination of Easy and Powerful.
 
-While Envira offers tons of features, below are some of the most requested gallery demos.
+While Envira offers tons of features, below are some of the most requested photo gallery demos.
 
 * <a href="http://enviragallery.com/demo/lightbox-gallery-demo/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">WordPress Lightbox Gallery Demo</a>
 * <a href="http://enviragallery.com/demo/masonry-gallery-demo/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion" rel="friend">WordPress Masonry Gallery Demo</a>
@@ -228,6 +228,16 @@ Envira Gallery is absolutely, positively the <a href="http://enviragallery.com/?
 Also, I'm an <a href="https://thomasgriffin.io" rel="me" title="WordPress Developer - Thomas Griffin">expert WordPress developer</a> and I write a lot about WordPress in general. You can check out my blog at the link above.
 
 == Changelog ==
+
+
+= 1.6.2 =
+
+* Fix:Image titles with numbers throwing js errors.
+* Fix: Minor bug fixes
+
+= 1.6.1.7 =
+
+* Fix: Minor bug fixes
 
 = 1.6.1.6 =
 
